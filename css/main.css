@@ -151,8 +151,8 @@ border-radius : 25px;
 
 
 .significants {
-  width : 80px;
-  height : 80px;
+  width : 150px;
+  height : 40px;
   vertical-align: top;
   text-align : center;
   position: relative;
@@ -162,12 +162,12 @@ border-radius : 25px;
   border : solid black 1px;
   border-radius : 10px;
   overflow : hidden;
-  font-size : 1em;
+  font-size : 0.75em;
   font-weight : bolder;
 }
 
 .domain {
-  width : 15%;
+  width : 16%;
   display: inline-block;
   border : solid black 2px;
   margin : 1px;
