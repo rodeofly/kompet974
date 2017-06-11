@@ -762,8 +762,7 @@ EVALS =
   "D4" :
     "name" : "Domaine 4"
     "subtitle" : "Systèmes naturels et systèmes techniques"
-    "significants" :
-          
+    "significants" :       
       "Mener une démarche scientifique, résoudre un problème" : ["Extraire, organiser les informations utiles et les transcrire dans un langage adapté." , "Mettre en œuvre un raisonnement logique simple."]
       "Mener une démarche scientifique, résoudre un problème" : ["Modéliser et représenter des phénomènes et des objets." , "Mettre en œuvre un protocole expérimental, réaliser le prototype d’un objet."
 	      "Pratiquer le calcul numérique (exact et approché) et le calcul littéral." , "Contrôler la vraisemblance d’un résultat." , "Communiquer sur ses démarches, ses résultats et ses choix, en argumentant"]
@@ -922,16 +921,22 @@ select_kid = (el) ->
 $ ->
   window.onbeforeunload = () -> return ""
 #############################################################################################################"
-#Construction de l'interface  
-  $select = $( "<select id='letter'></select>" )
-  for o in " ABCDEFGHIJKLM"
-    $select.append "<option value='#{o}'>#{o}</option>"
-  $( "#tabs" ).after $select 
+#Construction de l'interface 
+  ###########################################################
+  #Menu select pour la classe 
   $select = $( "<select id='level'></select>" )
   for o in [3..6]
     $select.append "<option value='#{o}'>#{o}</option>"
-  $( "#tabs" ).after $select        
- 
+  $( "#tabs" ).before $select    
+  $select = $( "<select id='letter'></select>" )
+  for o in " ABCDEFGHIJKLM"
+    $select.append "<option value='#{o}'>#{o}</option>"
+  $( "#tabs" ).before $select 
+
+  #Fin menu select pour la classe 
+  ###########################################################
+  ###########################################################
+  #Boutons .domain 
   evals = Object.keys EVALS
   for k of EVALS
     $html = $( """
@@ -943,28 +948,31 @@ $ ->
     for s of EVALS[k].significants
       id = ID++
       n++
-      $s = $( "<div class='significants white' data-dom='#{k}.#{n}'><h4>#{s}<img class='more' src='css/icons/more.png' data-id='#{id}'></h4><div class='info' id='#{id}' title='#{s}'><ul></ul></div></div>" )
+      $s = $( "<div class='significants white' data-dom='#{k}.#{n}'>#{s}<img class='more' src='css/icons/more.png' data-id='#{id}'><div class='info' id='#{id}' title='#{s}'><ul></ul></div></div>" )
       for i in EVALS[k].significants[s]
         $s.find(".info ul").append "<li class='item'>#{i}</li>"
       $html.append $s
-    $("body").append $html
-  
+    $("#significants_area").append $html  
   $( ".domain" ).hide()
   $( ".tabdomain" ).addClass "hide"
   $( ".info" ).dialog
     autoOpen: false
+    width   : "auto"
   $( ".more" ).on "click", (event) -> 
     event.stopPropagation()
     id = $( this ).data( "id" )
     $( "##{id}" ).dialog "open"
+  #Fin boutons .domain 
+  ###########################################################
+  
 #Fin de construction de l'interface
-#############################################################################################################"
+#############################################################################################################
 
 
-#############################################################################################################"
-#Fin de construction de l'interface 
-  
-  
+#############################################################################################################
+#Evenements de l'interface 
+  ##################################################################
+  #On selection de la classe 
   $( "#letter" ).change () -> 
     CLASSE = $( "#level" ).val()+$( "#letter" ).val()
     d = [HEADERS]
@@ -1000,16 +1008,5 @@ $ ->
       else 
         $( ".tabdomain" ).removeClass( "show" ).addClass "hide"
         $( ".domain" ).hide()
-      
-   
-  
-  $( "#send" ).on "click", ->
-    table = $('#tableau')[0]
-    dataT = tableToJson( table )
-    request = $.ajax
-      url  : "https://script.google.com/macros/s/AKfycbyAwxdqn4waP2ot04KgrXKhcA_mJGYhjOaTV8cUJxLlyF4thbI/exec"
-      type     : "post"
-      data     : dataT
-      dataType : "text/js"
-   
+
   

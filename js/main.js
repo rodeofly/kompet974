@@ -851,18 +851,18 @@
     window.onbeforeunload = function() {
       return "";
     };
+    $select = $("<select id='level'></select>");
+    for (o = m = 3; m <= 6; o = ++m) {
+      $select.append("<option value='" + o + "'>" + o + "</option>");
+    }
+    $("#tabs").before($select);
     $select = $("<select id='letter'></select>");
     ref = " ABCDEFGHIJKLM";
-    for (m = 0, len1 = ref.length; m < len1; m++) {
-      o = ref[m];
+    for (p = 0, len1 = ref.length; p < len1; p++) {
+      o = ref[p];
       $select.append("<option value='" + o + "'>" + o + "</option>");
     }
-    $("#tabs").after($select);
-    $select = $("<select id='level'></select>");
-    for (o = p = 3; p <= 6; o = ++p) {
-      $select.append("<option value='" + o + "'>" + o + "</option>");
-    }
-    $("#tabs").after($select);
+    $("#tabs").before($select);
     evals = Object.keys(EVALS);
     for (k in EVALS) {
       $html = $("<div id=\"" + k + "\" class=\"domain\">\n  <div class=\"nom\">" + k + " : " + EVALS[k]['subtitle'] + "</div>\n</div>    ");
@@ -870,7 +870,7 @@
       for (s in EVALS[k].significants) {
         id = ID++;
         n++;
-        $s = $("<div class='significants white' data-dom='" + k + "." + n + "'><h4>" + s + "<img class='more' src='css/icons/more.png' data-id='" + id + "'></h4><div class='info' id='" + id + "' title='" + s + "'><ul></ul></div></div>");
+        $s = $("<div class='significants white' data-dom='" + k + "." + n + "'>" + s + "<img class='more' src='css/icons/more.png' data-id='" + id + "'><div class='info' id='" + id + "' title='" + s + "'><ul></ul></div></div>");
         ref1 = EVALS[k].significants[s];
         for (q = 0, len2 = ref1.length; q < len2; q++) {
           i = ref1[q];
@@ -878,12 +878,13 @@
         }
         $html.append($s);
       }
-      $("body").append($html);
+      $("#significants_area").append($html);
     }
     $(".domain").hide();
     $(".tabdomain").addClass("hide");
     $(".info").dialog({
-      autoOpen: false
+      autoOpen: false,
+      width: "auto"
     });
     $(".more").on("click", function(event) {
       event.stopPropagation();
@@ -909,7 +910,7 @@
     $(".significants").on("click", function() {
       return toggleEval($(this).data("dom"));
     });
-    $(".tabdomain").on("click", function(event) {
+    return $(".tabdomain").on("click", function(event) {
       var CLASSE, d, dom, len3, r, table;
       $(this).toggleClass("show hide");
       dom = $(this).data("domain");
@@ -940,17 +941,6 @@
           return $(".domain").hide();
         }
       }
-    });
-    return $("#send").on("click", function() {
-      var dataT, request, table;
-      table = $('#tableau')[0];
-      dataT = tableToJson(table);
-      return request = $.ajax({
-        url: "https://script.google.com/macros/s/AKfycbyAwxdqn4waP2ot04KgrXKhcA_mJGYhjOaTV8cUJxLlyF4thbI/exec",
-        type: "post",
-        data: dataT,
-        dataType: "text/js"
-      });
     });
   });
 

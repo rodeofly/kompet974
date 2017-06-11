@@ -94,22 +94,45 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+html { 
+  background: url(http://www.thezenworld.org/zenworld/wp-content/uploads/2014/07/GALETS2.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#tabs {
+ width : 100%;
+ text-align : center;
+
+}
+
 table, tr, td,th {
+margin-left: auto;
+margin-right: auto;
 font-size : 0.9em;
+text-align : center;
 border : solid black 1px;
 padding : 5px;
 }
 
 #scoreTable {
-  width : 100%;
+width : 100%;
 
 }
 
+#significants_area {
+width : 100%;
+text-align : center;
 
+}
 .tabdomain {
 
-width : 100px;
-height : 100px;
+width : 50px;
+height : 50px;
+margin-right: 25px;
+border-radius : 25px;
 
 }
 
@@ -119,6 +142,8 @@ height : 100px;
 }
 .nom {
   display : inline-block;
+  margin : 5px;
+  text-align : center;
   font-size : 0.75em;
   font-weight : bolder;
   height : 50px;
@@ -126,17 +151,18 @@ height : 100px;
 
 
 .significants {
-  width : 90px;
-  height : 90px;
+  width : 80px;
+  height : 80px;
   vertical-align: top;
   text-align : center;
   position: relative;
   display : inline-block;
   margin : 5px;
+  padding : 5px;
   border : solid black 1px;
-  border-radius : 1px;
+  border-radius : 10px;
   overflow : hidden;
-  font-size : 0.6em;
+  font-size : 1em;
   font-weight : bolder;
 }
 
@@ -144,9 +170,10 @@ height : 100px;
   width : 15%;
   display: inline-block;
   border : solid black 2px;
-  margin : 0.5%;
+  margin : 1px;
   vertical-align : top;
-
+  background-color : rgba(0,0,0,0.25);
+  border-radius : 10px;
 
 }
 
