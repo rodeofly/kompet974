@@ -897,9 +897,9 @@ bigTable = (data) ->
 	  attrs: {class: 'table'}	  
   
 select_kid = (el) ->
-  id = parseInt el.data( 'row' )
-  d = [HEADERS]
-  d.push DATA[id]
+  id = parseInt el.data( 'id' )
+  DATA_TEMP = [HEADERS]
+  DATA_TEMP.push DATA[id]
   table = bigTable(d)
   $('#scoreTable').empty().append(table)
   $( ".significants" ).removeClass("white red yellow lightGreen green")
@@ -916,7 +916,7 @@ select_kid = (el) ->
       when 50 then $( ".significants[data-dom='#{dom}']" ).addClass "green"  
   $( "body" ).off "click", "tr"
 
-
+DATA_TEMP = []
 
 $ ->
   window.onbeforeunload = () -> return ""
@@ -977,10 +977,10 @@ $ ->
     letter = $( "#letter" ).val()
     if letter isnt " "
       CLASSE = $( "#level" ).val()+letter
-      d = [HEADERS]
+      DATA_TEMP = [HEADERS]
       for o in DATA
             d.push o if o[1] is CLASSE  
-    else d = DATA    
+    else DATA_TEMP = DATA    
     table = bigTable(d)
     $('#scoreTable').empty().append(table)
     $( "body" ).on "click", "tr", -> select_kid($(this))
@@ -998,9 +998,9 @@ $ ->
         
       else               #aucun domaine !
         CLASSE = $( "#level" ).val()+$( "#letter" ).val()
-        d = [HEADERS]
+        DATA_TEMP = [HEADERS]
         for o in DATA
-          d.push o if o[1] is CLASSE            
+          DATA_TEMP.push o if o[1] is CLASSE            
         table = bigTable(d)
         $('#scoreTable').empty().append(table)
         $( "body" ).on "click", "tr", -> select_kid($(this))
