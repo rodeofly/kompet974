@@ -974,13 +974,16 @@ $ ->
   ##################################################################
   #On selection de la classe 
   $( "#letter" ).change () -> 
-    CLASSE = $( "#level" ).val()+$( "#letter" ).val()
-    d = [HEADERS]
-    for o in DATA
-          d.push o if o[1] is CLASSE     
+    letter = $( "#letter" ).val()
+    if letter isnt " "
+      CLASSE = $( "#level" ).val()+letter
+      d = [HEADERS]
+      for o in DATA
+            d.push o if o[1] is CLASSE  
+    else d = DATA    
     table = bigTable(d)
     $('#scoreTable').empty().append(table)
-    #$( "body" ).on "click", "tr", -> select_kid($(this))
+    $( "body" ).on "click", "tr", -> select_kid($(this))
   
   $( "body" ).on "click", "tr", -> select_kid($(this))
   

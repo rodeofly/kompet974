@@ -892,17 +892,25 @@
       return $("#" + id).dialog("open");
     });
     $("#letter").change(function() {
-      var CLASSE, d, len3, r, table;
-      CLASSE = $("#level").val() + $("#letter").val();
-      d = [HEADERS];
-      for (r = 0, len3 = DATA.length; r < len3; r++) {
-        o = DATA[r];
-        if (o[1] === CLASSE) {
-          d.push(o);
+      var CLASSE, d, len3, letter, r, table;
+      letter = $("#letter").val();
+      if (letter !== " ") {
+        CLASSE = $("#level").val() + letter;
+        d = [HEADERS];
+        for (r = 0, len3 = DATA.length; r < len3; r++) {
+          o = DATA[r];
+          if (o[1] === CLASSE) {
+            d.push(o);
+          }
         }
+      } else {
+        d = DATA;
       }
       table = bigTable(d);
-      return $('#scoreTable').empty().append(table);
+      $('#scoreTable').empty().append(table);
+      return $("body").on("click", "tr", function() {
+        return select_kid($(this));
+      });
     });
     $("body").on("click", "tr", function() {
       return select_kid($(this));
