@@ -806,7 +806,7 @@ tableToJson = (table) ->
 
 arrayToTable = (data, options) ->
   'use strict'
-  table = $('<table />')
+  table = $('<table id="tableau"/>')
   rows = []
   defaults = 
     th: true
@@ -825,8 +825,10 @@ arrayToTable = (data, options) ->
         head = data[i][j]
         row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}'/>").html(head)
       else
-        val = data[i][j]
-        if j isnt 0
+        if j is 0
+          val = "<button class='eleve_id'>#{data[i][j]}</button>"
+        else 
+          val = data[i][j]
           color = {0 : "white", 10 : "red", 25 : "yellow", 40 : "lightGreen", 50 : "green"}[val]
         if color is undefined then color = "white"
         row.append $("<td class='#{color}' data-row='#{i}' data-col='#{j}' data-id='#{data[i][0]}' data-dom='#{data[0][j]}'/>").html(val)
@@ -915,6 +917,8 @@ select_kid = (el) ->
       when 50 then $( ".significants[data-dom='#{dom}']" ).addClass "green"  
   $( "body" ).off "click", "tr"
 
+
+
 $ ->
   window.onbeforeunload = () -> return ""
 #############################################################################################################"
@@ -1000,11 +1004,12 @@ $ ->
    
   
   $( "#send" ).on "click", ->
-    table = $('#scoreTable table')[0]
+    table = $('#tableau')[0]
+    dataT = tableToJson( table )
     request = $.ajax
-      url: "https://script.google.com/macros/s/AKfycbyAwxdqn4waP2ot04KgrXKhcA_mJGYhjOaTV8cUJxLlyF4thbI/exec",
-      type: "post",
-      data: tableToJson( table )
-  
-  
+      url  : "https://script.google.com/macros/s/AKfycbyAwxdqn4waP2ot04KgrXKhcA_mJGYhjOaTV8cUJxLlyF4thbI/exec"
+      type     : "post"
+      data     : dataT
+      dataType : "text/js"
+   
   

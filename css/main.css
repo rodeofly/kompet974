@@ -95,6 +95,7 @@ textarea {
    Author's custom styles
    ========================================================================== */
 table, tr, td,th {
+font-size : 0.9em;
 border : solid black 1px;
 padding : 5px;
 }

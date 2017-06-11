@@ -698,7 +698,7 @@
   arrayToTable = function(data, options) {
     'use strict';
     var color, defaults, head, i, j, row, rows, table, tfoot, thead, val;
-    table = $('<table />');
+    table = $('<table id="tableau"/>');
     rows = [];
     defaults = {
       th: true,
@@ -717,8 +717,10 @@
           head = data[i][j];
           row.append($("<th data-row='" + i + "' data-col='" + j + "' data-id='" + data[i][j] + "'/>").html(head));
         } else {
-          val = data[i][j];
-          if (j !== 0) {
+          if (j === 0) {
+            val = "<button class='eleve_id'>" + data[i][j] + "</button>";
+          } else {
+            val = data[i][j];
             color = {
               0: "white",
               10: "red",
@@ -940,12 +942,14 @@
       }
     });
     return $("#send").on("click", function() {
-      var request, table;
-      table = $('#scoreTable table')[0];
+      var dataT, request, table;
+      table = $('#tableau')[0];
+      dataT = tableToJson(table);
       return request = $.ajax({
         url: "https://script.google.com/macros/s/AKfycbyAwxdqn4waP2ot04KgrXKhcA_mJGYhjOaTV8cUJxLlyF4thbI/exec",
         type: "post",
-        data: tableToJson(table)
+        data: dataT,
+        dataType: "text/js"
       });
     });
   });
