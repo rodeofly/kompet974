@@ -817,7 +817,7 @@ arrayToTable = (data, options) ->
   # loop through all the rows, we will deal with tfoot and thead later
   i = 0
   while i < data.length
-    row = $("<tr data-row='#{i}'/>")
+    row = $("<tr data-id='#{data[i][0]}'/>")
     j = 0
     while j < data[i].length
       if i == 0 and options.th
@@ -900,7 +900,7 @@ select_kid = (el) ->
   id = parseInt el.data( 'id' )
   DATA_TEMP = [HEADERS]
   DATA_TEMP.push DATA[id]
-  table = bigTable(d)
+  table = bigTable(DATA_TEMP)
   $('#scoreTable').empty().append(table)
   $( ".significants" ).removeClass("white red yellow lightGreen green")
   $("td[data-id='#{id}']").each ->
@@ -979,9 +979,9 @@ $ ->
       CLASSE = $( "#level" ).val()+letter
       DATA_TEMP = [HEADERS]
       for o in DATA
-            d.push o if o[1] is CLASSE  
+            DATA_TEMP.push o if o[1] is CLASSE  
     else DATA_TEMP = DATA    
-    table = bigTable(d)
+    table = bigTable(DATA_TEMP)
     $('#scoreTable').empty().append(table)
     $( "body" ).on "click", "tr", -> select_kid($(this))
   
@@ -1001,7 +1001,7 @@ $ ->
         DATA_TEMP = [HEADERS]
         for o in DATA
           DATA_TEMP.push o if o[1] is CLASSE            
-        table = bigTable(d)
+        table = bigTable(DATA_TEMP)
         $('#scoreTable').empty().append(table)
         $( "body" ).on "click", "tr", -> select_kid($(this))
     else #tous les domaines
