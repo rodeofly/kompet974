@@ -1,718 +1,8 @@
-ELEVES = [
-    {
-        "id": 1,
-        "classe": "3G",
-        "nom": "AH-KIT",
-        "prenom": "Loïc"
-    },
-    {
-        "id": 2,
-        "classe": "3G",
-        "nom": "BALOUNAÏK",
-        "prenom": "Morane"
-    },
-    {
-        "id": 3,
-        "classe": "3G",
-        "nom": "BEGHIN",
-        "prenom": "Thomas"
-    },
-    {
-        "id": 4,
-        "classe": "3G",
-        "nom": "BOYER",
-        "prenom": "Lea"
-    },
-    {
-        "id": 5,
-        "classe": "3G",
-        "nom": "CABOUBASSI AVABY",
-        "prenom": "Maeva"
-    },
-    {
-        "id": 6,
-        "classe": "3G",
-        "nom": "CARPANIN",
-        "prenom": "Yann"
-    },
-    {
-        "id": 7,
-        "classe": "3G",
-        "nom": "DARMI",
-        "prenom": "Zainoudine"
-    },
-    {
-        "id": 8,
-        "classe": "3G",
-        "nom": "FELS",
-        "prenom": "Lila"
-    },
-    {
-        "id": 9,
-        "classe": "3G",
-        "nom": "FOLIO",
-        "prenom": "Emma"
-    },
-    {
-        "id": 10,
-        "classe": "3G",
-        "nom": "FONTAINE",
-        "prenom": "Maéva"
-    },
-    {
-        "id": 11,
-        "classe": "3G",
-        "nom": "FRANCOIS",
-        "prenom": "Xavier"
-    },
-    {
-        "id": 12,
-        "classe": "3G",
-        "nom": "GUENOIS",
-        "prenom": "Léa"
-    },
-    {
-        "id": 13,
-        "classe": "3G",
-        "nom": "HAILEMARIAM",
-        "prenom": "Hemen"
-    },
-    {
-        "id": 14,
-        "classe": "3G",
-        "nom": "JIRAHOUA",
-        "prenom": "Benjamin"
-    },
-    {
-        "id": 15,
-        "classe": "3G",
-        "nom": "LE DEUN",
-        "prenom": "Yec'han"
-    },
-    {
-        "id": 16,
-        "classe": "3G",
-        "nom": "LEBON",
-        "prenom": "Morgane"
-    },
-    {
-        "id": 17,
-        "classe": "3G",
-        "nom": "LIM-HOUN-TCHEN",
-        "prenom": "Noah"
-    },
-    {
-        "id": 18,
-        "classe": "3G",
-        "nom": "ORTAIN",
-        "prenom": "Amandine"
-    },
-    {
-        "id": 19,
-        "classe": "3G",
-        "nom": "PAYET",
-        "prenom": "Benjamin"
-    },
-    {
-        "id": 20,
-        "classe": "3G",
-        "nom": "RIVIERE",
-        "prenom": "Alan"
-    },
-    {
-        "id": 21,
-        "classe": "3G",
-        "nom": "SAMARA",
-        "prenom": "Dorian"
-    },
-    {
-        "id": 22,
-        "classe": "3G",
-        "nom": "SAMARIA",
-        "prenom": "Laïka"
-    },
-    {
-        "id": 23,
-        "classe": "3G",
-        "nom": "SAUTRON",
-        "prenom": "Alexis"
-    },
-    {
-        "id": 24,
-        "classe": "3G",
-        "nom": "TAILAME",
-        "prenom": "Anna"
-    },
-    {
-        "id": 25,
-        "classe": "3G",
-        "nom": "VANDAMME",
-        "prenom": "Karla"
-    },
-    {
-        "id": 26,
-        "classe": "4B",
-        "nom": "AMOUNY",
-        "prenom": "Kumaren"
-    },
-    {
-        "id": 27,
-        "classe": "4B",
-        "nom": "BACARI",
-        "prenom": "Nouzlati"
-    },
-    {
-        "id": 28,
-        "classe": "4B",
-        "nom": "BORDIER",
-        "prenom": "Marie-Alicia"
-    },
-    {
-        "id": 29,
-        "classe": "4B",
-        "nom": "BORDIER",
-        "prenom": "Priscilla"
-    },
-    {
-        "id": 30,
-        "classe": "4B",
-        "nom": "CATHERINE",
-        "prenom": "Marie Christelle"
-    },
-    {
-        "id": 31,
-        "classe": "4B",
-        "nom": "CLERVILLE",
-        "prenom": "Brunella"
-    },
-    {
-        "id": 32,
-        "classe": "4B",
-        "nom": "DIJOUX",
-        "prenom": "Cassandra"
-    },
-    {
-        "id": 33,
-        "classe": "4B",
-        "nom": "IVOULA",
-        "prenom": "Méganne"
-    },
-    {
-        "id": 34,
-        "classe": "4B",
-        "nom": "KERALDY",
-        "prenom": "Loanne"
-    },
-    {
-        "id": 35,
-        "classe": "4B",
-        "nom": "LALLEMAND",
-        "prenom": "John"
-    },
-    {
-        "id": 36,
-        "classe": "4B",
-        "nom": "LEAR",
-        "prenom": "Priscilla Marie Cécile"
-    },
-    {
-        "id": 37,
-        "classe": "4B",
-        "nom": "MINATCHY",
-        "prenom": "Lynkxia"
-    },
-    {
-        "id": 38,
-        "classe": "4B",
-        "nom": "MOUTAMA-MOUTOU",
-        "prenom": "Angélique"
-    },
-    {
-        "id": 39,
-        "classe": "4B",
-        "nom": "MURAT",
-        "prenom": "Marie Emeline"
-    },
-    {
-        "id": 40,
-        "classe": "4B",
-        "nom": "NACAOUELLE",
-        "prenom": "Clémence"
-    },
-    {
-        "id": 41,
-        "classe": "4B",
-        "nom": "NAHOUDA",
-        "prenom": "Djamila"
-    },
-    {
-        "id": 42,
-        "classe": "4B",
-        "nom": "NIOBE",
-        "prenom": "Roan"
-    },
-    {
-        "id": 43,
-        "classe": "4B",
-        "nom": "RITNER",
-        "prenom": "Lucas"
-    },
-    {
-        "id": 44,
-        "classe": "4B",
-        "nom": "ROBERT",
-        "prenom": "Aymeric"
-    },
-    {
-        "id": 45,
-        "classe": "4B",
-        "nom": "SUZANNE",
-        "prenom": "Flora"
-    },
-    {
-        "id": 46,
-        "classe": "4B",
-        "nom": "VANECHY",
-        "prenom": "Chloé"
-    },
-    {
-        "id": 47,
-        "classe": "4B",
-        "nom": "VIMBAYE",
-        "prenom": "Brunella"
-    },
-    {
-        "id": 48,
-        "classe": "4E",
-        "nom": "ANDA",
-        "prenom": "Alexandre"
-    },
-    {
-        "id": 49,
-        "classe": "4E",
-        "nom": "ATIDE",
-        "prenom": "Chrislan"
-    },
-    {
-        "id": 50,
-        "classe": "4E",
-        "nom": "BIJOUX",
-        "prenom": "Lauryne"
-    },
-    {
-        "id": 51,
-        "classe": "4E",
-        "nom": "BOULAY",
-        "prenom": "Antoine"
-    },
-    {
-        "id": 52,
-        "classe": "4E",
-        "nom": "BOYER",
-        "prenom": "Marie Clara"
-    },
-    {
-        "id": 53,
-        "classe": "4E",
-        "nom": "BOYER",
-        "prenom": "Romain"
-    },
-    {
-        "id": 54,
-        "classe": "4E",
-        "nom": "BRET",
-        "prenom": "Kamy"
-    },
-    {
-        "id": 55,
-        "classe": "4E",
-        "nom": "CATAY",
-        "prenom": "Jean Dany"
-    },
-    {
-        "id": 56,
-        "classe": "4E",
-        "nom": "CAVERIVIERE-CODINA",
-        "prenom": "Dorian"
-    },
-    {
-        "id": 57,
-        "classe": "4E",
-        "nom": "COUPAMA",
-        "prenom": "Alexandre"
-    },
-    {
-        "id": 58,
-        "classe": "4E",
-        "nom": "DALLEAU",
-        "prenom": "Tony"
-    },
-    {
-        "id": 59,
-        "classe": "4E",
-        "nom": "FERRER",
-        "prenom": "Maël"
-    },
-    {
-        "id": 60,
-        "classe": "4E",
-        "nom": "FINAUD",
-        "prenom": "Jordan"
-    },
-    {
-        "id": 61,
-        "classe": "4E",
-        "nom": "FULMAR",
-        "prenom": "Agnès"
-    },
-    {
-        "id": 62,
-        "classe": "4E",
-        "nom": "GARDOQUE",
-        "prenom": "Orlane"
-    },
-    {
-        "id": 63,
-        "classe": "4E",
-        "nom": "HOAREAU",
-        "prenom": "Louan"
-    },
-    {
-        "id": 64,
-        "classe": "4E",
-        "nom": "ICHANE",
-        "prenom": "Gabrielle"
-    },
-    {
-        "id": 65,
-        "classe": "4E",
-        "nom": "LIATOUD",
-        "prenom": "Noa"
-    },
-    {
-        "id": 66,
-        "classe": "4E",
-        "nom": "MAILLOT",
-        "prenom": "Cédric"
-    },
-    {
-        "id": 67,
-        "classe": "4E",
-        "nom": "ORTAIN",
-        "prenom": "Thalia"
-    },
-    {
-        "id": 68,
-        "classe": "4E",
-        "nom": "REBOUL",
-        "prenom": "Quentin"
-    },
-    {
-        "id": 69,
-        "classe": "4E",
-        "nom": "RICHARD",
-        "prenom": "Julien"
-    },
-    {
-        "id": 70,
-        "classe": "4E",
-        "nom": "SEVERIN",
-        "prenom": "Manon"
-    },
-    {
-        "id": 71,
-        "classe": "4E",
-        "nom": "TIERPIED",
-        "prenom": "Sébastien"
-    },
-    {
-        "id": 72,
-        "classe": "4E",
-        "nom": "VELOU",
-        "prenom": "Kylian"
-    },
-    {
-        "id": 73,
-        "classe": "6A",
-        "nom": "AILLERET",
-        "prenom": "Anthony"
-    },
-    {
-        "id": 74,
-        "classe": "6A",
-        "nom": "AUNG-A-SING",
-        "prenom": "Ludo"
-    },
-    {
-        "id": 75,
-        "classe": "6A",
-        "nom": "BEN ATTOUMANE",
-        "prenom": "Hadia"
-    },
-    {
-        "id": 76,
-        "classe": "6A",
-        "nom": "BRANDON",
-        "prenom": "Melissa"
-    },
-    {
-        "id": 77,
-        "classe": "6A",
-        "nom": "COSTE",
-        "prenom": "Rose-Lys"
-    },
-    {
-        "id": 78,
-        "classe": "6A",
-        "nom": "ESTHER",
-        "prenom": "Anne Gaëlle"
-    },
-    {
-        "id": 79,
-        "classe": "6A",
-        "nom": "GRONDIN",
-        "prenom": "Evan"
-    },
-    {
-        "id": 80,
-        "classe": "6A",
-        "nom": "GRONDIN",
-        "prenom": "Laurinda"
-    },
-    {
-        "id": 81,
-        "classe": "6A",
-        "nom": "ICHIZE-IMA",
-        "prenom": "Lorenzo"
-    },
-    {
-        "id": 82,
-        "classe": "6A",
-        "nom": "INOM",
-        "prenom": "Samira"
-    },
-    {
-        "id": 83,
-        "classe": "6A",
-        "nom": "LABONNE",
-        "prenom": "Gabriella"
-    },
-    {
-        "id": 84,
-        "classe": "6A",
-        "nom": "LAGARRIGUE",
-        "prenom": "Julien"
-    },
-    {
-        "id": 85,
-        "classe": "6A",
-        "nom": "LAURET",
-        "prenom": "Anjali"
-    },
-    {
-        "id": 86,
-        "classe": "6A",
-        "nom": "MOUNIAPIN",
-        "prenom": "Shalini"
-    },
-    {
-        "id": 87,
-        "classe": "6A",
-        "nom": "NASSIBOU",
-        "prenom": "Lavina"
-    },
-    {
-        "id": 88,
-        "classe": "6A",
-        "nom": "PIETRE",
-        "prenom": "Nancy"
-    },
-    {
-        "id": 89,
-        "classe": "6A",
-        "nom": "SEBODIER",
-        "prenom": "Isaac"
-    },
-    {
-        "id": 90,
-        "classe": "6A",
-        "nom": "SOUDEL",
-        "prenom": "Jean-Noé"
-    },
-    {
-        "id": 91,
-        "classe": "6B",
-        "nom": "ABRADOR",
-        "prenom": "Melissa"
-    },
-    {
-        "id": 92,
-        "classe": "6B",
-        "nom": "ANCILE",
-        "prenom": "Théo Francis Marc"
-    },
-    {
-        "id": 93,
-        "classe": "6B",
-        "nom": "ANTOISSI",
-        "prenom": "Fayire"
-    },
-    {
-        "id": 94,
-        "classe": "6B",
-        "nom": "AUMORD",
-        "prenom": "Tracy"
-    },
-    {
-        "id": 95,
-        "classe": "6B",
-        "nom": "BELIN",
-        "prenom": "Roan"
-    },
-    {
-        "id": 96,
-        "classe": "6B",
-        "nom": "BORDIER",
-        "prenom": "Killyan"
-    },
-    {
-        "id": 97,
-        "classe": "6B",
-        "nom": "BOUCLET",
-        "prenom": "Faustine"
-    },
-    {
-        "id": 98,
-        "classe": "6B",
-        "nom": "BROU",
-        "prenom": "Clément"
-    },
-    {
-        "id": 99,
-        "classe": "6B",
-        "nom": "CAVERY",
-        "prenom": "Sandjee"
-    },
-    {
-        "id": 100,
-        "classe": "6B",
-        "nom": "DUBAU",
-        "prenom": "Eneko"
-    },
-    {
-        "id": 101,
-        "classe": "6B",
-        "nom": "DUNGIA",
-        "prenom": "Alyssa"
-    },
-    {
-        "id": 102,
-        "classe": "6B",
-        "nom": "FIDJI",
-        "prenom": "Clara"
-    },
-    {
-        "id": 103,
-        "classe": "6B",
-        "nom": "GEORGET",
-        "prenom": "Nathanaël"
-    },
-    {
-        "id": 104,
-        "classe": "6B",
-        "nom": "GONNEAU",
-        "prenom": "Julien"
-    },
-    {
-        "id": 105,
-        "classe": "6B",
-        "nom": "GRONDIN",
-        "prenom": "Anjalie"
-    },
-    {
-        "id": 106,
-        "classe": "6B",
-        "nom": "LAURET",
-        "prenom": "Sanjay"
-    },
-    {
-        "id": 107,
-        "classe": "6B",
-        "nom": "LEZIKA",
-        "prenom": "Eva"
-    },
-    {
-        "id": 108,
-        "classe": "6B",
-        "nom": "LOUISE",
-        "prenom": "Lindsay"
-    },
-    {
-        "id": 109,
-        "classe": "6B",
-        "nom": "MOUTAMA-MOUTOU",
-        "prenom": "Ericka"
-    },
-    {
-        "id": 110,
-        "classe": "6B",
-        "nom": "PAÏRO",
-        "prenom": "Maria"
-    },
-    {
-        "id": 111,
-        "classe": "6B",
-        "nom": "PAYET",
-        "prenom": "Heinda"
-    },
-    {
-        "id": 112,
-        "classe": "6B",
-        "nom": "PRAYA",
-        "prenom": "Camila"
-    },
-    {
-        "id": 113,
-        "classe": "6B",
-        "nom": "RAZAFIMAHATOMBO",
-        "prenom": "Rachel"
-    },
-    {
-        "id": 114,
-        "classe": "6B",
-        "nom": "REBOUL",
-        "prenom": "Meddy"
-    },
-    {
-        "id": 115,
-        "classe": "6B",
-        "nom": "SERY",
-        "prenom": "Alyson"
-    },
-    {
-        "id": 116,
-        "classe": "6B",
-        "nom": "TECHER",
-        "prenom": "Lucas"
-    },
-    {
-        "id": 117,
-        "classe": "6B",
-        "nom": "TIERPIED",
-        "prenom": "Elvina"
-    },
-    {
-        "id": 118,
-        "classe": "6B",
-        "nom": "TURPIN",
-        "prenom": "Grâce"
-    }
-]
+
 
 HEADERS = ['ID',	'Classe', 'Nom', 'Prénom',	'D1-1.1', 'D1-1.2',	'D1-1.3',	'D1-1.4',	'D1-1.5',	'D1-3.1',	'D1-3.2',	'D1-3.3',	'D1-3.4',	'D1-3.5',	'D1-3.6',	'D1-3.7',	'D2.1', 'D2.2',	'D2.3',	'D2.4',	'D3.1',	'D3.2',	'D3.3',	'D3.4',	'D4.1',	'D4.2',	'D5.1']
-
 DATA = [HEADERS]
-DATA.push([o.id,o.classe,o.nom,o.prenom,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) for o in ELEVES
+
 
 EVALS =
   "D1-1" :
@@ -780,30 +70,11 @@ EVALS =
       - situer et mettre en relation des lieux et des espaces à partir de cartes d’échelles et de projection variées et d’images.", "Contextualiser un document, un texte, une œuvre, un(e) artiste, un personnage, une découverte scientifique, un fait artistique ou une notion dans le temps et dans une ou plusieurs aires géographiques et culturelles."]
         
 ID = 1
-
-tableToJson = (table) ->
-  `var i`
-  data = []
-  # first row needs to be headers
-  headers = []
-  i = 0
-  while i < table.rows[0].cells.length
-    headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(RegExp(' ', 'gi'), '')
-    i++
-  # go through cells
-  i = 1
-  while i < table.rows.length
-    tableRow = table.rows[i]
-    rowData = {}
-    j = 0
-    while j < tableRow.cells.length
-      rowData[headers[j]] = tableRow.cells[j].innerHTML
-      j++
-    data.push rowData
-    i++
-  data
-
-arrayToTable = (data, options) ->
+DATA_TEMP = []
+#############################################################################################################"
+#Construction de la table
+bigTable = (data) ->  
+  arrayToTable = (data, options) ->
   'use strict'
   table = $('<table id="tableau"/>')
   rows = []
@@ -822,15 +93,24 @@ arrayToTable = (data, options) ->
     while j < data[i].length
       if i == 0 and options.th
         head = data[i][j]
-        row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}'/>").html(head)
+        head = "<input type='checkbox' data-row='#{i}'>#{head}" if j is 0
+        if j > 3
+          if j < 16
+            head = "<img class='thdomain' src='img/domaine#{data[i][j][1..3]}.svg' data-domain='D1-1'><br>#{data[i][j]}"                   
+          else
+            head = "<img  class='thdomain' src='img/domaine#{data[i][j][1]}.svg' data-domain='D1-1'><br>#{data[i][j]}"
+          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' /th>").html(head)
+        else
+          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}'></th>").html(head)
+        
       else
         if j is 0
-          val = "<button class='eleve_id'>#{data[i][j]}</button>"
+          val = "<input type='checkbox' data-id='#{data[i][j]}''><button class='eleve_id' data-id='#{data[i][j]}''>#{data[i][j]}</button>"
         else 
-          val = data[i][j]
+          val = "#{data[i][j]}"
           color = {0 : "white", 10 : "red", 25 : "yellow", 40 : "lightGreen", 50 : "green"}[val]
         if color is undefined then color = "white"
-        row.append $("<td class='#{color}' data-row='#{i}' data-col='#{j}' data-id='#{data[i][0]}' data-dom='#{data[0][j]}'/>").html(val)
+        row.append $("<td class='#{color}' data-row='#{i}' data-col='#{j}' data-id='#{data[i][0]}' data-dom='#{data[0][j]}'></td>").html(val)
       j = j + 1
     rows.push row
     i = i + 1
@@ -853,17 +133,25 @@ arrayToTable = (data, options) ->
     table.append tfoot
   return table
   
+  table = arrayToTable data,
+	  thead: true,
+	  attrs: {class: 'table'}	
+#############################################################################################################"
+#Construction de l'interface 
 toggleEval = (dom) ->
-  $cells = $( "#scoreTable" ).find( "td[data-dom='#{dom}']" )
+  $cells = $( "#scoreTable" ).find( "td:visible[data-dom='#{dom}']" )
   $cells.each ->
     row = $( this ).data( "row" )
     col = $( this ).data( "col" )
     id  = $( this ).data( "id" )
     if $( this ).hasClass( "white" )
-      $( this ).toggleClass( "white red" )
-      $( ".significants[data-dom='#{dom}']" ).toggleClass( "white red" )
+      $( this ).toggleClass( "white shaded" )
+      $( ".significants[data-dom='#{dom}']" ).toggleClass( "white shaded" )
+    else if $( this ).hasClass( "shaded" )
+      $( this ).toggleClass( "shaded red" )
+      $( ".significants[data-dom='#{dom}']" ).toggleClass( "shaded red" )
       if row isnt undefined and col isnt undefined
-        DATA[id][col] = 10 
+        DATA[id][col] = 10
         $( this ).html 10
     else if $( this ).hasClass( "red" )
       $( this ).toggleClass( "red yellow" )
@@ -890,36 +178,41 @@ toggleEval = (dom) ->
         DATA[id][col] = 0 
         $( this ).html 0
 
+#############################################################################################################"
+#Copy to clipboard 
 
-bigTable = (data) ->
-   table = arrayToTable data,
-	  thead: true,
-	  attrs: {class: 'table'}	  
-  
-select_kid = (el) ->
-  id = parseInt el.data( 'id' )
-  DATA_TEMP = [HEADERS]
-  DATA_TEMP.push DATA[id]
-  table = bigTable(DATA_TEMP)
-  $('#scoreTable').empty().append(table)
-  $( ".significants" ).removeClass("white red yellow lightGreen green")
-  $("td[data-id='#{id}']").each ->
-    col = $(this).data( "col" )
-    dom = $(this).data( "dom" )
-    val = DATA[id][col]
-    console.log "#{dom}:#{val}"
-    switch val
-      when 0  then $( ".significants[data-dom='#{dom}']" ).addClass "white"
-      when 10 then $( ".significants[data-dom='#{dom}']" ).addClass "red"
-      when 25 then $( ".significants[data-dom='#{dom}']" ).addClass "yellow"
-      when 40 then $( ".significants[data-dom='#{dom}']" ).addClass "lightGreen"
-      when 50 then $( ".significants[data-dom='#{dom}']" ).addClass "green"  
-  $( "body" ).off "click", "tr"
+copyToClipboard = (el) ->
+  body = document.body
+  if (document.createRange and window.getSelection) 
+    range = document.createRange()
+    sel = window.getSelection()
+    sel.removeAllRanges()
+    try 
+        range.selectNodeContents(el)
+        sel.addRange(range)
+    catch e
+        range.selectNode(el)
+        sel.addRange(range)
+    
+  else if (body.createTextRange) 
+    range = body.createTextRange()
+    range.moveToElementText(el)
+    range.select()
 
-DATA_TEMP = []
-
+  document.execCommand("Copy")
+#############################################################################################################"
+#On dom ready
 $ ->
+
   window.onbeforeunload = () -> return ""
+  
+  $.getJSON "eleves.json", ( data ) ->
+    items = []
+    $.each data, ( o, val ) -> items.push val
+    for o in items
+      DATA.push [o.id,o.classe,o.nom,o.prenom,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+  
 #############################################################################################################"
 #Construction de l'interface 
   ###########################################################
@@ -952,64 +245,122 @@ $ ->
       for i in EVALS[k].significants[s]
         $s.find(".info ul").append "<li class='item'>#{i}</li>"
       $html.append $s
-    $("#significants_area").append $html  
-  $( ".domain" ).hide()
-  $( ".tabdomain" ).addClass "hide"
+    $("#significants_area").append $html
+  ##################################################################
+  #On selectionne de la classe    
+  ##################################################################  
+  $("#significants_area").draggable()
+  ##################################################################
+  #On selectionne de la classe    
+  ##################################################################
   $( ".info" ).dialog
     autoOpen: false
     width   : "auto"
+    
+  ##################################################################
+  #On selectionne de la classe    
+  ##################################################################  
   $( ".more" ).on "click", (event) -> 
     event.stopPropagation()
     id = $( this ).data( "id" )
     $( "##{id}" ).dialog "open"
   #Fin boutons .domain 
   ###########################################################
-  
+##################################################################
 #Fin de construction de l'interface
 #############################################################################################################
 
 
 #############################################################################################################
 #Evenements de l'interface 
+##################################################################
   ##################################################################
-  #On selection de la classe 
+  #Toggle all checkboxes
+  ##################################################################
+  $( "body" ).on "click", "input[data-row='0']", ->
+    checkBoxes = $("input[type='checkbox']").not($(this))
+    if $(this).prop "checked"
+      checkBoxes.prop("checked", true)
+      checkBoxes.closest("tr").addClass "export"
+    else
+      checkBoxes.prop("checked", false)
+      checkBoxes.closest("tr").removeClass "export"
+  ##################################################################
+  #Toggle single checkbox  
+  ##################################################################
+  $( "body" ).on "click", "input[type='checkbox']", ->
+    $( this ).closest("tr").toggleClass "export"
+    text = ""
+    $(".export").each ->
+      $(this).find( "td" ).each ->
+        text += $(this).text()
+        text += ","
+      text += "\n"
+    $( "#bar" ).text text 
+    new Clipboard ".btn" 
+  ##################################################################
+  #On selectionne de la classe    
+  ##################################################################
   $( "#letter" ).change () -> 
     letter = $( "#letter" ).val()
     if letter isnt " "
       CLASSE = $( "#level" ).val()+letter
       DATA_TEMP = [HEADERS]
       for o in DATA
-            DATA_TEMP.push o if o[1] is CLASSE  
+        DATA_TEMP.push o if o[1] is CLASSE  
     else DATA_TEMP = DATA    
     table = bigTable(DATA_TEMP)
     $('#scoreTable').empty().append(table)
-    $( "body" ).on "click", "tr", -> select_kid($(this))
+    
+    
+  ##################################################################
+  #On selectionne de la classe    
+  ##################################################################  
+  $( "body" ).on "click", "button.eleve_id", ->
+    id = $(this).data "id"
+    $( "tr" ).hide()
+    $( "tr:first, tr[data-id='#{id}']" ).show()
+    $( ".significants" ).removeClass("white red yellow lightGreen green")
+    $("td[data-id='#{id}']").each ->
+      col = $(this).data( "col" )
+      dom = $(this).data( "dom" )
+      val = DATA[id][col]
+      switch val
+        when 0 
+          if $(this).hasClass "shaded"
+            $( ".significants[data-dom='#{dom}']" ).addClass "shaded"
+          else
+            $( ".significants[data-dom='#{dom}']" ).addClass "white"
+        when 10 then $( ".significants[data-dom='#{dom}']" ).addClass "red"
+        when 25 then $( ".significants[data-dom='#{dom}']" ).addClass "yellow"
+        when 40 then $( ".significants[data-dom='#{dom}']" ).addClass "lightGreen"
+        when 50 then $( ".significants[data-dom='#{dom}']" ).addClass "green"  
+  ##################################################################
+  #On selectionne un domaine   
+  ##################################################################
+  $( ".tabdomain" ).addClass "show"
   
-  $( "body" ).on "click", "tr", -> select_kid($(this))
+  $( ".tabdomain[data-domain='all']" ).hide()
   
+  $( ".tabdomain[data-domain='none']" ).on "click", ->
+    $("#significants_area").hide()
+    $( ".tabdomain[data-domain='all']" ).show()
+    $(this).hide()
+    $( "tr" ).show()
+  $( ".tabdomain[data-domain='all']" ).on "click", ->
+    $("#significants_area").show()
+    $( ".tabdomain[data-domain='none']" ).show()
+    $(this).hide()
+  
+  
+  $( ".tabdomain" ).on "click", (event) ->
+    dom = $(this).data( "domain" )
+    if dom not in ["all", "none"] #un certain domaine
+      $(this).toggleClass "show hide"
+      $( "##{dom}" ).toggle()
+  ##################################################################
+  #On selectionne d'un sognifiant   
+  ################################################################## 
   $( ".significants" ).on "click", -> toggleEval( $(this).data "dom" )  
     
-  $( ".tabdomain" ).on "click", (event) ->
-    $(this).toggleClass "show hide"
-    dom = $(this).data( "domain" )
-    if dom isnt "all"
-      if dom isnt "none" #un certain domaine
-        $( "##{dom}" ).toggle()
-        
-      else               #aucun domaine !
-        CLASSE = $( "#level" ).val()+$( "#letter" ).val()
-        DATA_TEMP = [HEADERS]
-        for o in DATA
-          DATA_TEMP.push o if o[1] is CLASSE            
-        table = bigTable(DATA_TEMP)
-        $('#scoreTable').empty().append(table)
-        $( "body" ).on "click", "tr", -> select_kid($(this))
-    else #tous les domaines
-      if $( this ).hasClass "show"
-        $( ".tabdomain" ).removeClass( "hide" ).addClass "show"
-        $( ".domain" ).show()
-      else 
-        $( ".tabdomain" ).removeClass( "show" ).addClass "hide"
-        $( ".domain" ).hide()
-
-  
+   

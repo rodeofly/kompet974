@@ -21,14 +21,25 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <!-- Add your site or application content here -->
+        
+        <!-- Target -->
+        <textarea id="bar">Mussum ipsum cacilds...</textarea>
+
+        <!-- Trigger -->
+        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#bar">
+            Copier
+        </button>
+        
+
         <div id="tabs" class="tabs">
-          <img class="tabdomain" src="img/all-domain.svg" data-domain="all">
-          <img class="tabdomain" src="img/domaine1.1.svg" data-domain="D1-1">
-          <img class="tabdomain" src="img/domaine1.3.svg" data-domain="D1-3">
+          
+          <img class="tabdomain" src="img/domaine1-1.svg" data-domain="D1-1">
+          <img class="tabdomain" src="img/domaine1-3.svg" data-domain="D1-3">
           <img class="tabdomain" src="img/domaine2.svg" data-domain="D2">
           <img class="tabdomain" src="img/domaine3.svg" data-domain="D3">
           <img class="tabdomain" src="img/domaine4.svg" data-domain="D4">
           <img class="tabdomain" src="img/domaine5.svg" data-domain="D5">
+          <img class="tabdomain" src="img/all-domain.svg" data-domain="all">
           <img class="tabdomain" src="img/no-domain.svg" data-domain="none">
         </div>
         <div id="scoreTable"></div>  
@@ -40,6 +51,8 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="js/plugins.js"></script>
+        <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.7.1/dist/clipboard.min.js"></script>
+
         <script src="js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

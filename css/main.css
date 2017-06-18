@@ -94,6 +94,11 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+@media print {
+
+    -webkit-print-color-adjust: exact;
+}
+
 html { 
   width: 100%;
   height: 100%;
@@ -117,7 +122,16 @@ select {
  text-align : center;
 
 }
+#bar {
+ position : absolute;
+ width : 1px;
+ height:1px;
+ right : 0;
+ bottom : 0%;
+ font-size : 0.1em;
+ background-color : rgba(255,255,255,0.25);
 
+}
 table, tr, td, th {
 background-color : transparent;
 margin-left: auto;
@@ -125,10 +139,16 @@ margin-right: auto;
 font-size : 0.9em;
 text-align : center;
 border : solid black 1px;
-padding : 5px;
+padding : 0px;
 }
+td  {
+min-width : 40px;
+
+}
+input[type='checkbox'] {
 
 
+}
 
 #scoreTable {
 width : 100%;
@@ -136,7 +156,13 @@ width : 100%;
 }
 
 #significants_area {
-width : 100%;
+position : absolute;
+bottom : 0;
+margin-left : auto;
+margin-right: auto;
+background : transparent;
+height : 0%
+width : 0%;
 text-align : center;
 
 }
@@ -164,17 +190,18 @@ border-radius : 25px;
 
 
 .significants {
-  width : 150px;
-  height : 40px;
+  width : 200px;
+  height : 30px;
   vertical-align: top;
   text-align : center;
   position: relative;
   display : inline-block;
-  margin : 5px;
-  padding : 5px;
+  margin : 2px;
+  padding : 2px;
   border : solid black 1px;
   border-radius : 10px;
   overflow : hidden;
+  color : black;
   font-size : 0.75em;
   font-weight : bolder;
 }
@@ -185,25 +212,37 @@ border-radius : 25px;
   border : solid black 2px;
   margin : 1px;
   vertical-align : top;
-  background-color : rgba(0,0,0,0.25);
+  font-weight :bolder;
+  background-color : white;
   border-radius : 10px;
 
 }
 
 .white {
   background-color : rgba(255, 255, 255, 0.75);
+  -webkit-print-color-adjust: exact;
 }
+
+.shaded {
+  background-color : rgba(0, 0, 0, 0.25);
+  -webkit-print-color-adjust: exact;
+}
+
 .red {
   background-color : red;
+  -webkit-print-color-adjust: exact;
 }
 .yellow {
   background-color : yellow;
+  -webkit-print-color-adjust: exact;
 }
 .lightGreen {
   background-color : #00ff00;
+  -webkit-print-color-adjust: exact;
 }
 .green {
   background-color : green;
+  -webkit-print-color-adjust: exact;
 }
 
 
@@ -335,7 +374,6 @@ font-size : 0.75em;
     *:after,
     *:first-letter,
     *:first-line {
-        background: transparent !important;
         color: #000 !important; /* Black prints faster:
                                    http://www.sanbeiji.com/archives/953 */
         box-shadow: none !important;
