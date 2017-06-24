@@ -292,6 +292,11 @@ font-size : 0.75em;
   position : absolute;
   top : 0;
   right : 0;
+  width : 25px;
+  height : 25px;
+  background-image : url(icons/close.png);
+  background-color : white;
+  background-size : 100% 100%;
 }
 #upload.slim {
   background-color : rgba(0,0,0,0.25);
