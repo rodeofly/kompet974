@@ -109,18 +109,15 @@ html {
   background-size: cover;
  
 }
-select {
+#letter,#level {
   width : 50px;
   height:50px;
   font-weight : bolder;
   float : left;
   font-size : 1.5em;
-
 }
 #tabs {
- width : 100%;
- text-align : center;
-
+ display : inline-block;
 }
 #bar {
  position : absolute;
@@ -134,8 +131,6 @@ select {
 }
 table, tr, td, th {
 background-color : transparent;
-margin-left: auto;
-margin-right: auto;
 font-size : 0.9em;
 text-align : center;
 border : solid black 1px;
@@ -143,10 +138,13 @@ padding : 0px;
 }
 td  {
 min-width : 40px;
-
 }
-input[type='checkbox'] {
 
+.selected {
+  border : solid black 2px;
+}
+
+input[type='checkbox'] {
 
 }
 
@@ -158,15 +156,15 @@ width : 100%;
 #significants_area {
 position : absolute;
 bottom : 0;
-margin-left : auto;
-margin-right: auto;
 background : transparent;
 height : 0%
-width : 0%;
+width : 100%;
+min-width : 100%;
+max-width : 100%;
 text-align : center;
 
 }
-.tabdomain {
+.tabdomain, .tabtoggler {
 
 width : 50px;
 height : 50px;
@@ -175,6 +173,13 @@ border-radius : 25px;
 
 }
 
+.tabtoggler {
+  position : absolute;
+  top : 0;
+  right :0;
+
+}
+ 
 .tabdomain.show {
   background-color : rgba(64,64,64,64);
 
@@ -218,29 +223,29 @@ border-radius : 25px;
 
 }
 
-.white {
+[data-color='white'] {
   background-color : rgba(255, 255, 255, 0.75);
   -webkit-print-color-adjust: exact;
 }
 
-.shaded {
+[data-color='shaded'] {
   background-color : rgba(0, 0, 0, 0.25);
   -webkit-print-color-adjust: exact;
 }
 
-.red {
+[data-color='red'] {
   background-color : red;
   -webkit-print-color-adjust: exact;
 }
-.yellow {
+[data-color='yellow'] {
   background-color : yellow;
   -webkit-print-color-adjust: exact;
 }
-.lightGreen {
+[data-color='lightGreen'] {
   background-color : #00ff00;
   -webkit-print-color-adjust: exact;
 }
-.green {
+[data-color='green'] {
   background-color : green;
   -webkit-print-color-adjust: exact;
 }
@@ -269,7 +274,30 @@ padding: 0 !important;
 font-size : 0.75em;
 }
 
+#upload {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -200px;
+  width: 400px;
+  height: 400px;
+  background-image : url(icons/drop.png);
+  background-color : rgba(0,0,0,0.5);
+  background-size : 100% 100%;
+  z-index : 100;
+  border : solid black 5px;
+  border-radius : 10px;
+}
+#upload .close {
+  position : absolute;
+  top : 0;
+  right : 0;
+}
+#upload.slim {
+  background-color : rgba(0,0,0,0.25);
 
+}
 
 /* ==========================================================================
    Helper classes

@@ -23,30 +23,37 @@
         <!-- Add your site or application content here -->
         
         <!-- Target -->
-        <textarea id="bar">Mussum ipsum cacilds...</textarea>
+        <div id="mainmenu">
+            <div id="menu-item">
+                
 
-        <!-- Trigger -->
-        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#bar">
-            Copier
-        </button>
-        
+                <!-- Trigger -->
+               
+                
+                
+                <input type="file" style="display:none" id="file_upload" />
+                <div id="upload"><div class="close">X</div></div>
 
-        <div id="tabs" class="tabs">
-          
-          <img class="tabdomain" src="img/domaine1-1.svg" data-domain="D1-1">
-          <img class="tabdomain" src="img/domaine1-3.svg" data-domain="D1-3">
-          <img class="tabdomain" src="img/domaine2.svg" data-domain="D2">
-          <img class="tabdomain" src="img/domaine3.svg" data-domain="D3">
-          <img class="tabdomain" src="img/domaine4.svg" data-domain="D4">
-          <img class="tabdomain" src="img/domaine5.svg" data-domain="D5">
-          <img class="tabdomain" src="img/all-domain.svg" data-domain="all">
-          <img class="tabdomain" src="img/no-domain.svg" data-domain="none">
+                <img class="tabtoggler" src="img/all-domain.svg" data-domain="all">
+                <img class="tabtoggler" src="img/no-domain.svg" data-domain="none">
+                <div id="tabs" class="tabs">                
+                  <img class="tabdomain" src="img/domaine1-1.svg" data-domain="D1-1">
+                  <img class="tabdomain" src="img/domaine1-3.svg" data-domain="D1-3">
+                  <img class="tabdomain" src="img/domaine2.svg" data-domain="D2">
+                  <img class="tabdomain" src="img/domaine3.svg" data-domain="D3">
+                  <img class="tabdomain" src="img/domaine4.svg" data-domain="D4">
+                  <img class="tabdomain" src="img/domaine5.svg" data-domain="D5">
+                  
+                </div>
+            </div>
         </div>
         <div id="scoreTable"></div>  
         <div id="significants_area"></div>
   
          
-        
+        <a id="save" href="" download=""></a>
+        <button id="copy" data-clipboard-action="copy" data-clipboard-target="#bar">Copier</button>
+        <textarea id="bar">Mussum ipsum cacilds...</textarea>      
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -54,7 +61,7 @@
         <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.7.1/dist/clipboard.min.js"></script>
 
         <script src="js/main.js"></script>
-
+        <script src="js/vendor/jquery.csv.min.js"></script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
