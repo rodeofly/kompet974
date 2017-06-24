@@ -48,9 +48,13 @@
   };
 
   bigTable = function(data) {
-    var arrayToTable, color, defaults, head, i, j, options, row, rows, table, tfoot, thead, val;
-    arrayToTable = function(data, options) {};
-    'use strict';
+    var color, defaults, head, i, j, options, row, rows, table, tfoot, thead, val;
+    options = {
+      thead: true,
+      attrs: {
+        "class": 'table'
+      }
+    };
     table = $('<table id="tableau"/>');
     rows = [];
     defaults = {
@@ -121,22 +125,11 @@
       tfoot = $('<tfoot />').append(tfoot);
       table.append(tfoot);
     }
-    return table;
-    return table = arrayToTable(data, {
-      thead: true,
-      attrs: {
-        "class": 'table'
-      }
-    });
+    return $("#scoreTable").empty().append(table);
   };
 
   toggleEval = function(dom) {
-    var $cells, color, ref, ref1, ref2, ref3, ref4, ref5, score;
-    if ($(".selected").length === 1) {
-      $cells = $(".selected").find("td:visible[data-dom='" + dom + "']");
-    } else {
-      $cells = $("#scoreTable").find("td:visible[data-dom='" + dom + "']");
-    }
+    var $cell, $cells, col, color, id, ref, ref1, ref2, ref3, ref4, ref5, row, score;
     switch ($(".significants[data-dom='" + dom + "']").data("color")) {
       case "white":
         ref = ["shaded", 0], color = ref[0], score = ref[1];
@@ -158,18 +151,42 @@
     }
     $(".significants[data-dom='" + dom + "']").attr("data-color", color);
     $(".significants[data-dom='" + dom + "']").data("color", color);
-    return $cells.each(function() {
-      var col, id, row;
-      row = $(this).data("row");
-      col = $(this).data("col");
-      id = $(this).data("id");
-      $(this).attr("data-color", color);
-      $(this).data("color", color);
+    if ($(".selected").length === 1) {
+      id = $(".selected").data("id");
+      $cell = $("tr[data-id='" + id + "']").find("td[data-dom='" + dom + "']");
+      row = $cell.data("row");
+      col = $cell.data("col");
+      id = $cell.data("id");
+      $cell.attr("data-color", color);
+      $cell.data("color", color);
       if (!isNaN(row * col)) {
         DATA[id][col] = score;
-        return $(this).html(score);
+        return $cell.html(score);
       }
-    });
+    } else {
+      $cells = $("#scoreTable").find("td[data-dom='" + dom + "']");
+      if (color !== "white") {
+        $("#scoreTable").find("th[data-dom='" + dom + "']").show();
+      } else {
+        $("#scoreTable").find("th[data-dom='" + dom + "']").hide();
+      }
+      return $cells.each(function() {
+        if (color !== "white") {
+          $(this).show();
+          row = $(this).data("row");
+          col = $(this).data("col");
+          id = $(this).data("id");
+          $(this).attr("data-color", color);
+          $(this).data("color", color);
+          if (!isNaN(row * col)) {
+            DATA[id][col] = score;
+            return $(this).html(score);
+          }
+        } else {
+          return $(this).hide();
+        }
+      });
+    }
   };
 
   copyToClipboard = function(el) {
@@ -196,7 +213,7 @@
   };
 
   go_csv_data = function(data) {
-    var $select, i, id, l, len, len1, m, o, ref, ref1, table, temp;
+    var $select, i, id, l, len, len1, m, o, ref, ref1, temp;
     temp = $.csv.toArrays(data);
     id = 1;
     DATA = [];
@@ -209,8 +226,7 @@
       DATA.push([id++].concat(i).concat([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
     }
     DATA.unshift(HEADERS);
-    table = bigTable(DATA);
-    $('#scoreTable').empty().append(table);
+    bigTable(DATA);
     $select = $("<select id='mainselect'></select>");
     ref1 = ["Menu", "Importer", "Sauver", "Copier", "Tous"].concat(CLASSES);
     for (m = 0, len1 = ref1.length; m < len1; m++) {
@@ -241,8 +257,7 @@
           break;
         case "Tous":
           DATA_TEMP = DATA;
-          table = bigTable(DATA_TEMP);
-          $('#scoreTable').empty().append(table);
+          bigTable(DATA_TEMP);
           break;
         default:
           if (option !== "menu") {
@@ -255,8 +270,7 @@
                 DATA_TEMP.push(o);
               }
             }
-            table = bigTable(DATA_TEMP);
-            $('#scoreTable').empty().append(table);
+            bigTable(DATA_TEMP);
           }
       }
       return $('#mainselect option[value=Menu]').prop("selected", true);
@@ -264,7 +278,7 @@
   };
 
   $(function() {
-    var dnd;
+    var d1, d2, dnd;
     $("#upload").hide();
     $("#upload .close").on("click", function() {
       return $("#upload").hide();
@@ -272,22 +286,16 @@
     window.onbeforeunload = function() {
       return "";
     };
+    d1 = $.Deferred();
+    d2 = $.Deferred();
     $.ajax({
       type: "GET",
       url: "eleves.csv",
       dataType: "text",
       success: function(data) {
-        return go_csv_data(data);
+        go_csv_data(data);
+        return d1.resolve("Éleves finished !");
       }
-    });
-    dnd = new DnDFileController('#upload', function(files) {
-      var f, reader;
-      f = files[0];
-      reader = new FileReader;
-      reader.onloadend = function(e) {
-        return go_csv_data(this.result);
-      };
-      reader.readAsText(f);
     });
     $.getJSON("S4C.json", function(data) {
       var $html, $s, evals, i, id, k, l, len, n, ref, s;
@@ -308,17 +316,41 @@
           $html.append($s);
         }
         $("#significants_area").append($html);
+        $(".tabdomain").addClass("hide").hide();
+        $(".domain").hide();
       }
       $("#significants_area").draggable();
       $(".info").dialog({
         autoOpen: false,
         width: "auto"
       });
-      return $("body").on("click", ".more", function(event) {
+      $("body").on("click", ".more", function(event) {
         event.stopPropagation();
         id = $(this).data("id");
         return $("#" + id).dialog("open");
       });
+      return d2.resolve("S4C finished !");
+    });
+    $.when(d1, d2).done(function(v1, v2) {
+      console.log(v1);
+      console.log(v2);
+      return $(".significants").each(function() {
+        var dom;
+        if ($(this).data("color" === "white")) {
+          dom = $(this).data("dom");
+          console.log(dom);
+          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").hide();
+        }
+      });
+    });
+    dnd = new DnDFileController('#upload', function(files) {
+      var f, reader;
+      f = files[0];
+      reader = new FileReader;
+      reader.onloadend = function(e) {
+        return go_csv_data(this.result);
+      };
+      reader.readAsText(f);
     });
     $("body").on("click", "input[data-row='0']", function() {
       var checkBoxes;
@@ -346,12 +378,9 @@
       return new Clipboard("#copy");
     });
     $("body").on("click", "button.eleve_id", function() {
-      var id;
-      if ($(".selected").length === 1) {
-        return $(".selected").removeClass("selected");
-      } else {
-        id = $(this).data("id");
-        $("tr[data-id='" + id + "']").addClass("selected");
+      var do_it, id;
+      id = $(this).data("id");
+      do_it = function() {
         return $("td[data-id='" + id + "']").each(function() {
           var col, color, dom, ref, ref1, ref2, ref3, ref4, ref5, score, val;
           col = $(this).data("col");
@@ -380,13 +409,24 @@
           $(".significants[data-dom='" + dom + "']").attr("data-color", color);
           return $(".significants[data-dom='" + dom + "']").data("color", color);
         });
+      };
+      if ($(".selected").length === 0) {
+        $("tr[data-id='" + id + "']").addClass("selected");
+        return do_it();
+      } else {
+        if ($(".selected").is($(this).closest("tr"))) {
+          return $(".selected").removeClass("selected");
+        } else {
+          $(".selected").removeClass("selected");
+          $("tr[data-id='" + id + "']").addClass("selected");
+          return do_it();
+        }
       }
     });
-    $(".tabdomain").addClass("show");
-    $(".tabtoggler[data-domain='all']").hide();
+    $(".tabtoggler[data-domain='none']").hide();
     $(".tabtoggler[data-domain='none']").on("click", function() {
       $("#significants_area, .tabdomain").hide();
-      $("tr, .tabtoggler[data-domain='all']").show();
+      $(".tabtoggler[data-domain='all']").show();
       return $(this).hide();
     });
     $(".tabtoggler[data-domain='all']").on("click", function() {
@@ -399,11 +439,11 @@
       var dom;
       dom = $(this).data("domain");
       $(this).toggleClass("show hide");
-      $("#" + dom).toggle();
-      if ($(this).hasClass("hide")) {
-        return $("th[data-dom^='" + dom + "'],td[data-dom^='" + dom + "']").hide();
+      if ($(this).hasClass("show")) {
+        $("#" + dom).show();
+        return $(".selected").removeClass("selected");
       } else {
-        return $("th[data-dom^='" + dom + "'],td[data-dom^='" + dom + "']").show();
+        return $("#" + dom).hide();
       }
     });
     return $("body").on("click", ".significants", function() {

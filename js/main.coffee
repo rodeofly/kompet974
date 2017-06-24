@@ -1,6 +1,6 @@
 ID = 1
 
-HEADERS = ['ID',	'Classe', 'Nom', 'Prénom',	'D1-1.1', 'D1-1.2',	'D1-1.3',	'D1-1.4',	'D1-1.5',	'D1-3.1',	'D1-3.2',	'D1-3.3',	'D1-3.4',	'D1-3.5',	'D1-3.6',	'D1-3.7',	'D2.1', 'D2.2',	'D2.3',	'D2.4',	'D3.1',	'D3.2',	'D3.3',	'D3.4',	'D4.1',	'D4.2',	'D5.1']
+HEADERS = ['ID',  'Classe', 'Nom', 'Prénom',  'D1-1.1', 'D1-1.2',  'D1-1.3',  'D1-1.4',  'D1-1.5',  'D1-3.1',  'D1-3.2',  'D1-3.3',  'D1-3.4',  'D1-3.5',  'D1-3.6',  'D1-3.7',  'D2.1', 'D2.2',  'D2.3',  'D2.4',  'D3.1',  'D3.2',  'D3.3',  'D3.4',  'D4.1',  'D4.2',  'D5.1']
 
 EVALS = undefined
 CLASSES = []
@@ -47,8 +47,9 @@ DnDFileController = (selector, onDropCallback) ->
 #############################################################################################################"
 #Construction de la table DATA_TEMP
 bigTable = (data) ->  
-  arrayToTable = (data, options) ->
-  'use strict'
+  options = 
+    thead: true
+    attrs: {class: 'table'}
   table = $('<table id="tableau"/>')
   rows = []
   defaults = 
@@ -104,17 +105,12 @@ bigTable = (data) ->
   if options.tfoot
     tfoot = $('<tfoot />').append(tfoot)
     table.append tfoot
-  return table
-  table = arrayToTable data,
-	  thead: true,
-	  attrs: {class: 'table'}	
+  $( "#scoreTable" ).empty().append(table)
+  
+      
 #############################################################################################################"
 #Toggle compétences
 toggleEval = (dom) ->
-  if $( ".selected" ).length is 1
-    $cells = $( ".selected" ).find( "td:visible[data-dom='#{dom}']" )
-  else
-    $cells = $( "#scoreTable" ).find( "td:visible[data-dom='#{dom}']" )
   switch $( ".significants[data-dom='#{dom}']" ).data "color"
     when "white"      then [color, score] = ["shaded", 0]
     when "shaded"     then [color, score] = ["red", 10]
@@ -123,16 +119,38 @@ toggleEval = (dom) ->
     when "lightGreen" then [color, score] = ["green", 50]
     when "green"      then [color, score] = ["white", 0]
   $( ".significants[data-dom='#{dom}']" ).attr( "data-color", color )
-  $( ".significants[data-dom='#{dom}']" ).data( "color", color )  
-  $cells.each ->
-    row = $( this ).data( "row" )
-    col = $( this ).data( "col" )
-    id  = $( this ).data( "id" )
-    $( this ).attr "data-color", color      
-    $( this ).data "color", color  
+  $( ".significants[data-dom='#{dom}']" ).data( "color", color )
+  if $( ".selected" ).length is 1
+    id = $( ".selected" ).data "id"
+    $cell = $( "tr[data-id='#{id}']" ).find( "td[data-dom='#{dom}']" )
+    row = $cell.data( "row" )
+    col = $cell.data( "col" )
+    id  = $cell.data( "id" )
+    $cell.attr "data-color", color      
+    $cell.data "color", color  
     if not isNaN row * col
       DATA[id][col] = score
-      $( this ).html score
+      $cell.html score
+  else
+    $cells = $( "#scoreTable" ).find( "td[data-dom='#{dom}']" )
+    if color isnt "white"
+      $( "#scoreTable" ).find( "th[data-dom='#{dom}']" ).show()
+    else
+      $( "#scoreTable" ).find( "th[data-dom='#{dom}']" ).hide()
+    $cells.each ->
+      if color isnt "white"
+        $( this ).show()
+        row = $( this ).data( "row" )
+        col = $( this ).data( "col" )
+        id  = $( this ).data( "id" )
+        $( this ).attr "data-color", color      
+        $( this ).data "color", color  
+        if not isNaN row * col
+          DATA[id][col] = score
+          $( this ).html score
+      else
+        $( this ).hide()
+    
 #############################################################################################################"
 #Copy to clipboard 
 copyToClipboard = (el) ->
@@ -163,8 +181,7 @@ go_csv_data = (data) ->
     CLASSES.push i[0] if i[0] not in CLASSES
     DATA.push( [id++].concat(i).concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) )
   DATA.unshift HEADERS
-  table = bigTable(DATA)
-  $('#scoreTable').empty().append(table)
+  bigTable(DATA)
   ###########################################################
   #Menu select pour le mainmenu
   $select = $( "<select id='mainselect'></select>" )
@@ -193,8 +210,8 @@ go_csv_data = (data) ->
         $( "#copy" ).click()
       when "Tous"
         DATA_TEMP = DATA    
-        table = bigTable(DATA_TEMP)
-        $('#scoreTable').empty().append(table)
+        bigTable(DATA_TEMP)
+        
       else
         if option isnt "menu"
           console.log option
@@ -202,8 +219,8 @@ go_csv_data = (data) ->
           DATA_TEMP = [HEADERS]
           for o in DATA
             DATA_TEMP.push o if o[1] is CLASSE
-          table = bigTable(DATA_TEMP)
-          $('#scoreTable').empty().append(table)  
+          bigTable(DATA_TEMP)
+         
     $('#mainselect option[value=Menu]').prop "selected", true
 #############################################################################################################"
 #############################################################################################################"
@@ -215,22 +232,18 @@ $ ->
   #############################################################################################################"
   #Accidental reload !
   window.onbeforeunload = () -> return ""  
-  ##################################################################   
+  ################################################################## 
+  d1 = $.Deferred()
+  d2 = $.Deferred()
   #Construction de DATA
   $.ajax
     type: "GET",
     url: "eleves.csv",
     dataType: "text",
-    success: (data) -> go_csv_data(data) 
+    success: (data) ->
+      go_csv_data(data)
+      d1.resolve( "Éleves finished !" )
   #Fin de DATA
-  #############################################################################################################"
-  #Drag and Drop file
-  dnd = new DnDFileController '#upload', (files) ->
-    f = files[0]
-    reader = new FileReader
-    reader.onloadend = (e) -> go_csv_data(@result)
-    reader.readAsText f
-    return
   #############################################################################################################"
   #Construction du S4C
   $.getJSON "S4C.json", ( data ) -> 
@@ -253,6 +266,10 @@ $ ->
           $s.find(".info ul").append "<li class='item'>#{i}</li>"
         $html.append $s
       $("#significants_area").append $html
+      $( ".tabdomain" )
+        .addClass "hide"
+        .hide()
+      $( ".domain" ).hide()
     ##################################################################
     #sugar
     $("#significants_area").draggable()
@@ -263,12 +280,32 @@ $ ->
       event.stopPropagation()
       id = $( this ).data( "id" )
       $( "##{id}" ).dialog "open"
+    d2.resolve( "S4C finished !" );
   #Fin du S4C
   
+ 
+  $.when( d1, d2 ).done ( v1, v2 ) ->
+    console.log( v1 )
+    console.log( v2 )
+    $( ".significants" ).each ->
+      if $(this).data "color" is "white"
+        dom = $(this).data "dom"
+        console.log dom
+        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
+
+
+  #############################################################################################################"
+  #Drag and Drop file
+  dnd = new DnDFileController '#upload', (files) ->
+    f = files[0]
+    reader = new FileReader
+    reader.onloadend = (e) -> go_csv_data(@result)
+    reader.readAsText f
+    return
   ##################################################################  
-#############################################################################################################
-#Evenements de l'interface 
-##################################################################
+  #############################################################################################################
+  #Evenements de l'interface 
+  ##################################################################
   ##################################################################
   #Toggle all checkboxes
   ##################################################################
@@ -298,12 +335,8 @@ $ ->
   #On selectionne de la classe    
   ##################################################################  
   $( "body" ).on "click", "button.eleve_id", ->
-    if $( ".selected" ).length is 1
-      $( ".selected" ).removeClass "selected"
-    else
-      id = $(this).data "id"
-      $( "tr[data-id='#{id}']" ).addClass "selected"
-      
+    id = $(this).data "id"
+    do_it = ->
       $("td[data-id='#{id}']").each ->
         col = $(this).data( "col" )
         dom = $(this).data( "dom" )
@@ -320,16 +353,28 @@ $ ->
           when 50 then [color, score] = ["green", 50]
         $( ".significants[data-dom='#{dom}']" ).attr "data-color", color
         $( ".significants[data-dom='#{dom}']" ).data "color", color
+        
+    if $( ".selected" ).length is 0
+      $( "tr[data-id='#{id}']" ).addClass "selected"
+      do_it()
+    else 
+      if $( ".selected" ).is $( this ).closest( "tr" )
+        $( ".selected" ).removeClass "selected"
+      else
+        $( ".selected" ).removeClass "selected"
+        $( "tr[data-id='#{id}']" ).addClass "selected"
+        do_it()
+        
     
   ##################################################################
   #On selectionne un domaine   
   ##################################################################
-  $( ".tabdomain" ).addClass "show"
-  $( ".tabtoggler[data-domain='all']" ).hide()
+  
+  $( ".tabtoggler[data-domain='none']" ).hide()
   
   $( ".tabtoggler[data-domain='none']" ).on "click", ->
     $( "#significants_area, .tabdomain" ).hide()
-    $( "tr, .tabtoggler[data-domain='all']" ).show()
+    $( ".tabtoggler[data-domain='all']" ).show()
     $(this).hide()
     
   $( ".tabtoggler[data-domain='all']" ).on "click", ->
@@ -341,12 +386,13 @@ $ ->
   $( ".tabdomain" ).on "click", (event) ->
     dom = $(this).data( "domain" )
     $(this).toggleClass "show hide"
-    $( "##{dom}" ).toggle()
-    if $(this).hasClass "hide"
-      $( "th[data-dom^='#{dom}'],td[data-dom^='#{dom}']" ).hide()
+
+    if $(this).hasClass "show"
+      $( "##{dom}" ).show()
+      $( ".selected" ).removeClass "selected"
     else
-      $( "th[data-dom^='#{dom}'],td[data-dom^='#{dom}']" ).show()
-  ##################################################################
+      $( "##{dom}" ).hide()
+      ##################################################################
   #On selectionne d'un signifiant   
   ################################################################## 
   $( "body" ).on "click", ".significants", -> 
