@@ -102,11 +102,11 @@
           } else {
             val = "" + data[i][j];
             color = {
-              0: "white",
-              10: "red",
-              25: "yellow",
-              40: "lightGreen",
-              50: "green"
+              "0": "white",
+              "10": "red",
+              "25": "yellow",
+              "40": "lightGreen",
+              "50": "green"
             }[val];
           }
           if (color === void 0) {
@@ -224,7 +224,23 @@
   };
 
   go_csv_data = function(data) {
-    var $select, i, id, l, len, len1, m, o, ref, ref1, temp;
+    var $select, hide_show_col, i, id, l, len, len1, m, o, ref, ref1, temp;
+    hide_show_col = function() {
+      $("#mainselect option[value=Menu]").prop("selected", true);
+      return $(".significants").each(function() {
+        var $cells, color, dom;
+        dom = $(this).data("dom");
+        if ($(this).data("color") === "white") {
+          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").hide();
+        } else {
+          color = $(this).data("color");
+          $cells = $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']");
+          $cells.not("th").data("color", color);
+          $cells.not("th").attr("data-color", color);
+          return $cells.show();
+        }
+      });
+    };
     temp = $.csv.toArrays(data);
     id = 1;
     DATA = [];
@@ -248,6 +264,7 @@
     $("#mainselect").remove();
     $("#menu-item").prepend($select);
     $("#mainselect option[value=Menu]").prop("selected", true);
+    hide_show_col();
     return $("#mainselect").change(function() {
       var CLASSE, dataStr, dlAnchorElem, len2, option, p, stringValue;
       option = $("#mainselect").val();
@@ -283,16 +300,7 @@
             bigTable(DATA_TEMP);
           }
       }
-      $("#mainselect option[value=Menu]").prop("selected", true);
-      return $(".significants").each(function() {
-        var dom;
-        dom = $(this).data("dom");
-        if ($(this).data("color" === "white")) {
-          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").hide();
-        } else {
-          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").show();
-        }
-      });
+      return hide_show_col();
     });
   };
 

@@ -85,7 +85,7 @@ bigTable = (data) ->
           val = "<input type='checkbox' data-id='#{data[i][j]}''><button class='eleve_id' data-id='#{data[i][j]}''>#{data[i][j]}</button>"
         else 
           val = "#{data[i][j]}"
-          color = {0 : "white", 10 : "red", 25 : "yellow", 40 : "lightGreen", 50 : "green"}[val]
+          color = {"0" : "white", "10" : "red", "25" : "yellow", "40" : "lightGreen", "50" : "green"}[val]
         if color is undefined then color = "white"
         row.append $("<td data-color='#{color}' data-row='#{i}' data-col='#{j}' data-id='#{data[i][0]}' data-dom='#{data[0][j]}'></td>").html(val)
       j = j + 1
@@ -175,7 +175,20 @@ copyToClipboard = (el) ->
   document.execCommand("Copy")
 ##################################################################
 #Construction de DATA_TEMP  
-go_csv_data = (data) ->   
+go_csv_data = (data) ->
+  hide_show_col = ->
+    #On remet le menu à zero et on affiche les signifiants      
+    $( "#mainselect option[value=Menu]" ).prop "selected", true
+    $( ".significants" ).each ->
+      dom = $(this).data "dom"
+      if $(this).data("color") is "white"
+        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
+      else
+        color = $(this).data("color")
+        $cells = $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" )
+        $cells.not("th").data "color", color
+        $cells.not("th").attr "data-color", color
+        $cells.show()
   temp = $.csv.toArrays(data)
   id = 1
   DATA = []
@@ -197,6 +210,7 @@ go_csv_data = (data) ->
   ##################################################################
   #On selectionne de la classe    
   ##################################################################
+  hide_show_col()
   $( "#mainselect" ).change () ->
     option = $("#mainselect").val()
     switch option
@@ -221,14 +235,8 @@ go_csv_data = (data) ->
           for o in DATA
             DATA_TEMP.push o if o[1] is CLASSE
           bigTable(DATA_TEMP)
-    #On remet le menu à zero et on affiche les signifiants      
-    $( "#mainselect option[value=Menu]" ).prop "selected", true
-    $( ".significants" ).each ->
-      dom = $(this).data "dom"
-      if $(this).data "color" is "white"
-        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
-      else
-        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).show()
+    hide_show_col()
+    
 #############################################################################################################"
 #############################################################################################################"
 #############################################################################################################"
