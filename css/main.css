@@ -109,16 +109,27 @@ html {
   background-size: cover;
  
 }
-#letter,#level {
+#mainmenu, #mainselect, #competences, .competence {
+  display : inline-block;
+}
+
+#mainmenu {
+  width : 100%;
+  height : 50px;
+}
+#competences {
+
+}
+.competence {
   width : 50px;
-  height:50px;
-  font-weight : bolder;
-  float : left;
-  font-size : 1.5em;
+}
+.competence.show {
+  background-color : rgba(64,64,64,64);
 }
 #tabs {
  display : inline-block;
 }
+
 #bar {
  position : absolute;
  width : 1px;
@@ -129,51 +140,22 @@ html {
  background-color : rgba(255,255,255,0.25);
 
 }
-table, tr, td, th {
-background-color : transparent;
-font-size : 0.9em;
-text-align : center;
-border : solid black 1px;
-padding : 0px;
-}
-
-td  {
-min-width : 40px;
-}
-
-.selected {
-  border : solid black 2px;
-}
-
-input[type='checkbox'] {
-
-}
-
-#scoreTable {
-width : 100%;
-
-}
-
 
 .tabdomain, .tabtoggler {
-
 width : 50px;
 height : 50px;
 margin-right: 25px;
 border-radius : 25px;
-
 }
 
 .tabs {
   position : fixed;
   top : 0;
   right :0;
-
 }
  
 .tabdomain.show {
   background-color : rgba(64,64,64,64);
-
 }
 
 #significants_area {
@@ -267,14 +249,39 @@ text-align : center;
 
 
 .more {
-
 position : absolute;
 bottom : 0;
 right : 0;
 width : 25;
 height : 25px;
+}
+
+#scoreTable {
+width : 100%;
+}
+
+table, tr, td, th {
+background-color : transparent;
+font-size : 0.9em;
+text-align : center;
+border : solid black 1px;
+padding : 0px;
+}
+.thdomain {
+  width : 25px;
 
 }
+td  {
+min-width : 40px;
+}
+
+.selected {
+  border : solid black 2px;
+}
+
+input[type='checkbox'] {
+}
+
 
 
 ::selection {

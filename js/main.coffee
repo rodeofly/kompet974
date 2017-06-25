@@ -1,6 +1,6 @@
 ID = 1
 
-HEADERS = ['ID',  'Classe', 'Nom', 'Prénom',  'D1-1.1', 'D1-1.2',  'D1-1.3',  'D1-1.4',  'D1-1.5',  'D1-3.1',  'D1-3.2',  'D1-3.3',  'D1-3.4',  'D1-3.5',  'D1-3.6',  'D1-3.7',  'D2.1', 'D2.2',  'D2.3',  'D2.4',  'D3.1',  'D3.2',  'D3.3',  'D3.4',  'D4.1',  'D4.2',  'D5.1']
+HEADERS = ['ID',  'Classe', 'Nom', 'Prénom',  'D1-1.1', 'D1-1.2',  'D1-1.3',  'D1-1.4',  'D1-1.5',  'D1-3.1',  'D1-3.2',  'D1-3.3',  'D1-3.4',  'D1-3.5',  'D1-3.6',  'D1-3.7',  'D2.1', 'D2.2',  'D2.3',  'D2.4',  'D3.1',  'D3.2',  'D3.3',  'D3.4',  'D4.1',  'D4.2',  'D5.1', 'Co.1', 'Co.2', 'Co.3', 'Co.4', 'Co.5', 'Co.6']
 
 EVALS = undefined
 CLASSES = []
@@ -65,13 +65,18 @@ bigTable = (data) ->
     while j < data[i].length
       if i == 0 and options.th
         head = data[i][j]
+        console.log head[0..1]
+        switch head[0..1]
+          when "D1" then domain = "D1"
+          when "Co" then domain = "Co"      
+          else domain = head[0..1]
         head = "<input type='checkbox' data-row='#{i}'>#{head}" if j is 0
         if j > 3
-          if j < 16
-            head = "<img class='thdomain' src='img/domaine#{data[i][j][1..3]}.svg' data-domain='D1-1'><br>#{data[i][j]}"                   
+          if domain is "Co"
+            head = "<img  class='thdomain' src='img/#{data[i][j]}.svg' data-domain='#{domain}'><br>#{data[i][j]}"
           else
-            head = "<img  class='thdomain' src='img/domaine#{data[i][j][1]}.svg' data-domain='D#{data[i][j][1]}'><br>#{data[i][j]}"
-          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'/th>").html(head)
+            head = "<img  class='thdomain' src='img/#{domain}.svg' data-domain='#{domain}'><br>#{data[i][j]}"
+          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)
         else
           row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)
         
@@ -177,7 +182,7 @@ go_csv_data = (data) ->
   CLASSES = []
   for i in temp
     CLASSES.push i[0] if i[0] not in CLASSES
-    DATA.push( [id++].concat(i).concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) )
+    DATA.push( [id++].concat(i).concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) )
   DATA.unshift HEADERS
   DATA_TEMP = DATA    
   bigTable(DATA_TEMP)
@@ -187,7 +192,7 @@ go_csv_data = (data) ->
   for o in ["Menu", "Importer", "Sauver","Copier", "Tous"].concat CLASSES
     $select.append "<option value='#{o}'>#{o}</option>"
   $( "#mainselect" ).remove()
-  $( "#mainmenu" ).prepend $select       
+  $( "#menu-item" ).prepend $select       
   $( "#mainselect option[value=Menu]").prop "selected", true
   ##################################################################
   #On selectionne de la classe    
@@ -229,6 +234,7 @@ go_csv_data = (data) ->
 #############################################################################################################"
 #On dom ready
 $ ->
+  
   $( "#upload" ).hide()
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
   #############################################################################################################"
@@ -250,11 +256,12 @@ $ ->
   #Construction du S4C
   $.getJSON "S4C.json", ( data ) -> 
     EVALS = data
+    console.log EVALS
     #################
     #Boutons .domain 
     evals = Object.keys EVALS
     for k of EVALS
-      $html = $( "<div id='#{k}' class='domain'><div class='nom'><img src='img/domaine#{k[1..]}.svg' data-domain='#{k}'>#{k} : #{EVALS[k]['subtitle']}</div><div class='significants_list'></div></div>" )
+      $html = $( "<div id='#{k}' class='domain'><div class='nom'><img class='tabdomain' src='img/#{k[0..1]}.svg' data-domain='#{k}'>#{k} : #{EVALS[k]['subtitle']}</div><div class='significants_list'></div></div>" )
       n=0
       for s of EVALS[k].significants
         id = ID++
@@ -408,7 +415,6 @@ $ ->
   #Evt : Quand on toggle un signifiant   
   ################################################################## 
   $( "body" ).on "click", ".significants", -> 
-    toggleEval( $(this).data "dom" )  
+    toggleEval( $(this).data "dom" )
   
  
-      

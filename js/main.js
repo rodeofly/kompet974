@@ -5,7 +5,7 @@
 
   ID = 1;
 
-  HEADERS = ['ID', 'Classe', 'Nom', 'Prénom', 'D1-1.1', 'D1-1.2', 'D1-1.3', 'D1-1.4', 'D1-1.5', 'D1-3.1', 'D1-3.2', 'D1-3.3', 'D1-3.4', 'D1-3.5', 'D1-3.6', 'D1-3.7', 'D2.1', 'D2.2', 'D2.3', 'D2.4', 'D3.1', 'D3.2', 'D3.3', 'D3.4', 'D4.1', 'D4.2', 'D5.1'];
+  HEADERS = ['ID', 'Classe', 'Nom', 'Prénom', 'D1-1.1', 'D1-1.2', 'D1-1.3', 'D1-1.4', 'D1-1.5', 'D1-3.1', 'D1-3.2', 'D1-3.3', 'D1-3.4', 'D1-3.5', 'D1-3.6', 'D1-3.7', 'D2.1', 'D2.2', 'D2.3', 'D2.4', 'D3.1', 'D3.2', 'D3.3', 'D3.4', 'D4.1', 'D4.2', 'D5.1', 'Co.1', 'Co.2', 'Co.3', 'Co.4', 'Co.5', 'Co.6'];
 
   EVALS = void 0;
 
@@ -48,7 +48,7 @@
   };
 
   bigTable = function(data) {
-    var color, defaults, head, i, j, options, row, rows, table, tfoot, thead, val;
+    var color, defaults, domain, head, i, j, options, row, rows, table, tfoot, thead, val;
     options = {
       thead: true,
       attrs: {
@@ -72,16 +72,27 @@
       while (j < data[i].length) {
         if (i === 0 && options.th) {
           head = data[i][j];
+          console.log(head.slice(0, 2));
+          switch (head.slice(0, 2)) {
+            case "D1":
+              domain = "D1";
+              break;
+            case "Co":
+              domain = "Co";
+              break;
+            default:
+              domain = head.slice(0, 2);
+          }
           if (j === 0) {
             head = "<input type='checkbox' data-row='" + i + "'>" + head;
           }
           if (j > 3) {
-            if (j < 16) {
-              head = "<img class='thdomain' src='img/domaine" + data[i][j].slice(1, 4) + ".svg' data-domain='D1-1'><br>" + data[i][j];
+            if (domain === "Co") {
+              head = "<img  class='thdomain' src='img/" + data[i][j] + ".svg' data-domain='" + domain + "'><br>" + data[i][j];
             } else {
-              head = "<img  class='thdomain' src='img/domaine" + data[i][j][1] + ".svg' data-domain='D" + data[i][j][1] + "'><br>" + data[i][j];
+              head = "<img  class='thdomain' src='img/" + domain + ".svg' data-domain='" + domain + "'><br>" + data[i][j];
             }
-            row.append($("<th data-row='" + i + "' data-col='" + j + "' data-id='" + data[i][j] + "' data-dom='" + data[0][j] + "'/th>").html(head));
+            row.append($("<th data-row='" + i + "' data-col='" + j + "' data-id='" + data[i][j] + "' data-dom='" + data[0][j] + "'></th>").html(head));
           } else {
             row.append($("<th data-row='" + i + "' data-col='" + j + "' data-id='" + data[i][j] + "' data-dom='" + data[0][j] + "'></th>").html(head));
           }
@@ -223,7 +234,7 @@
       if (ref = i[0], indexOf.call(CLASSES, ref) < 0) {
         CLASSES.push(i[0]);
       }
-      DATA.push([id++].concat(i).concat([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+      DATA.push([id++].concat(i).concat([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
     }
     DATA.unshift(HEADERS);
     DATA_TEMP = DATA;
@@ -235,7 +246,7 @@
       $select.append("<option value='" + o + "'>" + o + "</option>");
     }
     $("#mainselect").remove();
-    $("#mainmenu").prepend($select);
+    $("#menu-item").prepend($select);
     $("#mainselect option[value=Menu]").prop("selected", true);
     return $("#mainselect").change(function() {
       var CLASSE, dataStr, dlAnchorElem, len2, option, p, stringValue;
@@ -308,9 +319,10 @@
     $.getJSON("S4C.json", function(data) {
       var $html, $s, evals, i, id, k, l, len, n, ref, s;
       EVALS = data;
+      console.log(EVALS);
       evals = Object.keys(EVALS);
       for (k in EVALS) {
-        $html = $("<div id='" + k + "' class='domain'><div class='nom'><img src='img/domaine" + k.slice(1) + ".svg' data-domain='" + k + "'>" + k + " : " + EVALS[k]['subtitle'] + "</div><div class='significants_list'></div></div>");
+        $html = $("<div id='" + k + "' class='domain'><div class='nom'><img class='tabdomain' src='img/" + k.slice(0, 2) + ".svg' data-domain='" + k + "'>" + k + " : " + EVALS[k]['subtitle'] + "</div><div class='significants_list'></div></div>");
         n = 0;
         for (s in EVALS[k].significants) {
           id = ID++;

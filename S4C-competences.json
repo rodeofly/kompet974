@@ -1,0 +1,159 @@
+{
+    "D1-1": {
+        "name": "Composante 1",
+        "subtitle": "Comprendre, s’exprimer en utilisant la langue française à l’oral et à l’écrit",
+        "significants": {
+            "S’exprimer à l’oral": {
+                "Être capable d’une prise de parole continue d’une durée variable selon les types de  discours (de cinq à dix minutes au maximum, si le propos croise narration, description, opinion et argumentation; moins s’il s’agit d’une seule de ces composantes), avec quelques relances de la part du professeur si nécessaire;" : "Communiquer",
+                "Pouvoir exprimer une impression, un avis, une opinion de manière raisonnée, en respectant les formes d’un oral codifié et socialisé;" : "Raisonner",
+                "Savoir faire preuve d’une relative liberté dans sa prise de parole par rapport à ses notes de préparation." : "Communiquer"
+            },
+            "Comprendre des énoncés oraux": {
+                "Reformuler le sens général d’un discours oral découvert de manière autonome et adapté par ses références et son niveau de langue aux connaissances définies par les programmes" : "Communiquer",
+                "Rendre compte de la teneur générale de discours oraux complexes (conversations, débats)." : "Communiquer"
+            },
+            "Lire et comprendre l’écrit": {
+                "Proposer sa compréhension d’un texte inconnu d’environ trente lignes ou d’un document associant image et énoncé écrit, en s’appuyant sur des éléments d’analyse précis et en mobilisant ses connaissances linguistiques et culturelles ;" : "Communiquer",
+                "Proposer un compte rendu de ce qu’il retient de la lecture d’une œuvre et la mise en évidence de l’essentiel d’un texte long." : "Communiquer"
+            },
+            "Écrire": {
+                "Être capable de réponses écrites développées et argumentées à des questions de compréhension et d’analyse d’un texte et/ou d’une image;" : "Communiquer",
+                "Savoir écrire un texte pouvant aller jusqu’à 2000 à 3000 signes dans une langue globalement correcte, en cohérence avec les attendus en étude de la langue, et suffisamment riche pour lui permettre de produire un texte d’invention, intéressant et conforme à l’énoncé de l’exercice, ou d’exprimer sa pensée de manière  argumentée et nuancée;",
+                "Produire un texte rédigé dans une langue suffisamment maîtrisée pour que son intelligibilité ne soit pas compromise;" : "Communiquer",
+                "Réinvestir le vocabulaire spécialisé à bon escient." : "Communiquer"
+            },
+            "Exploiter les ressources de la langue": {
+                "Réfléchir sur le système linguistique" : "Raisonner",
+                "Mobiliser les connaissances et procédures orthographiques et syntaxiques étudiées pour produire un texte pouvant aller jusqu’à 2000 à 3000 signes dans une langue globalement correcte;" : "Raisonner",
+                "Réviser un énoncé produit par lui-même ou un autre scripteur à partir d’indications orientant cette révision;" : "Raisonner",
+                "Savoir analyser en contexte des unités lexicales en les mettant en relation et en se fondant sur l’analyse de leur forme;" : "Raisonner",
+                "Savoir analyser les propriétés d’un ou de plusieurs éléments linguistiques en les référant au système de la langue et en les comparant éventuellement au système d’une autre langue." : "Raisonner"
+            }
+        }
+    },
+    "D1-3": {
+        "nom": "Composante 3",
+        "subtitle": "Comprendre, s’exprimer en utilisant les langages mathématiques, scientifiques et informatiques ",
+        "significants": {
+            "Utiliser les nombres": {
+                "Comprendre et utiliser les notions de divisibilité et de nombre premier." : ["raisonner", "calculer"],
+                "Effectuer (mentalement, à la main, à la calculatrice, à l’aide d’un tableur) des calculs engageant les quatre opérations et des comparaisons sur des nombres rationnels positifs ou négatifs." : "calculer",
+                "Effectuer des calculs numériques impliquant des puissances." : "calculer" ,
+                "Passer d’une écriture d’un nombre à une autre (écritures décimale et fractionnaire, notation scientifique, pourcentages)." : "calculer",
+                "Comprendre et utiliser la notion de racine carrée.",
+                "Repérer un nombre sur une droite graduée.",
+                "Reconnaître et résoudre une situation de proportionnalité."
+            },
+            "Utiliser le calcul littéral": {
+                "Développer et factoriser des expressions littérales dans des cas très simples.",
+                "Citer et utiliser une expression littérale, notamment pour exprimer une grandeur en fonction d’autres grandeurs.",
+                "Produire une expression littérale.",
+                "Dans une expression littérale, substituer une lettre par une valeur numérique, en utilisant si nécessaire les unités adaptées.",
+                "Mettre un problème simple en équation.",
+                "Résoudre des équations ou des inéquations du premier degré."
+            },
+            "Exprimer une grandeur mesurée ou calculée dans une unité adaptée": {
+                "Accompagner de son unité toute valeur numérique d’une grandeur physique mesurée, calculée ou fournie.",
+                "Utiliser, dans les calculs numériques, un système d’unités cohérent."
+            },
+            "Passer d’un langage à un autre": {
+                "Passer du langage courant à un langage scientifique ou technique et vice versa.",
+                "Passer d’un registre de représentation à un autre (tableau, graphique, croquis, symbole, schéma, etc.).",
+                "Exploiter, dans des situations simples, les différences (complémentarité, redondance, complexité, etc.) entre différents registres de représentation"
+            },
+            "Utiliser le langage des probabilités": {
+                "Utiliser le vocabulaire lié aux notions élémentaires de probabilités : - calculer des probabilités dans un contexte simple; - faire le lien entre fréquence et probabilité; - simuler une expérience aléatoire."
+            },
+            "Utiliser et produire des représentations d’objets": {
+                "Utiliser et produire des figures géométriques.",
+                "Lire des plans et des cartes.",
+                "Se repérer sur des cartes à différentes échelles.",
+                "Utiliser le langage cartographique pour réaliser une production graphique.",
+                "Comprendre l’effet de quelques transformations (déplacements, agrandissements-réductions) sur des grandeurs géométriques.",
+                "Se repérer sur une droite graduée, dans le plan muni d’un repère orthogonal, dans un parallélépipède rectangle, sur une sphère.",
+                "Utiliser et produire des représentations de solides.",
+                "Lire, interpréter et produire des tableaux, des graphiques, des diagrammes.",
+                "Utiliser des indicateurs statistiques."
+            },
+            "Utiliser l’algorithmique et la programmation pour créer des applications simples": {
+                "Expliquer le déroulement et le résultat produit par un algorithme simple.",
+                "Écrire un algorithme ou un programme qui permet une interaction avec l’utilisateur ou entre les objets qu’il utilise, en réponse à un problème donné.",
+                "Mettre au point un programme pour corriger une erreur ou apporter une amélioration.",
+                "Implanter et tester un programme dans un système réel pour imposer un comportement."
+            }
+        }
+    },
+    "D2": {
+        "name": "Domaine 2",
+        "subtitle": "Les méthodes et outils pour apprendre",
+        "significants": {
+            "Organiser son travail personnel": {
+                "Choisir et utiliser différents outils et techniques pour garder la trace de ses activités et/ou recherches et permettre un entraînement au travers d’un travail personnel.",
+                "Planifier les étapes et les tâches pour la réalisation d’une production."
+            },
+            "Coopérer et réaliser des projets": {
+                "Définir et respecter une organisation et un partage des tâches dans le cadre d’un travail de groupe."
+            },
+            "Rechercher et traiter l’information et s’initier aux langages des médias": {
+                "Rechercher des informations dans différents médias (presse écrite, audiovisuelle, web) et ressources documentaires.",
+                "Apprécier la fiabilité des informations recueillies en croisant différentes sources."
+            },
+            "Mobiliser des outils numériques pour apprendre, échanger, communiquer": {
+                "Utiliser des outils numériques pour réaliser une production (scientifique, artistique, motrice, expérimentale, document multimédia…).",
+                "Utiliser des outils numériques pour analyser des données ou une production (orale, artistique, motrice, technologique, etc.).",
+                "Utiliser des outils et espaces numériques pour échanger, stocker, mutualiser des informations."
+            }
+        }
+    },
+    "D3": {
+        "name": "Domaine 3",
+        "subtitle": "La formation de la personne et du citoyen",
+        "significants": {
+            "Maîtriser l’expression de sa sensibilité et de ses opinions, respecter celles des autres": {
+                "Expliciter les émotions ressenties.",
+                "Formuler une opinion, prendre de la distance avec celle-ci, la confronter à celle d’autrui et en discuter."
+            },
+            "Connaître et comprendre la règle et le droit": {
+                "S’approprier et respecter les règles de fonctionnement de son établissement et de collectifs plus restreints, et participer à leur élaboration.",
+                "Connaître, comprendre et analyser les principes, les valeurs et les symboles de la République française et des sociétés démocratiques."
+            },
+            "Exercer son esprit critique, faire preuve de réflexion et de discernement": {
+                "Rendre compte des argumentaires développés par différents protagonistes relativement à une thématique.",
+                "Utiliser les médias et l’information de manière responsable et raisonnée.",
+                "Distinguer ce qui relève d’une croyance ou d’une opinion et ce qui constitue un savoir (ou un fait) scientifique.",
+                "Distinguer la perception subjective de l’analyse objective."
+            },
+            "Faire preuve de responsabilité, respecter les règles de la vie collective, s’engager et prendre des initiatives": {
+                "Assumer des responsabilités et prendre des initiatives dans l’établissement et/ou dans la classe.",
+                "S’impliquer dans la mise en place d’un événement dans l’établissement."
+            }
+        }
+    },
+    "D4": {
+        "name": "Domaine 4",
+        "subtitle": "Systèmes naturels et systèmes techniques",
+        "significants": {
+            "Mener une démarche scientifique, résoudre un problème": {
+                "Modéliser et représenter des phénomènes et des objets.",
+                "Mettre en œuvre un protocole expérimental, réaliser le prototype d’un objet.",
+                "Pratiquer le calcul numérique (exact et approché) et le calcul littéral.",
+                "Contrôler la vraisemblance d’un résultat.",
+                "Communiquer sur ses démarches, ses résultats et ses choix, en argumentant"
+            },
+            "Concevoir des objets et systèmes techniques": {
+                "Concevoir des objets simples, des éléments de programme informatique, des protocoles biotechnologiques en réponse à un besoin."
+            }
+        }
+    },
+    "D5": {
+        "name": "Domaine 5",
+        "subtitle": "Représentation du monde",
+        "significants": {
+            "Situer et se situer dans le temps et l’espace": {
+                "Maîtriser de manière autonome des repères dans le temps :<br> - connaître et localiser dans le temps de grandes périodes historiques, des phénomènes historiques, des faits et des événements, des mouvements intellectuels, artistiques et culturels;<br> - situer et ordonner des faits dans le temps ; pratiquer de conscients allers-retours dans la chronologie, maîtriser la chronologie narrative, savoir ordonner un récit.",
+                "Maîtriser de manière autonome des repères dans l’espace :<br> - connaître et localiser des repères spatiaux aux différentes échelles et sur des projections cartographiques variées ;<br> - se repérer et repérer des lieux dans l’espace en utilisant des plans, des cartes et des outils de géolocalisation ;<br> - situer et mettre en relation des lieux et des espaces à partir de cartes d’échelles et de projection variées et d’images.",
+                "Contextualiser un document, un texte, une œuvre, un(e) artiste, un personnage, une découverte scientifique, un fait artistique ou une notion dans le temps et dans une ou plusieurs aires géographiques et culturelles."
+            }
+        }
+    }
+}

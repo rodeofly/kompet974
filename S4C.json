@@ -155,5 +155,29 @@
                 "Contextualiser un document, un texte, une œuvre, un(e) artiste, un personnage, une découverte scientifique, un fait artistique ou une notion dans le temps et dans une ou plusieurs aires géographiques et culturelles."
             ]
         }
+    },
+    "Co" : {
+        "name": "Compétences",
+        "subtitle": "Chercher,...",
+        "significants": {
+            "Chercher" : [
+                "Chercher est peut-être la première des compétences à laquelle on pense lorsqu’on tente de décrire l’activité mathématique. Elle en constitue sans doute la part la plus exaltante pour celles et ceux qui aiment les mathématiques. Mais aussi la part la plus difficile pour d’autres. Il faut reconnaitre qu’il s’agit de l’une des compétences qui se laissent le moins facilement circonscrire. Amener les élèves à savoir quoi chercher et comment chercher est donc un objectif ambitieux, mais nécessaire au développement de toutes les autres compétences au cycle 4."
+            ],
+            "Modéliser" : [
+                "La compétence « Modéliser », si on la prend dans son acception la plus large, renvoie pour le mathématicien au fait d’utiliser un ensemble de concepts, de méthodes, de théories mathématiques qui vont permettre de décrire, comprendre et prévoir l’évolution de phénomènes externes aux mathématiques."
+            ],
+            "Représenter" : [
+                "Le développement de la compétence « Représenter » au cycle 4 doit à la fois permettre à l’élève de progresser dans la vision du réel et dans l’appréhension des objets mathématiques abstraits. Comprendre ce qu’est un triangle, ce qu’est une fonction, ce qu’est une fraction, c’est savoir « représenter » ces objets, c’est-à-dire trouver un registre de représentation adéquat, mais aussi savoir varier les représentations et les registres de représentation. Un élève capable de convoquer dans un exercice mettant en jeu une fonction un graphique, un tableau de nombres, une écriture symbolique, est en train de s’approprier la notion de fonction. Dans cet exercice, on voit que la représentation est aussi pensée de manière dynamique, dans sa capacité à engendrer d’autres représentations, à l’intérieur d’un même registre ou dans un autre registre."
+            ],
+            "Raisonner" : [
+                "Le programme de mathématiques du cycle 4 offre une place de choix à la compétence « raisonner » dans laquelle il regroupe les démarches suivantes :<br>• résoudre des problèmes impliquant des grandeurs variées (géométriques, physiques, économiques) : mobiliser les connaissances nécessaires, analyser et exploiter ses erreurs, mettre à l’essai plusieurs solutions ;<br>• mener collectivement une investigation en sachant prendre en compte le point de vue d’autrui ;<br>• démontrer : utiliser un raisonnement logique et des règles établies (propriétés, théorèmes, formules) pour parvenir à une conclusion ;<br>• fonder et défendre ses jugements en s’appuyant sur des résultats établis et sur sa maîtrise de l’argumentation."
+            ],
+            "Calculer" : [
+                "La pratique du calcul doit viser un double équilibre : d’une part entre automatisation et raisonnement, d’autre part entre une visée pragmatique (l’obtention d’un résultat) et un accès à la compréhension des objets mathématiques engagés dans le calcul (nombres, symboles, etc.). Par ailleurs, le développement des technologies informatiques a profondément modifié l’appréhension du calcul, tant au niveau des pratiques quotidiennes et sociales qu’à celui des pratiques scientifiques. D’une part, la plupart des algorithmes de calcul dont l’apprentissage occupait autrefois un temps important de la scolarité obligatoire sont aujourd’hui implémentés dans les calculatrices les plus simples, ce qui pose la question de la pertinence du maintien de leur enseignement, d’autre part la puissance de calcul des nouveaux outils modifie profondément l’économie du calcul et pose dans des termes renouvelés celle de la gestion des rapports entre le calcul et le raisonnement puisqu’elle favorise explorations, simulations et expérimentations préalables à la découverte de preuves."
+            ],
+            "Communiquer" : [
+                "Communiquer efficacement dans le cadre d’une activité mathématique est un objectif de formation essentiel, recouvrant plusieurs champs de compétences : comprendre des énoncés, produire des textes aux finalités diverses, s’exprimer oralement.<br> C’est aussi par la médiation d’échanges que le professeur apprécie le niveau de maîtrise de l’élève. Cette double fonction de la communication, objet de formation et moyen d’apprécier la réussite de l’élève, a son importance. S’il convient que l’élève apprenne à s’exprimer avec un maximum de rigueur et de clarté, il ne faut pas pour autant considérer que celui qui s’exprime avec peine a nécessairement des difficultés mathématiques. Il s’agit avant tout d’ouvrir le champ de la résolution de problèmes au plus grand nombre d’élèves, y compris à ceux qui ont des difficultés à entrer dans les codes de la rédaction d’une démonstration."
+            ]
+        }
     }
 }
