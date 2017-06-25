@@ -136,6 +136,7 @@ text-align : center;
 border : solid black 1px;
 padding : 0px;
 }
+
 td  {
 min-width : 40px;
 }
@@ -153,17 +154,7 @@ width : 100%;
 
 }
 
-#significants_area {
-position : absolute;
-bottom : 0;
-background : transparent;
-height : 0%
-width : 100%;
-min-width : 100%;
-max-width : 100%;
-text-align : center;
 
-}
 .tabdomain, .tabtoggler {
 
 width : 50px;
@@ -174,7 +165,7 @@ border-radius : 25px;
 }
 
 .tabs {
-  position : absolute;
+  position : fixed;
   top : 0;
   right :0;
 
@@ -184,20 +175,57 @@ border-radius : 25px;
   background-color : rgba(64,64,64,64);
 
 }
+
+#significants_area {
+position : fixed;
+display: flex;
+flex-flow: row nowrap;
+justify-content: center;
+align-items: flex-start;
+bottom : 0;
+background : transparent;
+height : 0%
+width : 100%;
+min-width : 100%;
+max-width : 100%;
+text-align : center;
+
+}
+
+.domain {
+  border : solid black 2px;
+  margin : 1px;
+  vertical-align : top;
+  font-weight :bolder;
+  background-color : white;
+  border-radius : 10px;
+
+}
 .nom {
   display : inline-block;
-  margin : 5px;
+  width : 100%;
+  margin : 0px;
   text-align : center;
   font-size : 0.75em;
   font-weight : bolder;
   height : 50px;
 }
+.significants_list {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  border : solid black 2px;
+  margin : 0px;
+  vertical-align : top;
+  font-weight :bolder;
+  background-color : white;
+  border-radius : 10px;
 
-
+}
 .significants {
   height : 30px;
   vertical-align: top;
-  text-align : center;
+  text-align : left;
   position: relative;
   display : inline-block;
   margin : 2px;
@@ -208,18 +236,6 @@ border-radius : 25px;
   color : black;
   font-size : 0.75em;
   font-weight : bolder;
-}
-
-.domain {
-  width : 16%;
-  display: inline-block;
-  border : solid black 2px;
-  margin : 1px;
-  vertical-align : top;
-  font-weight :bolder;
-  background-color : white;
-  border-radius : 10px;
-
 }
 
 [data-color='white'] {

@@ -28,16 +28,14 @@ DnDFileController = (selector, onDropCallback) ->
     e.preventDefault()
     $( "#upload" ).removeClass "slim"
     #el_.classList.remove('dropping');
-    return
 
   @drop = (e) ->
-    $( "#upload" ).removeClass "slim"
-    $( "#upload" ).hide()
     e.stopPropagation()
     e.preventDefault()
     el_.classList.remove 'dropping'
     onDropCallback e.dataTransfer.files, e
-    return
+    $( "#upload" ).removeClass "slim"
+    $( "#upload" ).hide()
 
   el_.addEventListener 'dragenter', @dragenter, false
   el_.addEventListener 'dragover', @dragover, false
@@ -72,7 +70,7 @@ bigTable = (data) ->
           if j < 16
             head = "<img class='thdomain' src='img/domaine#{data[i][j][1..3]}.svg' data-domain='D1-1'><br>#{data[i][j]}"                   
           else
-            head = "<img  class='thdomain' src='img/domaine#{data[i][j][1]}.svg' data-domain='D1-1'><br>#{data[i][j]}"
+            head = "<img  class='thdomain' src='img/domaine#{data[i][j][1]}.svg' data-domain='D#{data[i][j][1]}'><br>#{data[i][j]}"
           row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'/th>").html(head)
         else
           row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)
@@ -181,7 +179,8 @@ go_csv_data = (data) ->
     CLASSES.push i[0] if i[0] not in CLASSES
     DATA.push( [id++].concat(i).concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) )
   DATA.unshift HEADERS
-  bigTable(DATA)
+  DATA_TEMP = DATA    
+  bigTable(DATA_TEMP)
   ###########################################################
   #Menu select pour le mainmenu
   $select = $( "<select id='mainselect'></select>" )
@@ -195,13 +194,12 @@ go_csv_data = (data) ->
   ##################################################################
   $( "#mainselect" ).change () ->
     option = $("#mainselect").val()
-    console.log option
     switch option
       when "Importer"
         $( "#upload" ).show()
       when "Sauver"
         stringValue = prompt( "Nom du fichier ?", stringValue )
-        dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent($.csv.fromArrays(DATA_TEMP);)
+        dataStr = "data:text/csv;charset=utf-16," + encodeURIComponent($.csv.fromArrays(DATA_TEMP))
         dlAnchorElem = document.getElementById('save')
         dlAnchorElem.setAttribute("href",     dataStr     )
         dlAnchorElem.setAttribute("download", "#{stringValue}.csv")
@@ -210,18 +208,22 @@ go_csv_data = (data) ->
         $( "#copy" ).click()
       when "Tous"
         DATA_TEMP = DATA    
-        bigTable(DATA_TEMP)
-        
+        bigTable(DATA_TEMP)      
       else
         if option isnt "menu"
-          console.log option
           CLASSE = option
           DATA_TEMP = [HEADERS]
           for o in DATA
             DATA_TEMP.push o if o[1] is CLASSE
           bigTable(DATA_TEMP)
-         
-    $('#mainselect option[value=Menu]').prop "selected", true
+    #On remet le menu à zero et on affiche les signifiants      
+    $( "#mainselect option[value=Menu]" ).prop "selected", true
+    $( ".significants" ).each ->
+      dom = $(this).data "dom"
+      if $(this).data "color" is "white"
+        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
+      else
+        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).show()
 #############################################################################################################"
 #############################################################################################################"
 #############################################################################################################"
@@ -244,7 +246,7 @@ $ ->
       go_csv_data(data)
       d1.resolve( "Éleves finished !" )
   #Fin de DATA
-  #############################################################################################################"
+  ##################################################################
   #Construction du S4C
   $.getJSON "S4C.json", ( data ) -> 
     EVALS = data
@@ -252,19 +254,15 @@ $ ->
     #Boutons .domain 
     evals = Object.keys EVALS
     for k of EVALS
-      $html = $( """
-  <div id="#{k}" class="domain">
-    <div class="nom">#{k} : #{EVALS[k]['subtitle']}</div>
-  </div>    
-      """ )
+      $html = $( "<div id='#{k}' class='domain'><div class='nom'><img src='img/domaine#{k[1..]}.svg' data-domain='#{k}'>#{k} : #{EVALS[k]['subtitle']}</div><div class='significants_list'></div></div>" )
       n=0
       for s of EVALS[k].significants
         id = ID++
         n++
-        $s = $( "<div class='significants' data-color='white' data-dom='#{k}.#{n}'>#{s}<img class='more' src='css/icons/more.png' data-id='#{id}'><div class='info' id='#{id}' title='#{s}'><ul></ul></div></div>" )
+        $s = $( "<div class='significants' data-color='white' data-dom='#{k}.#{n}'>#{k}.#{n} : #{s}<img class='more' src='css/icons/more.png' data-id='#{id}'><div class='info' id='#{id}' title='#{s}'><ul></ul></div></div>" )
         for i in EVALS[k].significants[s]
           $s.find(".info ul").append "<li class='item'>#{i}</li>"
-        $html.append $s
+        $html.find(".significants_list").append $s
       $("#significants_area").append $html
       $( ".tabdomain" )
         .addClass "hide"
@@ -282,19 +280,20 @@ $ ->
       $( "##{id}" ).dialog "open"
     d2.resolve( "S4C finished !" );
   #Fin du S4C
-  
- 
+      
+  ###################################################################
+  #Deffered to resolve Ajax concurrency
   $.when( d1, d2 ).done ( v1, v2 ) ->
     console.log( v1 )
     console.log( v2 )
     $( ".significants" ).each ->
+      dom = $(this).data "dom"
       if $(this).data "color" is "white"
-        dom = $(this).data "dom"
-        console.log dom
         $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
+      else
+        $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).show()
 
-
-  #############################################################################################################"
+  ##################################################################
   #Drag and Drop file
   dnd = new DnDFileController '#upload', (files) ->
     f = files[0]
@@ -303,7 +302,7 @@ $ ->
     reader.readAsText f
     return
   ##################################################################  
-  #############################################################################################################
+  ##################################################################
   #Evenements de l'interface 
   ##################################################################
   ##################################################################
@@ -332,7 +331,7 @@ $ ->
     new Clipboard "#copy" 
   
   ##################################################################
-  #On selectionne de la classe    
+  #On selectionne un élève ! 
   ##################################################################  
   $( "body" ).on "click", "button.eleve_id", ->
     id = $(this).data "id"
@@ -353,36 +352,49 @@ $ ->
           when 50 then [color, score] = ["green", 50]
         $( ".significants[data-dom='#{dom}']" ).attr "data-color", color
         $( ".significants[data-dom='#{dom}']" ).data "color", color
-        
     if $( ".selected" ).length is 0
-      $( "tr[data-id='#{id}']" ).addClass "selected"
-      do_it()
+      if $( ".significants[data-color='shaded']" ).length is 0
+        alert "Selectionnez d'abord des signifiants !"
+      else
+        $( ".significants[data-color='white']" ).hide()
+        $( "tr[data-id='#{id}']" ).addClass "selected"
+        do_it()
     else 
       if $( ".selected" ).is $( this ).closest( "tr" )
         $( ".selected" ).removeClass "selected"
+        # On remet les signifiants séléctionnés
+        $( "#significants_area, .significants" ).show()
+        $( "#scoreTable" ).find( "th:visible" ).each ->
+          dom = $(this).data "dom"
+          $( ".significants[data-dom='#{dom}']" ).attr "data-color", "shaded"
+          $( ".significants[data-dom='#{dom}']" ).data "color", "shaded"        
       else
         $( ".selected" ).removeClass "selected"
         $( "tr[data-id='#{id}']" ).addClass "selected"
-        do_it()
-        
-    
+        do_it()   
   ##################################################################
   #On selectionne un domaine   
   ##################################################################
-  
+  #Par défaut on affiche rien
   $( ".tabtoggler[data-domain='none']" ).hide()
-  
+  ##################################################################
+  #Evt : Quand on veux cacher les domaines  
+  ################################################################## 
   $( ".tabtoggler[data-domain='none']" ).on "click", ->
     $( "#significants_area, .tabdomain" ).hide()
     $( ".tabtoggler[data-domain='all']" ).show()
     $(this).hide()
-    
+  ##################################################################
+  #Evt : Quand on veux afficher les domaines   
+  ##################################################################   
   $( ".tabtoggler[data-domain='all']" ).on "click", ->
     $( ".tabdomain" ).show()
     $("#significants_area").show()
     $( ".tabtoggler[data-domain='none']" ).show()
     $(this).hide()
-    
+  ##################################################################
+  #Evt : Quand on afficher/cacher les signifiants d'un domaine
+  ##################################################################   
   $( ".tabdomain" ).on "click", (event) ->
     dom = $(this).data( "domain" )
     $(this).toggleClass "show hide"
@@ -392,8 +404,8 @@ $ ->
       $( ".selected" ).removeClass "selected"
     else
       $( "##{dom}" ).hide()
-      ##################################################################
-  #On selectionne d'un signifiant   
+  ##################################################################
+  #Evt : Quand on toggle un signifiant   
   ################################################################## 
   $( "body" ).on "click", ".significants", -> 
     toggleEval( $(this).data "dom" )  

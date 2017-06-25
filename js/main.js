@@ -31,15 +31,15 @@
     this.dragleave = function(e) {
       e.stopPropagation();
       e.preventDefault();
-      $("#upload").removeClass("slim");
+      return $("#upload").removeClass("slim");
     };
     this.drop = function(e) {
-      $("#upload").removeClass("slim");
-      $("#upload").hide();
       e.stopPropagation();
       e.preventDefault();
       el_.classList.remove('dropping');
       onDropCallback(e.dataTransfer.files, e);
+      $("#upload").removeClass("slim");
+      return $("#upload").hide();
     };
     el_.addEventListener('dragenter', this.dragenter, false);
     el_.addEventListener('dragover', this.dragover, false);
@@ -79,7 +79,7 @@
             if (j < 16) {
               head = "<img class='thdomain' src='img/domaine" + data[i][j].slice(1, 4) + ".svg' data-domain='D1-1'><br>" + data[i][j];
             } else {
-              head = "<img  class='thdomain' src='img/domaine" + data[i][j][1] + ".svg' data-domain='D1-1'><br>" + data[i][j];
+              head = "<img  class='thdomain' src='img/domaine" + data[i][j][1] + ".svg' data-domain='D" + data[i][j][1] + "'><br>" + data[i][j];
             }
             row.append($("<th data-row='" + i + "' data-col='" + j + "' data-id='" + data[i][j] + "' data-dom='" + data[0][j] + "'/th>").html(head));
           } else {
@@ -226,7 +226,8 @@
       DATA.push([id++].concat(i).concat([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
     }
     DATA.unshift(HEADERS);
-    bigTable(DATA);
+    DATA_TEMP = DATA;
+    bigTable(DATA_TEMP);
     $select = $("<select id='mainselect'></select>");
     ref1 = ["Menu", "Importer", "Sauver", "Copier", "Tous"].concat(CLASSES);
     for (m = 0, len1 = ref1.length; m < len1; m++) {
@@ -239,14 +240,13 @@
     return $("#mainselect").change(function() {
       var CLASSE, dataStr, dlAnchorElem, len2, option, p, stringValue;
       option = $("#mainselect").val();
-      console.log(option);
       switch (option) {
         case "Importer":
           $("#upload").show();
           break;
         case "Sauver":
           stringValue = prompt("Nom du fichier ?", stringValue);
-          dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent($.csv.fromArrays(DATA_TEMP));
+          dataStr = "data:text/csv;charset=utf-16," + encodeURIComponent($.csv.fromArrays(DATA_TEMP));
           dlAnchorElem = document.getElementById('save');
           dlAnchorElem.setAttribute("href", dataStr);
           dlAnchorElem.setAttribute("download", stringValue + ".csv");
@@ -261,7 +261,6 @@
           break;
         default:
           if (option !== "menu") {
-            console.log(option);
             CLASSE = option;
             DATA_TEMP = [HEADERS];
             for (p = 0, len2 = DATA.length; p < len2; p++) {
@@ -273,7 +272,16 @@
             bigTable(DATA_TEMP);
           }
       }
-      return $('#mainselect option[value=Menu]').prop("selected", true);
+      $("#mainselect option[value=Menu]").prop("selected", true);
+      return $(".significants").each(function() {
+        var dom;
+        dom = $(this).data("dom");
+        if ($(this).data("color" === "white")) {
+          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").hide();
+        } else {
+          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").show();
+        }
+      });
     });
   };
 
@@ -302,18 +310,18 @@
       EVALS = data;
       evals = Object.keys(EVALS);
       for (k in EVALS) {
-        $html = $("<div id=\"" + k + "\" class=\"domain\">\n  <div class=\"nom\">" + k + " : " + EVALS[k]['subtitle'] + "</div>\n</div>    ");
+        $html = $("<div id='" + k + "' class='domain'><div class='nom'><img src='img/domaine" + k.slice(1) + ".svg' data-domain='" + k + "'>" + k + " : " + EVALS[k]['subtitle'] + "</div><div class='significants_list'></div></div>");
         n = 0;
         for (s in EVALS[k].significants) {
           id = ID++;
           n++;
-          $s = $("<div class='significants' data-color='white' data-dom='" + k + "." + n + "'>" + s + "<img class='more' src='css/icons/more.png' data-id='" + id + "'><div class='info' id='" + id + "' title='" + s + "'><ul></ul></div></div>");
+          $s = $("<div class='significants' data-color='white' data-dom='" + k + "." + n + "'>" + k + "." + n + " : " + s + "<img class='more' src='css/icons/more.png' data-id='" + id + "'><div class='info' id='" + id + "' title='" + s + "'><ul></ul></div></div>");
           ref = EVALS[k].significants[s];
           for (l = 0, len = ref.length; l < len; l++) {
             i = ref[l];
             $s.find(".info ul").append("<li class='item'>" + i + "</li>");
           }
-          $html.append($s);
+          $html.find(".significants_list").append($s);
         }
         $("#significants_area").append($html);
         $(".tabdomain").addClass("hide").hide();
@@ -336,10 +344,11 @@
       console.log(v2);
       return $(".significants").each(function() {
         var dom;
+        dom = $(this).data("dom");
         if ($(this).data("color" === "white")) {
-          dom = $(this).data("dom");
-          console.log(dom);
           return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").hide();
+        } else {
+          return $("#scoreTable").find("th[data-dom='" + dom + "'], td[data-dom='" + dom + "']").show();
         }
       });
     });
@@ -411,11 +420,23 @@
         });
       };
       if ($(".selected").length === 0) {
-        $("tr[data-id='" + id + "']").addClass("selected");
-        return do_it();
+        if ($(".significants[data-color='shaded']").length === 0) {
+          return alert("Selectionnez d'abord des signifiants !");
+        } else {
+          $(".significants[data-color='white']").hide();
+          $("tr[data-id='" + id + "']").addClass("selected");
+          return do_it();
+        }
       } else {
         if ($(".selected").is($(this).closest("tr"))) {
-          return $(".selected").removeClass("selected");
+          $(".selected").removeClass("selected");
+          $("#significants_area, .significants").show();
+          return $("#scoreTable").find("th:visible").each(function() {
+            var dom;
+            dom = $(this).data("dom");
+            $(".significants[data-dom='" + dom + "']").attr("data-color", "shaded");
+            return $(".significants[data-dom='" + dom + "']").data("color", "shaded");
+          });
         } else {
           $(".selected").removeClass("selected");
           $("tr[data-id='" + id + "']").addClass("selected");
