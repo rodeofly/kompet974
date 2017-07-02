@@ -2,7 +2,8 @@ ID = 1
 
 HEADERS = ['ID',  'Classe', 'Nom', 'Prénom',  'D1-1.1', 'D1-1.2',  'D1-1.3',  'D1-1.4',  'D1-1.5',  'D1-3.1',  'D1-3.2',  'D1-3.3',  'D1-3.4',  'D1-3.5',  'D1-3.6',  'D1-3.7',  'D2.1', 'D2.2',  'D2.3',  'D2.4',  'D3.1',  'D3.2',  'D3.3',  'D3.4',  'D4.1',  'D4.2',  'D5.1', 'Co.1', 'Co.2', 'Co.3', 'Co.4', 'Co.5', 'Co.6']
 
-EVALS = undefined
+SELECTED_DOMS=[]
+CATEGORIES = undefined
 CLASSES = []
 DATA = [HEADERS]
 DATA_TEMP = []
@@ -16,18 +17,16 @@ DnDFileController = (selector, onDropCallback) ->
     e.preventDefault()
     el_.classList.add 'dropping'
     $( "#upload" ).addClass "slim"
-    return
 
   @dragover = (e) ->
     e.stopPropagation()
     e.preventDefault()
-    return
 
   @dragleave = (e) ->
     e.stopPropagation()
     e.preventDefault()
     $( "#upload" ).removeClass "slim"
-    #el_.classList.remove('dropping');
+    el_.classList.remove 'dropping'
 
   @drop = (e) ->
     e.stopPropagation()
@@ -41,20 +40,14 @@ DnDFileController = (selector, onDropCallback) ->
   el_.addEventListener 'dragover', @dragover, false
   el_.addEventListener 'dragleave', @dragleave, false
   el_.addEventListener 'drop', @drop, false
-  return  
+  
 #############################################################################################################"
 #Construction de la table DATA_TEMP
 bigTable = (data) ->  
-  options = 
-    thead: true
-    attrs: {class: 'table'}
+  options = {thead: true, attrs: {class: 'table'}}
   table = $('<table id="tableau"/>')
   rows = []
-  defaults = 
-    th: true
-    thead: false
-    tfoot: false
-    attrs: {}
+  defaults = {th: true, thead: false, tfoot: false, attrs: {}}
   options = $.extend(defaults, options)
   table.attr options.attrs
   # loop through all the rows, we will deal with tfoot and thead later
@@ -78,8 +71,7 @@ bigTable = (data) ->
             head = "<img  class='thdomain' src='img/#{domain}.svg' data-domain='#{domain}'><br>#{data[i][j]}"
           row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)
         else
-          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)
-        
+          row.append $("<th data-row='#{i}' data-col='#{j}' data-id='#{data[i][j]}' data-dom='#{data[0][j]}'></th>").html(head)       
       else
         if j is 0
           val = "<input type='checkbox' data-id='#{data[i][j]}''><button class='eleve_id' data-id='#{data[i][j]}''>#{data[i][j]}</button>"
@@ -108,21 +100,19 @@ bigTable = (data) ->
   if options.tfoot
     tfoot = $('<tfoot />').append(tfoot)
     table.append tfoot
-  $( "#scoreTable" ).empty().append(table)
-  
-      
+  $( "#scoreTable" ).empty().append(table)     
 #############################################################################################################"
 #Toggle compétences
 toggleEval = (dom) ->
-  switch $( ".significants[data-dom='#{dom}']" ).data "color"
+  switch $( ".signifiant[data-item='#{dom}']" ).data "color"
     when "white"      then [color, score] = ["shaded", 0]
     when "shaded"     then [color, score] = ["red", 10]
     when "red"        then [color, score] = ["yellow", 25]
     when "yellow"     then [color, score] = ["lightGreen", 40]
     when "lightGreen" then [color, score] = ["green", 50]
     when "green"      then [color, score] = ["white", 0]
-  $( ".significants[data-dom='#{dom}']" ).attr( "data-color", color )
-  $( ".significants[data-dom='#{dom}']" ).data( "color", color )
+  $( ".signifiant[data-item='#{dom}']" ).attr( "data-color", color )
+  $( ".signifiant[data-item='#{dom}']" ).data( "color", color )
   if $( ".selected" ).length is 1
     id = $( ".selected" ).data "id"
     $cell = $( "tr[data-id='#{id}']" ).find( "td[data-dom='#{dom}']" )
@@ -136,23 +126,26 @@ toggleEval = (dom) ->
       $cell.html score
   else
     $cells = $( "#scoreTable" ).find( "td[data-dom='#{dom}']" )
+    ###
     if color isnt "white"
       $( "#scoreTable" ).find( "th[data-dom='#{dom}']" ).show()
     else
       $( "#scoreTable" ).find( "th[data-dom='#{dom}']" ).hide()
+    ###
     $cells.each ->
-      if color isnt "white"
-        $( this ).show()
-        row = $( this ).data( "row" )
-        col = $( this ).data( "col" )
-        id  = $( this ).data( "id" )
-        $( this ).attr "data-color", color      
-        $( this ).data "color", color  
-        if not isNaN row * col
-          DATA[id][col] = score
-          $( this ).html score
-      else
-        $( this ).hide()
+      #if color isnt "white"
+        #$( this ).show()
+      row = $( this ).data( "row" )
+      col = $( this ).data( "col" )
+      id  = $( this ).data( "id" )
+      $( this ).attr "data-color", color      
+      $( this ).data "color", color  
+      if not isNaN row * col
+        DATA[id][col] = score
+        $( this ).html score
+      
+      #else
+        #$( this ).hide()
     
 #############################################################################################################"
 #Copy to clipboard 
@@ -179,8 +172,8 @@ go_csv_data = (data) ->
   hide_show_col = ->
     #On remet le menu à zero et on affiche les signifiants      
     $( "#mainselect option[value=Menu]" ).prop "selected", true
-    $( ".significants" ).each ->
-      dom = $(this).data "dom"
+    $( ".signifiant" ).each ->
+      dom = $(this).data "item"
       if $(this).data("color") is "white"
         $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
       else
@@ -191,8 +184,7 @@ go_csv_data = (data) ->
         $cells.show()
   temp = $.csv.toArrays(data)
   id = 1
-  DATA = []
-  CLASSES = []
+  [DATA,CLASSES] = [[], []]
   for i in temp
     CLASSES.push i[0] if i[0] not in CLASSES
     DATA.push( [id++].concat(i).concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]) )
@@ -202,7 +194,7 @@ go_csv_data = (data) ->
   ###########################################################
   #Menu select pour le mainmenu
   $select = $( "<select id='mainselect'></select>" )
-  for o in ["Menu", "Importer", "Sauver","Copier", "Tous"].concat CLASSES
+  for o in ["Menu", "Importer", "Sauver Table", "Sauver Catégories", "Copier", "Tous"].concat CLASSES
     $select.append "<option value='#{o}'>#{o}</option>"
   $( "#mainselect" ).remove()
   $( "#menu-item" ).prepend $select       
@@ -210,24 +202,27 @@ go_csv_data = (data) ->
   ##################################################################
   #On selectionne de la classe    
   ##################################################################
-  hide_show_col()
+  #hide_show_col()
   $( "#mainselect" ).change () ->
+    save = (type) ->
+      dataStr = "data:text/#{type};charset=utf-8,"
+      stringValue = prompt( "Nom du fichier ?", stringValue )
+      switch type
+        when "json" 
+          dataStr += encodeURIComponent(JSON.stringify(CATEGORIES))
+        when "csv"
+          dataStr += encodeURIComponent $.csv.fromArrays(DATA_TEMP[1..].map (val) -> return val.slice 1)
+      dlAnchorElem = document.getElementById('save')
+      dlAnchorElem.setAttribute("href",     dataStr     )
+      dlAnchorElem.setAttribute("download", "#{stringValue}.#{type}")
+      dlAnchorElem.click()
     option = $("#mainselect").val()
     switch option
-      when "Importer"
-        $( "#upload" ).show()
-      when "Sauver"
-        stringValue = prompt( "Nom du fichier ?", stringValue )
-        dataStr = "data:text/csv;charset=utf-16," + encodeURIComponent($.csv.fromArrays(DATA_TEMP))
-        dlAnchorElem = document.getElementById('save')
-        dlAnchorElem.setAttribute("href",     dataStr     )
-        dlAnchorElem.setAttribute("download", "#{stringValue}.csv")
-        dlAnchorElem.click()
-      when "Copier"
-        $( "#copy" ).click()
-      when "Tous"
-        DATA_TEMP = DATA    
-        bigTable(DATA_TEMP)      
+      when "Importer"          then $( "#upload" ).show()
+      when "Sauver Table"      then save "csv"        
+      when "Sauver Catégories" then save "json"           
+      when "Copier"            then $( "#copy" ).click()
+      when "Tous"              then bigTable(DATA_TEMP = DATA)      
       else
         if option isnt "menu"
           CLASSE = option
@@ -235,17 +230,65 @@ go_csv_data = (data) ->
           for o in DATA
             DATA_TEMP.push o if o[1] is CLASSE
           bigTable(DATA_TEMP)
-    hide_show_col()
-    
+    #hide_show_col()
 #############################################################################################################"
+class Descripteur
+  constructor : (@item,@parent_id, @nom) ->
+    @id = ID++
+    html = """
+<li id='#{@id}' class='descripteur'data-item='#{@item}' data-color='white' data-parent_id='#{@parent_id}'>
+    <div class='head'>
+        #{@nom}
+        <button class='editSignifiant admin'>Éditer</button>
+    </div>
+</li>"""
+    $( "##{@parent_id} .descripteurs ul" ).append html
 #############################################################################################################"
+class Signifiant
+  constructor : (@item, @parent_id, @nom) ->
+    @id = ID++
+    html = """
+<div id='#{@id}' class='signifiant' data-item='#{@item}' data-color='white' data-parent_id='#{@parent_id}' data-nom='#{@nom}'>
+    <div class='head'>
+        <div class='toggleDescripteurs hide' data-id='#{@id}'></div>#{@nom}
+        <button class='addDescripteur admin' data-parent_id='#{@id}'>+Descripteur</button>       
+    </div>
+    <div class='descripteurs' title='#{@nom}'>
+        <ul></ul>
+    </div>
+</div>"""
+    $( "##{@parent_id}" ).find( ".signifiants" ).append html
+#############################################################################################################"
+class Categorie
+  constructor : (@nom, @desc, @iconUrl) ->
+    @id = ID++    
+    @tab_html = """
+<div class='category__tab show' data-id='#{@id}'>
+    <div class='head'>
+        <img class='tabdomain' src='#{@iconUrl}'>
+    </div>
+</div>"""
+    @eval_html = """
+<div id='#{@id}' class='category' data-nom='#{@nom}' data-desc='#{@desc}' data-icon='#{@iconUrl}'>
+    <div class='head'>   
+        <span class='category__name'>
+          <h1>
+              <img class='category__icon' src='#{@iconUrl}' data-nom='#{@nom}'>#{@nom}
+          </h1>
+          <h2>#{@desc}</h2>
+        </span>
+    </div>
+    <button class='addSignifiant admin' data-parent_id='#{@id}'>+Signifiant</button>
+    <div class='signifiants'></div>
+</div>"""
+    $( "#tabs" ).append @tab_html
+    $( "#categories_area" ).append @eval_html   
 #############################################################################################################"
 #On dom ready
-$ ->
-  
+$ -> 
   $( "#upload" ).hide()
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
-  #############################################################################################################"
+  ##################################################################
   #Accidental reload !
   window.onbeforeunload = () -> return ""  
   ################################################################## 
@@ -259,55 +302,35 @@ $ ->
     success: (data) ->
       go_csv_data(data)
       d1.resolve( "Éleves finished !" )
-  #Fin de DATA
+    #Fin Élèves
   ##################################################################
   #Construction du S4C
-  $.getJSON "S4C.json", ( data ) -> 
-    EVALS = data
-    console.log EVALS
-    #################
-    #Boutons .domain 
-    evals = Object.keys EVALS
-    for k of EVALS
-      $html = $( "<div id='#{k}' class='domain'><div class='nom'><img class='tabdomain' src='img/#{k[0..1]}.svg' data-domain='#{k}'>#{k} : #{EVALS[k]['subtitle']}</div><div class='significants_list'></div></div>" )
-      n=0
-      for s of EVALS[k].significants
-        id = ID++
-        n++
-        $s = $( "<div class='significants' data-color='white' data-dom='#{k}.#{n}'>#{k}.#{n} : #{s}<img class='more' src='css/icons/more.png' data-id='#{id}'><div class='info' id='#{id}' title='#{s}'><ul></ul></div></div>" )
-        for i in EVALS[k].significants[s]
-          $s.find(".info ul").append "<li class='item'>#{i}</li>"
-        $html.find(".significants_list").append $s
-      $("#significants_area").append $html
-      $( ".tabdomain" )
-        .addClass "hide"
-        .hide()
-      $( ".domain" ).hide()
-    ##################################################################
-    #sugar
-    $("#significants_area").draggable()
-    $( ".info" ).dialog
-      autoOpen: false
-      width   : "auto"   
-    $( "body" ).on "click", ".more", (event) -> 
-      event.stopPropagation()
-      id = $( this ).data( "id" )
-      $( "##{id}" ).dialog "open"
+  $.getJSON "S4C_cat.json", ( data ) -> 
+      CATEGORIES = data
+      for nom of CATEGORIES
+        cat = new Categorie(nom, data[nom].desc, data[nom].iconUrl)
+        i=1
+        for signifiant, descripteurs of data[nom].signifiants
+          s = new Signifiant("#{nom}.#{i++}",cat.id, signifiant)
+          j=1
+          for descripteur in descripteurs
+            new Descripteur("#{s.item}.#{j++}",s.id, descripteur)
+      $( "#edit" ).prop "checked", false
+      $( ".admin" ).hide()
+      $( ".toggleDescripteurs" ).click()
     d2.resolve( "S4C finished !" );
-  #Fin du S4C
-      
+    #Fin du S4C     
   ###################################################################
   #Deffered to resolve Ajax concurrency
   $.when( d1, d2 ).done ( v1, v2 ) ->
     console.log( v1 )
     console.log( v2 )
-    $( ".significants" ).each ->
-      dom = $(this).data "dom"
+    $( ".signifiant" ).each ->
+      dom = $(this).data "item"
       if $(this).data "color" is "white"
         $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide()
       else
         $( "#scoreTable" ).find( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).show()
-
   ##################################################################
   #Drag and Drop file
   dnd = new DnDFileController '#upload', (files) ->
@@ -316,21 +339,17 @@ $ ->
     reader.onloadend = (e) -> go_csv_data(@result)
     reader.readAsText f
     return
-  ##################################################################  
   ##################################################################
   #Evenements de l'interface 
-  ##################################################################
   ##################################################################
   #Toggle all checkboxes
   ##################################################################
   $( "body" ).on "click", "input[data-row='0']", ->
     checkBoxes = $("input[type='checkbox']").not($(this))
     if $(this).prop "checked"
-      checkBoxes.prop("checked", true)
-      checkBoxes.closest("tr").addClass "export"
+      checkBoxes.prop("checked", true).closest("tr").addClass "export"
     else
-      checkBoxes.prop("checked", false)
-      checkBoxes.closest("tr").removeClass "export"
+      checkBoxes.prop("checked", false).closest("tr").removeClass "export"
   ##################################################################
   #Toggle single checkbox  
   ##################################################################
@@ -343,8 +362,7 @@ $ ->
         text += ","
       text += "\n"
     $( "#bar" ).text text 
-    new Clipboard "#copy" 
-  
+    new Clipboard "#copy"   
   ##################################################################
   #On selectionne un élève ! 
   ##################################################################  
@@ -365,64 +383,81 @@ $ ->
           when 25 then [color, score] = ["yellow", 25]
           when 40 then [color, score] = ["lightGreen", 40]
           when 50 then [color, score] = ["green", 50]
-        $( ".significants[data-dom='#{dom}']" ).attr "data-color", color
-        $( ".significants[data-dom='#{dom}']" ).data "color", color
+        $( ".signifiant[data-item='#{dom}']" ).attr "data-color", color
+        $( ".signifiant[data-item='#{dom}']" ).data "color", color
     if $( ".selected" ).length is 0
-      if $( ".significants[data-color='shaded']" ).length is 0
+      if $( ".signifiant[data-color='shaded']" ).length is 0
         alert "Selectionnez d'abord des signifiants !"
       else
-        $( ".significants[data-color='white']" ).hide()
+        SELECTED_DOMS = []
+        doms = []
+        $( ".signifiant[data-color='white']" ).each ->
+          $( this ).hide()
+          doms.push $( this ).data( "item" )
+        $( "th[data-dom='#{dom}'], td[data-dom='#{dom}']" ).hide() for dom in doms
+        $( ".signifiant[data-color='shaded']" ).each ->
+          SELECTED_DOMS.push $(this).data "item"
+
+        $( ".category" ).each -> 
+          $(this).hide() if $( this).find(".signifiant:visible" ).length is 0
         $( "tr[data-id='#{id}']" ).addClass "selected"
         do_it()
     else 
       if $( ".selected" ).is $( this ).closest( "tr" )
         $( ".selected" ).removeClass "selected"
-        # On remet les signifiants séléctionnés
-        $( "#significants_area, .significants" ).show()
-        $( "#scoreTable" ).find( "th:visible" ).each ->
-          dom = $(this).data "dom"
-          $( ".significants[data-dom='#{dom}']" ).attr "data-color", "shaded"
-          $( ".significants[data-dom='#{dom}']" ).data "color", "shaded"        
+        # On reaffiche tout !
+        $( ".category, th, td, #categories_area, .signifiant" ).show()
+        for dom in SELECTED_DOMS
+          $( ".signifiant[data-item='#{dom}']" ).attr "data-color", "shaded"
+          $( ".signifiant[data-item='#{dom}']" ).data "color", "shaded"             
       else
         $( ".selected" ).removeClass "selected"
         $( "tr[data-id='#{id}']" ).addClass "selected"
-        do_it()   
-  ##################################################################
-  #On selectionne un domaine   
-  ##################################################################
-  #Par défaut on affiche rien
-  $( ".tabtoggler[data-domain='none']" ).hide()
-  ##################################################################
-  #Evt : Quand on veux cacher les domaines  
-  ################################################################## 
-  $( ".tabtoggler[data-domain='none']" ).on "click", ->
-    $( "#significants_area, .tabdomain" ).hide()
-    $( ".tabtoggler[data-domain='all']" ).show()
-    $(this).hide()
-  ##################################################################
-  #Evt : Quand on veux afficher les domaines   
-  ##################################################################   
-  $( ".tabtoggler[data-domain='all']" ).on "click", ->
-    $( ".tabdomain" ).show()
-    $("#significants_area").show()
-    $( ".tabtoggler[data-domain='none']" ).show()
-    $(this).hide()
+        do_it()
   ##################################################################
   #Evt : Quand on afficher/cacher les signifiants d'un domaine
-  ##################################################################   
-  $( ".tabdomain" ).on "click", (event) ->
-    dom = $(this).data( "domain" )
+  $( "body" ).on "click", ".category__tab", (event) ->
+    categoryId = $(this).data( "id" )
     $(this).toggleClass "show hide"
-
     if $(this).hasClass "show"
-      $( "##{dom}" ).show()
+      $( "##{categoryId}" ).show()
       $( ".selected" ).removeClass "selected"
     else
-      $( "##{dom}" ).hide()
+      $( "##{categoryId}" ).hide()
   ##################################################################
   #Evt : Quand on toggle un signifiant   
   ################################################################## 
-  $( "body" ).on "click", ".significants", -> 
-    toggleEval( $(this).data "dom" )
+  $( "body" ).on "click", ".signifiant", -> toggleEval( $(this).data "item" )
+  ##################################################################
+  #CRUD
+  ################################################################## 
+  $( "body" ).on "click", ".addCategory", ->
+    nom = prompt( "Nom de la catégorie ?", "test" )
+    desc = prompt( "Description de la catégorie ?", "desc" )
+    iconUrl = prompt( "url de l'image de la catégorie ?", "img/D2.svg" )
+    new Categorie(nom, desc, iconUrl)
   
- 
+  $( "body" ).on "click", ".addSignifiant", ->
+    parent_id = $(this).data "parent_id"
+    nom = prompt( "Nom du signifiant ?", "signifiant" )
+    new Signifiant(parent_id, nom)
+  
+  $( "body" ).on "click", ".addDescripteur", ->
+    parent_id = $(this).data "parent_id"
+    nom = prompt( "Nom du descripteur ?", "descripteur" )
+    new Descripteur(parent_id, nom)
+   
+  $( "body" ).on "click", ".toggleDescripteurs", (event) ->
+    event.stopPropagation()
+    id = $(this).data "id"
+    $( this ).toggleClass "hide show"
+    $( "##{id} .descripteurs" ).toggle()
+  
+  $( "body" ).on "click", "input#edit[type='checkbox']", ->
+    if $(this).prop "checked"
+      $( ".admin" ).show()
+    else $( ".admin" ).hide()
+  
+  $("#categories_area").draggable()
+  
+  

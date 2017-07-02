@@ -140,8 +140,27 @@ html {
  background-color : rgba(255,255,255,0.25);
 
 }
+.category {
+  background-color : rgba(0,0,0,.25);
+  color : white;
+  border-radius : 10px;
+  border : solid black 2px;
+  margin : 1px;
 
-.tabdomain, .tabtoggler {
+}
+.category__tab {
+  display : inline-block;
+  width : 50px;
+  height : 50px;
+  margin-right: 25px;
+  border-radius : 25px;
+}
+.category__tab.show {
+  background-color : rgba(64,64,64,64);
+}
+
+
+.category__icon, .tabdomain, .tabtoggler {
 width : 50px;
 height : 50px;
 margin-right: 25px;
@@ -158,7 +177,7 @@ border-radius : 25px;
   background-color : rgba(64,64,64,64);
 }
 
-#significants_area {
+#categories_area {
 position : fixed;
 display: flex;
 flex-flow: row nowrap;
@@ -192,24 +211,36 @@ text-align : center;
   font-weight : bolder;
   height : 50px;
 }
-.significants_list {
+
+
+
+.category__icon {
+
+}
+.category h1 {
+  font-size : 1em;
+}
+.category h2 {
+  font-size : .75em;
+}
+
+.descripteurs ul {
+  background-color : rgba(0, 0, 0, 0.25);
+  padding : 5px;
+  border-radius : 5px;
+}
+.signifiants {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  border : solid black 2px;
-  margin : 0px;
+
+
   vertical-align : top;
   font-weight :bolder;
   background-color : white;
-  border-radius : 10px;
 
-}
-.significants {
-  height : 30px;
-  vertical-align: top;
+
   text-align : left;
-  position: relative;
-  display : inline-block;
   margin : 2px;
   padding : 2px;
   border : solid black 1px;
@@ -220,13 +251,38 @@ text-align : center;
   font-weight : bolder;
 }
 
+.signifiant {
+  margin-bottom : 3px;
+}
+.descripteurs li {
+  margin-bottom : 2px;
+}
+.toggleDescripteurs {
+  width : 32px;
+  height : 16px;
+  display : inline-block;
+  background: url(icons/toggle.png) 0 0;
+  background-size : 100% 100%;
+
+}
+.toggleDescripteurs.hide{
+  background: url(icons/toggle.png) 0 0;
+}
+.toggleDescripteurs.show{
+  background: url(icons/toggle.png) 0 -16px;
+}
+
+[data-color] {
+  border-radius : 5px;
+}
+
 [data-color='white'] {
   background-color : rgba(255, 255, 255, 0.75);
   -webkit-print-color-adjust: exact;
 }
 
 [data-color='shaded'] {
-  background-color : rgba(0, 0, 0, 0.25);
+  background-color : rgba(0, 0, 0, 0.1);
   -webkit-print-color-adjust: exact;
 }
 
@@ -326,6 +382,10 @@ font-size : 0.75em;
 
 }
 
+.admin {
+  color:black;
+
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */
