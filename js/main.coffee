@@ -211,7 +211,9 @@ go_csv_data = (data) ->
         when "json" 
           dataStr += encodeURIComponent(JSON.stringify(CATEGORIES))
         when "csv"
-          dataStr += encodeURIComponent $.csv.fromArrays(DATA_TEMP[1..].map (val) -> return val.slice 1)
+          #dataStr += encodeURIComponent $.csv.fromArrays(DATA_TEMP[1..].map (val) -> return val.slice 1)
+          options = {"separator" : "\t"}
+          dataStr += encodeURIComponent $.csv.fromArrays(DATA_TEMP,options)
       dlAnchorElem = document.getElementById('save')
       dlAnchorElem.setAttribute("href",     dataStr     )
       dlAnchorElem.setAttribute("download", "#{stringValue}.#{type}")
