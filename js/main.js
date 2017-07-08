@@ -601,6 +601,7 @@
       }
     });
     $("body").on("click", "#qrcodeModeStart", function() {
+      var constraints;
       $(".signifiant:visible:first").addClass("selectedSig");
       $(".eleve").hide();
       $("body").off("click", ".signifiant");
@@ -610,6 +611,23 @@
       });
       $("#qrcodeModeStart, #qrcodeModeStop").toggle();
       $("#scanner").show();
+      constraints = {
+        audio: true,
+        video: {
+          width: 1280,
+          height: 720
+        }
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
+        var video;
+        video = document.querySelector('video');
+        video.srcObject = mediaStream;
+        return video.onloadedmetadata = function(e) {
+          return video.play();
+        };
+      })["catch"](function(err) {
+        return console.log(err.name + ': ' + err.message);
+      });
       return $('#reader').html5_qrcode((function(data) {
         var color, dom, id, item, ref, score;
         $(".eleve").hide();

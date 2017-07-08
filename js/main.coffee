@@ -503,6 +503,24 @@ $ ->
       $(this).addClass "selectedSig"      
     $( "#qrcodeModeStart, #qrcodeModeStop" ).toggle()
     $( "#scanner" ).show()
+    
+    # Prefer camera resolution nearest to 1280x720.
+    constraints = 
+      audio: true
+      video:
+        width: 1280
+        height: 720
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then((mediaStream) ->
+      video = document.querySelector('video')
+      video.srcObject = mediaStream
+      video.onloadedmetadata = (e) -> video.play()
+    ).catch (err) -> console.log err.name + ': ' + err.message
+
+
+    
+
+ 
     $('#reader').html5_qrcode ((data) ->
       $( ".eleve" ).hide()    
       [id, color] = data.split("-")
