@@ -174,6 +174,130 @@
     return results;
   };
 
+  $.fn.extend({
+    html5_qrcode: function(qrcodeSuccess, qrcodeError, videoError) {
+      return this.each(function() {
+        var audioSelect, canvas, canvasElem, context, currentElem, getStream, gotDevices, gotStream, handleError, height, localMediaStream, scan, successCallback, vidElem, video, videoElement, videoSelect, width;
+        currentElem = $(this);
+        height = currentElem.height();
+        width = currentElem.width();
+        if (height === null) {
+          height = 250;
+        }
+        if (width === null) {
+          width = 300;
+        }
+        vidElem = $("<video width='" + width + "px' height='" + height + "px'></video>").appendTo(currentElem);
+        canvasElem = $("<canvas id='qr-canvas' width='" + (width - 2) + "px' height='" + (height - 2) + "px' style='display:none;'></canvas>").appendTo(currentElem);
+        video = vidElem[0];
+        canvas = canvasElem[0];
+        context = canvas.getContext('2d');
+        localMediaStream = void 0;
+        videoElement = video;
+        audioSelect = document.querySelector('select#audioSource');
+        videoSelect = document.querySelector('select#videoSource');
+        gotDevices = function(deviceInfos) {
+          var deviceInfo, i, option;
+          i = 0;
+          while (i !== deviceInfos.length) {
+            deviceInfo = deviceInfos[i];
+            option = document.createElement('option');
+            option.value = deviceInfo.deviceId;
+            if (deviceInfo.kind === 'audioinput') {
+              option.text = deviceInfo.label || 'microphone ' + audioSelect.length + 1;
+              audioSelect.appendChild(option);
+            } else if (deviceInfo.kind === 'videoinput') {
+              option.text = deviceInfo.label || 'camera ' + videoSelect.length + 1;
+              videoSelect.appendChild(option);
+            } else {
+              console.log('Found ome other kind of source/device: ', deviceInfo);
+            }
+            ++i;
+          }
+        };
+        getStream = function() {
+          var constraints;
+          if (window.stream) {
+            window.stream.getTracks().forEach(function(track) {
+              track.stop();
+            });
+          }
+          constraints = {
+            audio: {
+              optional: [
+                {
+                  sourceId: audioSelect.value
+                }
+              ]
+            },
+            video: {
+              optional: [
+                {
+                  sourceId: videoSelect.value
+                }
+              ]
+            }
+          };
+          navigator.mediaDevices.getUserMedia(constraints).then(gotStream)["catch"](handleError);
+        };
+        gotStream = function(stream) {
+          window.stream = stream;
+          videoElement.srcObject = stream;
+        };
+        handleError = function(error) {
+          console.log('Error: ', error);
+        };
+        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream)["catch"](handleError);
+        audioSelect.onchange = getStream;
+        videoSelect.onchange = getStream;
+        scan = function() {
+          var e;
+          if (localMediaStream) {
+            context.drawImage(video, 0, 0, 307, 250);
+            try {
+              qrcode.decode();
+            } catch (_error) {
+              e = _error;
+              qrcodeError(e, localMediaStream);
+            }
+            return $.data(currentElem[0], 'timeout', setTimeout(scan, 500));
+          } else {
+            return $.data(currentElem[0], 'timeout', setTimeout(scan, 500));
+          }
+        };
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        successCallback = function(stream) {
+          video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+          localMediaStream = stream;
+          $.data(currentElem[0], 'stream', stream);
+          video.play();
+          return $.data(currentElem[0], 'timeout', setTimeout(scan, 1000));
+        };
+        if (navigator.getUserMedia) {
+          navigator.getUserMedia({
+            video: true
+          }, successCallback, function(error) {
+            videoError(error, localMediaStream);
+          });
+        } else {
+          console.log('Native web camera streaming (getUserMedia) not supported in this browser.');
+        }
+        return qrcode.callback = function(result) {
+          return qrcodeSuccess(result, localMediaStream);
+        };
+      });
+    },
+    html5_qrcode_stop: function() {
+      return this.each(function() {
+        $(this).data('stream').getVideoTracks().forEach(function(videoTrack) {
+          videoTrack.stop();
+        });
+        return clearTimeout($(this).data('timeout'));
+      });
+    }
+  });
+
   $(function() {
     var d1, d2, dnd, do_it, toggleSignifiant;
     $("#upload .close").on("click", function() {
@@ -601,7 +725,6 @@
       }
     });
     $("body").on("click", "#qrcodeModeStart", function() {
-      var constraints;
       $(".signifiant:visible:first").addClass("selectedSig");
       $(".eleve").hide();
       $("body").off("click", ".signifiant");
@@ -611,23 +734,6 @@
       });
       $("#qrcodeModeStart, #qrcodeModeStop").toggle();
       $("#scanner").show();
-      constraints = {
-        audio: true,
-        video: {
-          width: 1280,
-          height: 720
-        }
-      };
-      navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
-        var video;
-        video = document.querySelector('video');
-        video.srcObject = mediaStream;
-        return video.onloadedmetadata = function(e) {
-          return video.play();
-        };
-      })["catch"](function(err) {
-        return console.log(err.name + ': ' + err.message);
-      });
       return $('#reader').html5_qrcode((function(data) {
         var color, dom, id, item, ref, score;
         $(".eleve").hide();

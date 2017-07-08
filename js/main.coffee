@@ -151,8 +151,126 @@ studentsCards = (data) ->
     $( "#eleves" ).append s.html
 
 ####################################################################
+$.fn.extend
+  html5_qrcode: (qrcodeSuccess, qrcodeError, videoError) ->
+    @each ->
+      currentElem = $(this)
+      height = currentElem.height()
+      width = currentElem.width()
+      if height == null
+        height = 250
+      if width == null
+        width = 300
+      vidElem = $( "<video width='#{width}px' height='#{height}px'></video>").appendTo(currentElem)
+      canvasElem = $("<canvas id='qr-canvas' width='#{width - 2}px' height='#{height - 2}px' style='display:none;'></canvas>").appendTo(currentElem)
+      video = vidElem[0]
+      canvas = canvasElem[0]
+      context = canvas.getContext('2d')
+      localMediaStream = undefined
+      
+      
+      
+      videoElement = video
+      audioSelect = document.querySelector('select#audioSource')
+      videoSelect = document.querySelector('select#videoSource')
+
+      gotDevices = (deviceInfos) ->
+        i = 0
+        while i != deviceInfos.length
+          deviceInfo = deviceInfos[i]
+          option = document.createElement('option')
+          option.value = deviceInfo.deviceId
+          if deviceInfo.kind == 'audioinput'
+            option.text = deviceInfo.label or 'microphone ' + audioSelect.length + 1
+            audioSelect.appendChild option
+          else if deviceInfo.kind == 'videoinput'
+            option.text = deviceInfo.label or 'camera ' + videoSelect.length + 1
+            videoSelect.appendChild option
+          else
+            console.log 'Found ome other kind of source/device: ', deviceInfo
+          ++i
+        return
+
+      getStream = ->
+        if window.stream
+          window.stream.getTracks().forEach (track) ->
+            track.stop()
+            return
+        constraints = 
+          audio: optional: [ { sourceId: audioSelect.value } ]
+          video: optional: [ { sourceId: videoSelect.value } ]
+        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
+        return
+
+      gotStream = (stream) ->
+        window.stream = stream
+        # make stream available to console
+        videoElement.srcObject = stream
+        return
+
+      handleError = (error) ->
+        console.log 'Error: ', error
+        return
+
+      navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
+      audioSelect.onchange = getStream
+      videoSelect.onchange = getStream
+
+
+      
+      
+
+      scan = ->
+        if localMediaStream
+          context.drawImage video, 0, 0, 307, 250
+          try
+            qrcode.decode()
+          catch e
+            qrcodeError e, localMediaStream
+          $.data currentElem[0], 'timeout', setTimeout(scan, 500)
+        else
+          $.data currentElem[0], 'timeout', setTimeout(scan, 500)
+
+      #end snapshot function
+      window.URL = window.URL or window.webkitURL or window.mozURL or window.msURL
+      navigator.getUserMedia = navigator.getUserMedia or navigator.webkitGetUserMedia or navigator.mozGetUserMedia or navigator.msGetUserMedia
+
+      successCallback = (stream) ->
+        video.src = window.URL and window.URL.createObjectURL(stream) or stream
+        localMediaStream = stream
+        $.data currentElem[0], 'stream', stream
+        video.play()
+        $.data currentElem[0], 'timeout', setTimeout(scan, 1000)
+        
+
+      # Call the getUserMedia method with our callback functions
+      if navigator.getUserMedia
+        navigator.getUserMedia { video: true }, successCallback, (error) ->
+          videoError error, localMediaStream
+          return
+      else
+        console.log 'Native web camera streaming (getUserMedia) not supported in this browser.'
+        # Display a friendly "sorry" message to the user
+
+      qrcode.callback = (result) ->
+        qrcodeSuccess result, localMediaStream
+       
+    # end of html5_qrcode
+  html5_qrcode_stop: ->
+    @each ->
+      #stop the stream and cancel timeouts
+      $(this).data('stream').getVideoTracks().forEach (videoTrack) ->
+        videoTrack.stop()
+        return
+      clearTimeout $(this).data('timeout')
+      
+  
 #On dom ready
-$ ->     
+$ ->
+  
+  
+  
+    
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
   ##################################################################
   #Accidental reload !
@@ -504,23 +622,7 @@ $ ->
     $( "#qrcodeModeStart, #qrcodeModeStop" ).toggle()
     $( "#scanner" ).show()
     
-    # Prefer camera resolution nearest to 1280x720.
-    constraints = 
-      audio: true
-      video:
-        width: 1280
-        height: 720
-    navigator.mediaDevices.getUserMedia(constraints)
-    .then((mediaStream) ->
-      video = document.querySelector('video')
-      video.srcObject = mediaStream
-      video.onloadedmetadata = (e) -> video.play()
-    ).catch (err) -> console.log err.name + ': ' + err.message
 
-
-    
-
- 
     $('#reader').html5_qrcode ((data) ->
       $( ".eleve" ).hide()    
       [id, color] = data.split("-")
