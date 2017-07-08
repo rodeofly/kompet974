@@ -109,28 +109,33 @@ html {
   background-size: cover;
  
 }
-#mainmenu, #mainselect, #competences, .competence {
-  display : inline-block;
-}
-
-#mainmenu {
+#marginer {
+  height : 75px;
   width : 100%;
-  height : 50px;
+  margin : 0;
+  padding : 0;
 }
-#competences {
 
+#menu-item {
+  position : fixed;
+  width : 100%;
+  top : 0;
+  
+  background-color : blue;
+  z-index : 100;
 }
-.competence {
+
+#mainselect {
   width : 50px;
-}
-.competence.show {
-  background-color : rgba(64,64,64,64);
-}
-#tabs {
- display : inline-block;
+  height : 50px;
+  font-size : 1.5em;
 }
 
-#bar {
+#tabs {
+
+}
+
+#clipboard {
  position : absolute;
  width : 1px;
  height:1px;
@@ -140,68 +145,163 @@ html {
  background-color : rgba(255,255,255,0.25);
 
 }
-.category {
+
+#copy {
+  display : none;
+
+}
+#eleves {
+  text-align : center;  
+  margin-bottom : 300px;
+  display : flex;
+  flex-flow : row wrap;
+  justify-content: center;
+}
+
+.eleve {
+  display : inline-block;
+  min-width : 150px;
+  height : 125px;
+  background : grey;
+  border : solid black 2px;
+  border-radius : 5px;
+  margin : 2px;
+}
+
+.eleve.absent {
+  background-color : black;
+  color : white;
+}
+
+button.absent, button.present {
+  background-color: white;
+  color : black;
+  font-size : 0.75em;
+  border : solid black 2px;
+  border-radius : 5px;
+}
+
+.eleve .content {
+  position : relative;
+  margin : 0;
+  padding : 0;
+  width : 100%;
+  height : 100%;
+}
+
+.eleve .evaluation {
+  width : 100%;
+  display : flex;
+  flex-flow : row nowrap;
+  justify-content: space-around;
+}
+.evaluation .eval_dom {
+  display : flex;
+  flex-flow : row nowrap;
+  border : solid black 1px;
+  border-radius : 5px;
+  margin-top : 5px;
+}
+
+.eval_sig {
+  width : 25px;
+  height : 25px;
+  border-radius : 5px;
+
+}
+
+.eleve.selected {
+
+  background-color :white;
+
+}
+
+.eleve h1 {
+  font-size : 1em;
+  text-align  : center;
+}
+
+
+.eleve .save {
+  position : absolute;
+  top : 0;
+  right : 0;
+  
+  border : solid black 2px;
+  border-radius : 5px;
+}
+
+#domaines_area {
+  position : relative;
+  display     : flex;
+  justify-content: flex-start;
+  flex-flow : row nowrap;
+  background  : white;
+  text-align  : center;
+  z-index     : 1000;
+  overflow : scroll-y;
+}
+
+
+
+.domaine {
   background-color : rgba(0,0,0,.25);
   color : white;
   border-radius : 10px;
   border : solid black 2px;
   margin : 1px;
+  font-weight :bolder;
+  min-width : 200px;
 
 }
-.category__tab {
+
+
+.domaine > .head {
+  text-align : left;
+  background-color : rgba(0,0,0,0.75);
+  border-radius : 5px;
+  border : solid black 1px;
+  padding : 5px;
+
+}
+.domaine__name {
+  display    : inline-block;
+  text-align : center;
+  margin : auto;
+  width: -webkit-calc(100% - 100px);
+  width:    -moz-calc(100% - 100px);
+  width:         calc(100% - 100px);
+  vertical-align : middle;
+
+}
+
+.domaine__tab {
+  width  : 50px;
+  height : 50px;
+  border-radius : 25px;
+  text-align : center;
+  display    : inline-block;
+}
+
+.domaine__tab.show {
+  background-color : rgba(64,64,64,1);
+}
+
+.domaine__icon, .tabtoggler {
   display : inline-block;
   width : 50px;
   height : 50px;
   margin-right: 25px;
   border-radius : 25px;
-}
-.category__tab.show {
-  background-color : rgba(64,64,64,64);
+    
 }
 
-
-.category__icon, .tabdomain, .tabtoggler {
-width : 50px;
-height : 50px;
-margin-right: 25px;
-border-radius : 25px;
-}
-
-.tabs {
-  position : fixed;
-  top : 0;
-  right :0;
-}
- 
-.tabdomain.show {
-  background-color : rgba(64,64,64,64);
-}
-
-#categories_area {
-position : fixed;
-display: flex;
-flex-flow: row nowrap;
-justify-content: center;
-align-items: flex-start;
-bottom : 0;
-background : transparent;
-height : 0%
-width : 100%;
-min-width : 100%;
-max-width : 100%;
-text-align : center;
+.domaine__icon {
+ margin : 0;
+ vertical-align : middle;
 
 }
 
-.domain {
-  border : solid black 2px;
-  margin : 1px;
-  vertical-align : top;
-  font-weight :bolder;
-  background-color : white;
-  border-radius : 10px;
-
-}
 .nom {
   display : inline-block;
   width : 100%;
@@ -212,16 +312,14 @@ text-align : center;
   height : 50px;
 }
 
-
-
-.category__icon {
-
-}
-.category h1 {
+.domaine h1 {
   font-size : 1em;
+  margin : 0;
 }
-.category h2 {
+.domaine h2 {
+  margin : 0;
   font-size : .75em;
+  min-height : 50px;
 }
 
 .descripteurs ul {
@@ -229,33 +327,29 @@ text-align : center;
   padding : 5px;
   border-radius : 5px;
 }
-.signifiants {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-
-
-  vertical-align : top;
-  font-weight :bolder;
+.signifiants {  
   background-color : white;
-
-
-  text-align : left;
-  margin : 2px;
-  padding : 2px;
   border : solid black 1px;
   border-radius : 10px;
-  overflow : hidden;
   color : black;
-  font-size : 0.75em;
-  font-weight : bolder;
+  vertical-align : top;
+  text-align : left;
+  font-weight :bolder;  
+
 }
 
 .signifiant {
+  min-height : 50px;
   margin-bottom : 3px;
 }
+.descripteurs {
+  font-weight : normal;
+  height:auto;
+  }
+  
 .descripteurs li {
   margin-bottom : 2px;
+  background-color : transparent;
 }
 .toggleDescripteurs {
   width : 32px;
@@ -272,6 +366,52 @@ text-align : center;
   background: url(icons/toggle.png) 0 -16px;
 }
 
+#domaines_area.freeze {
+  position : fixed;
+  width : 100%;
+  bottom : 0;
+  left : 0;
+  z-index : 1000;
+  display : flex;
+  flex-flow : row nowrap;
+  justify-content: flex-start;
+}
+
+#domaines_area.freeze .domaine.freeze {
+  display : flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  max-width : none;
+  background-color : transparent;
+  border : none;
+}
+
+.domaine.freeze .domaine__name, .domaine.freeze .toggleDescripteurs{
+  display:none;
+}
+
+
+.domaine.freeze .signifiants {
+  display : flex;
+  flex-flow: row nowrap;
+  background-color : transparent;
+  border : none;
+}
+
+.domaine.freeze .signifiant {
+  width    : 75px;
+  height   : 75px;
+  overflow : hidden;
+  border   : solid black 2px;
+  border-radius : 5px;
+  text-align : center;
+  font-size : 0.75em;
+  vertical-align : middle;
+}
+
+.domaine.freeze .signifiant.selectedSig {
+  border : solid black 5px;
+}
 [data-color] {
   border-radius : 5px;
 }
@@ -282,7 +422,7 @@ text-align : center;
 }
 
 [data-color='shaded'] {
-  background-color : rgba(0, 0, 0, 0.1);
+  background-color : rgba(200, 200, 200, 1);
   -webkit-print-color-adjust: exact;
 }
 
@@ -304,38 +444,19 @@ text-align : center;
 }
 
 
-.more {
-position : absolute;
-bottom : 0;
-right : 0;
-width : 25;
-height : 25px;
+#scanner {
+  display : block;
+  z-index : 100;
+  width : 100%;
+  text-align : center;
 }
 
-#scoreTable {
-width : 100%;
-}
-
-table, tr, td, th {
-background-color : transparent;
-font-size : 0.9em;
-text-align : center;
-border : solid black 1px;
-padding : 0px;
-}
-.thdomain {
-  width : 25px;
+#reader {
+  display: inline-block;
 
 }
-td  {
-min-width : 40px;
-}
-
-.selected {
-  border : solid black 2px;
-}
-
-input[type='checkbox'] {
+.qrcodes {
+  text-align : center;
 }
 
 
@@ -363,7 +484,7 @@ font-size : 0.75em;
   background-image : url(icons/drop.png);
   background-color : rgba(0,0,0,0.5);
   background-size : 100% 100%;
-  z-index : 100;
+  z-index : 1000;
   border : solid black 5px;
   border-radius : 10px;
 }
@@ -554,3 +675,6 @@ font-size : 0.75em;
         page-break-after: avoid;
     }
 }
+
+
+

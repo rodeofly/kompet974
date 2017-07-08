@@ -1,7 +1,7 @@
 {
     "D1-1": {
-        "desc": "Comprendre, s’exprimer en utilisant la langue française à l’oral et à l’écrit",
-        "iconUrl" : "img/D1-1.svg",
+        "description": "Comprendre, s’exprimer en utilisant la langue française à l’oral et à l’écrit",
+        "iconUrl" : "img/D1-1.png",
         "signifiants": {
             "S’exprimer à l’oral": [
                 "Être capable d’une prise de parole continue d’une durée variable selon les types de  discours (de cinq à dix minutes au maximum, si le propos croise narration, description, opinion et argumentation; moins s’il s’agit d’une seule de ces composantes), avec quelques relances de la part du professeur si nécessaire;",
@@ -31,9 +31,18 @@
             ]
         }
     },
+    "D1-2": {
+        "description": "Comprendre, s’exprimer en utilisant une langue étrangère et, le cas échéant, une langue régionale",
+        "iconUrl" : "img/D1-2.png",
+        "signifiants": {
+            "Lire et comprendre l’écrit": ["<p><b>Niveau A1 :</b> Peut comprendre des textes très courts et très simples, phrase par phrase, en relevant des noms, des mots familiers et des expressions très élémentaires et en relisant si nécessaire.</p><p><b>Niveau A2 :</b> Peut comprendre de courts textes simples sur des sujets concrets courants avec une fréquence élevée de langue quotidienne.</p><p><b>Niveau B1 :</b> Peut lire des textes factuels directs sur des sujets relatifs à son domaine et à ses intérêts avec un niveau satisfaisant de compréhension.</p>"],
+            "Écrire et réagir à l’écrit" : ["<p><b>Niveau A1 :</b> Peut écrire des expressions et phrases simples isolées.</p><p><b>Niveau A2 :</b> Peut écrire une série d’expressions et de phrases simples reliées par des connecteurs simples tels que « et », « mais » et « parce que ».</p><p><b>Niveau B1 :</b>Peut écrire un énoncé simple et bref sur des sujets familiers ou déjà connus.</p>"],
+            "S’exprimer à l’oral en continu et en interaction" : ["<b>Réagir et dialoguer</b><p><b>Niveau A1 :</b> Peut interagir brièvement dans des situations déjà connues en utilisant des mots et expressions simples et avec un débit lent.</p><p><b>Niveau A2 :</b> Peut interagir avec une aisance raisonnable dans des situations bien structurées et de courtes conversations à condition que le locuteur apporte de l’aide le cas échéant.</p><p><b>Niveau B1 :</b> Peut exprimer un avis, manifester un sentiment et donner quelques éléments simples de contexte sur un sujet abstrait ou culturel.","<b>Parler en continu</b><p><b>Niveau A1 :</b> Peut produire des expressions simples, isolées, sur les gens et les choses.</p><p><b>Niveau A2 :</b> Peut décrire ou présenter simplement des gens, des conditions de vie, des activités quotidiennes, ce qu’on aime ou pas, par de courtes séries d’expressions ou de phrases.</p><p><b>Niveau B1 :</b> Peut raconter un événement, une expérience ou un rêve, décrire un espoir ou un but et exposer brièvement des raisons ou explications pour un projet ou une idée.</p>"]
+            }
+    },
     "D1-3": {
-        "desc": "Comprendre, s’exprimer en utilisant les langages mathématiques, scientifiques et informatiques ",
-        "iconUrl" : "img/D1-3.svg",
+        "description": "Comprendre, s’exprimer en utilisant les langages mathématiques, scientifiques et informatiques",
+        "iconUrl" : "img/D1-3.png",
         "signifiants": {
             "Utiliser les nombres": [
                 "Comprendre et utiliser les notions de divisibilité et de nombre premier.",
@@ -83,9 +92,18 @@
             ]
         }
     },
+    "D1-4": {
+        "description": "Comprendre, s’exprimer en utilisant les langages des arts et du corps",
+        "iconUrl" : "img/D1-4.png",
+        "signifiants": {
+            "Pratiquer des activités physiques sportives et artistiques": ["Concevoir et réaliser un projet de performance optimale.<br>- Gérer son effort, faire des choix pour réaliser la meilleure performance dans au moins deux familles athlétiques et/ou au moins de deux styles de nages.<br>- S’engager dans un programme de préparation individuel ou collectif.<br>- Planifier et réaliser une épreuve combinée.<br>- S’échauffer avant un effort.", "Concevoir et conduire un déplacement dans un milieu inhabituel.<br>- Réussir un déplacement planifié dans un milieu naturel aménagé ou artificiellement recréé plus ou moins connu.<br>- Gérer ses ressources pour réaliser en totalité un parcours sécurisé. <br>- Assurer la sécurité de son camarade.","Concevoir, présenter et apprécier une prestation corporelle gymnique et/ou artistique.<br>- Mobiliser les capacités expressives du corps pour imaginer, composer et interpréter une séquence artistique ou acrobatique.<br>- Participer activement, au sein d’un groupe, à l’élaboration et à la formalisation d’un projet artistique.<br>- Apprécier des prestations en utilisant différents supports d’observation et d’analyse.", "S’inscrire dans un projet de jeu pour rechercher le gain du match.<br>- Réaliser des actions décisives en situation favorable afin de faire basculer le rapport de force en sa faveur ou en faveur de son équipe.<br>- Adapter son engagement moteur en fonction de son état physique et du rapport de force.<br>- Être solidaire de ses partenaires et respectueux de son (ses) adversaire(s) et de l’arbitre.<br>- Observer et co-arbitrer.<br>- Accepter le résultat de la rencontre et savoir l’analyser avec objectivité."],
+            "Pratiquer les arts en mobilisant divers langages artistiques et leurs ressources expressives" : ["Mobiliser des techniques vocales et corporelles au service d’un projet d’interprétation ou de création musicale.", "Oraliser un texte littéraire en mobilisant les techniques appropriées.", "Mobiliser des moyens divers (matériaux, instruments, techniques, gestes…) dans différents champs de la pratique plastique pour servir un projet artistique singulier."],
+            "Prendre du recul sur la pratique artistique individuelle et collective" : ["Concevoir, créer, réaliser et réfléchir des productions plastiques dans une visée artistique personnelle, en prenant du recul sur les questions qu’elles posent, en établissant des liens avec des œuvres et des démarches de référence.", "Concevoir, créer, réaliser et réfléchir des pièces musicales en référence à des styles, des œuvres, des contraintes d’interprétation ou de diffusion."]
+            }
+    },
     "D2": {
-        "desc": "Les méthodes et outils pour apprendre",
-        "iconUrl" : "img/D2.svg",
+        "description": "Les méthodes et outils pour apprendre",
+        "iconUrl" : "img/D2.png",
         "signifiants": {
             "Organiser son travail personnel": [
                 "Choisir et utiliser différents outils et techniques pour garder la trace de ses activités et/ou recherches et permettre un entraînement au travers d’un travail personnel.",
@@ -106,8 +124,8 @@
         }
     },
     "D3": {
-        "desc": "La formation de la personne et du citoyen",
-        "iconUrl" : "img/D3.svg",
+        "description": "La formation de la personne et du citoyen",
+        "iconUrl" : "img/D3.png",
         "signifiants": {
             "Maîtriser l’expression de sa sensibilité et de ses opinions, respecter celles des autres": [
                 "Expliciter les émotions ressenties.",
@@ -130,8 +148,8 @@
         }
     },
     "D4": {
-        "desc": "Systèmes naturels et systèmes techniques",
-        "iconUrl" : "img/D4.svg",
+        "description": "Systèmes naturels et systèmes techniques",
+        "iconUrl" : "img/D4.png",
         "signifiants": {
             "Mener une démarche scientifique, résoudre un problème": [
                 "Modéliser et représenter des phénomènes et des objets.",
@@ -146,37 +164,13 @@
         }
     },
     "D5": {
-        "desc": "Représentation du monde",
-        "iconUrl" : "img/D5.svg",
+        "description": "Représentation du monde",
+        "iconUrl" : "img/D5.png",
         "signifiants": {
             "Situer et se situer dans le temps et l’espace": [
                 "Maîtriser de manière autonome des repères dans le temps :<br> - connaître et localiser dans le temps de grandes périodes historiques, des phénomènes historiques, des faits et des événements, des mouvements intellectuels, artistiques et culturels;<br> - situer et ordonner des faits dans le temps ; pratiquer de conscients allers-retours dans la chronologie, maîtriser la chronologie narrative, savoir ordonner un récit.",
                 "Maîtriser de manière autonome des repères dans l’espace :<br> - connaître et localiser des repères spatiaux aux différentes échelles et sur des projections cartographiques variées ;<br> - se repérer et repérer des lieux dans l’espace en utilisant des plans, des cartes et des outils de géolocalisation ;<br> - situer et mettre en relation des lieux et des espaces à partir de cartes d’échelles et de projection variées et d’images.",
                 "Contextualiser un document, un texte, une œuvre, un(e) artiste, un personnage, une découverte scientifique, un fait artistique ou une notion dans le temps et dans une ou plusieurs aires géographiques et culturelles."
-            ]
-        }
-    },
-    "Co" : {
-        "desc": "Compétences",
-        "iconUrl" : "img/Co.svg",
-        "signifiants": {
-            "Chercher" : [
-                "Chercher est peut-être la première des compétences à laquelle on pense lorsqu’on tente de décrire l’activité mathématique. Elle en constitue sans doute la part la plus exaltante pour celles et ceux qui aiment les mathématiques. Mais aussi la part la plus difficile pour d’autres. Il faut reconnaitre qu’il s’agit de l’une des compétences qui se laissent le moins facilement circonscrire. Amener les élèves à savoir quoi chercher et comment chercher est donc un objectif ambitieux, mais nécessaire au développement de toutes les autres compétences au cycle 4."
-            ],
-            "Modéliser" : [
-                "La compétence « Modéliser », si on la prend dans son acception la plus large, renvoie pour le mathématicien au fait d’utiliser un ensemble de concepts, de méthodes, de théories mathématiques qui vont permettre de décrire, comprendre et prévoir l’évolution de phénomènes externes aux mathématiques."
-            ],
-            "Représenter" : [
-                "Le développement de la compétence « Représenter » au cycle 4 doit à la fois permettre à l’élève de progresser dans la vision du réel et dans l’appréhension des objets mathématiques abstraits. Comprendre ce qu’est un triangle, ce qu’est une fonction, ce qu’est une fraction, c’est savoir « représenter » ces objets, c’est-à-dire trouver un registre de représentation adéquat, mais aussi savoir varier les représentations et les registres de représentation. Un élève capable de convoquer dans un exercice mettant en jeu une fonction un graphique, un tableau de nombres, une écriture symbolique, est en train de s’approprier la notion de fonction. Dans cet exercice, on voit que la représentation est aussi pensée de manière dynamique, dans sa capacité à engendrer d’autres représentations, à l’intérieur d’un même registre ou dans un autre registre."
-            ],
-            "Raisonner" : [
-                "Le programme de mathématiques du cycle 4 offre une place de choix à la compétence « raisonner » dans laquelle il regroupe les démarches suivantes :<br>• résoudre des problèmes impliquant des grandeurs variées (géométriques, physiques, économiques) : mobiliser les connaissances nécessaires, analyser et exploiter ses erreurs, mettre à l’essai plusieurs solutions ;<br>• mener collectivement une investigation en sachant prendre en compte le point de vue d’autrui ;<br>• démontrer : utiliser un raisonnement logique et des règles établies (propriétés, théorèmes, formules) pour parvenir à une conclusion ;<br>• fonder et défendre ses jugements en s’appuyant sur des résultats établis et sur sa maîtrise de l’argumentation."
-            ],
-            "Calculer" : [
-                "La pratique du calcul doit viser un double équilibre : d’une part entre automatisation et raisonnement, d’autre part entre une visée pragmatique (l’obtention d’un résultat) et un accès à la compréhension des objets mathématiques engagés dans le calcul (nombres, symboles, etc.). Par ailleurs, le développement des technologies informatiques a profondément modifié l’appréhension du calcul, tant au niveau des pratiques quotidiennes et sociales qu’à celui des pratiques scientifiques. D’une part, la plupart des algorithmes de calcul dont l’apprentissage occupait autrefois un temps important de la scolarité obligatoire sont aujourd’hui implémentés dans les calculatrices les plus simples, ce qui pose la question de la pertinence du maintien de leur enseignement, d’autre part la puissance de calcul des nouveaux outils modifie profondément l’économie du calcul et pose dans des termes renouvelés celle de la gestion des rapports entre le calcul et le raisonnement puisqu’elle favorise explorations, simulations et expérimentations préalables à la découverte de preuves."
-            ],
-            "Communiquer" : [
-                "Communiquer efficacement dans le cadre d’une activité mathématique est un objectif de formation essentiel, recouvrant plusieurs champs de compétences : comprendre des énoncés, produire des textes aux finalités diverses, s’exprimer oralement.<br> C’est aussi par la médiation d’échanges que le professeur apprécie le niveau de maîtrise de l’élève. Cette double fonction de la communication, objet de formation et moyen d’apprécier la réussite de l’élève, a son importance. S’il convient que l’élève apprenne à s’exprimer avec un maximum de rigueur et de clarté, il ne faut pas pour autant considérer que celui qui s’exprime avec peine a nécessairement des difficultés mathématiques. Il s’agit avant tout d’ouvrir le champ de la résolution de problèmes au plus grand nombre d’élèves, y compris à ceux qui ont des difficultés à entrer dans les codes de la rédaction d’une démonstration."
             ]
         }
     }

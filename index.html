@@ -23,31 +23,28 @@
         <!-- Add your site or application content here -->
         
         <!-- Target -->
-        <div id="mainmenu">
-            <div id="menu-item">
-                <input id="edit" type="checkbox">Edit</button>
-
-                <!-- Trigger -->   
-                
-                
-                <div id="upload"><div class="close"></div></div>
-                <input type="file" style="display:none" id="file_upload" />
-                <div id="competences"></div>
-                <div id="tabs" class="tabs">
-                  <button class="addCategory admin" data-parentId="root">+Catégorie</button>
-
-                
-                </div>
-            </div>
+        <div id="marginer"></div>
+        <div id="menu-item">
+            <div id="tabs" class="tabs">
+              <button id="editEval">Évaluation</button>
+              <button id='validEval' style="display:none;">Validation</button>
+              <button id="freeze" style="display:none;">Freeze</button>
+              <button id="qrcodeModeStart" style="display:none;">QrCode</button>
+              <button id="qrcodeModeStop" style="display:none;">Stop</button>
+            </div>     
         </div>
-        <div id="categories_area"></div>
-        <div id="scoreTable"></div>  
-
+        <div id="scanner" style="display:none;">
+          <div id="reader" style="width:300px;height:250px;"></div>
+        </div>
+        <div id="domaines_area" class=""></div>
+        <div id="eleves" class="grid"></div>  
   
-         
+        <div id="upload" style="display:none;"><div class="close"></div></div>
+        <input type="file" style="display:none" id="file_upload" />
         <a id="save" href="" download=""></a>
-        <button id="copy" data-clipboard-action="copy" data-clipboard-target="#bar">Copier</button>
-        <textarea id="bar">Mussum ipsum cacilds...</textarea>      
+        <textarea id="clipboard">Mussum ipsum cacilds...</textarea>
+        <button id="copy" data-clipboard-action="copy" data-clipboard-target="#clipboard">Copier</button>
+    
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -57,6 +54,10 @@
         <script src="js/main.js"></script>
         <script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
         <script src="js/vendor/jquery.csv.min.js"></script>
+        <script src="js/vendor/jquery.qrcode.min.js"></script>
+
+        <script src="js/vendor/html5-qrcode.min.js"></script>
+
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
