@@ -151,6 +151,7 @@ studentsCards = (data) ->
     $( "#eleves" ).append s.html
 
 ####################################################################
+d3 = $.Deferred()
 $.fn.extend
   html5_qrcode: (qrcodeSuccess, qrcodeError, videoError) ->
     @each ->
@@ -161,65 +162,13 @@ $.fn.extend
         height = 250
       if width == null
         width = 300
-      vidElem = $( "<video width='#{width}px' height='#{height}px'></video>").appendTo(currentElem)
+      vidElem = $( "<video id='cam' width='#{width}px' height='#{height}px'></video>").appendTo(currentElem)
       canvasElem = $("<canvas id='qr-canvas' width='#{width - 2}px' height='#{height - 2}px' style='display:none;'></canvas>").appendTo(currentElem)
       video = vidElem[0]
       canvas = canvasElem[0]
       context = canvas.getContext('2d')
       localMediaStream = undefined
       
-      
-      
-      videoElement = video
-      audioSelect = document.querySelector('select#audioSource')
-      videoSelect = document.querySelector('select#videoSource')
-
-      gotDevices = (deviceInfos) ->
-        i = 0
-        while i != deviceInfos.length
-          deviceInfo = deviceInfos[i]
-          option = document.createElement('option')
-          option.value = deviceInfo.deviceId
-          if deviceInfo.kind == 'audioinput'
-            option.text = deviceInfo.label or 'microphone ' + audioSelect.length + 1
-            audioSelect.appendChild option
-          else if deviceInfo.kind == 'videoinput'
-            option.text = deviceInfo.label or 'camera ' + videoSelect.length + 1
-            videoSelect.appendChild option
-          else
-            console.log 'Found ome other kind of source/device: ', deviceInfo
-          ++i
-        return
-
-      getStream = ->
-        if window.stream
-          window.stream.getTracks().forEach (track) ->
-            track.stop()
-            return
-        constraints = 
-          audio: optional: [ { sourceId: audioSelect.value } ]
-          video: optional: [ { sourceId: videoSelect.value } ]
-        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
-        return
-
-      gotStream = (stream) ->
-        window.stream = stream
-        # make stream available to console
-        videoElement.srcObject = stream
-        return
-
-      handleError = (error) ->
-        console.log 'Error: ', error
-        return
-
-      navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
-      audioSelect.onchange = getStream
-      videoSelect.onchange = getStream
-
-
-      
-      
-
       scan = ->
         if localMediaStream
           context.drawImage video, 0, 0, 307, 250
@@ -251,7 +200,7 @@ $.fn.extend
       else
         console.log 'Native web camera streaming (getUserMedia) not supported in this browser.'
         # Display a friendly "sorry" message to the user
-
+      d3.resolve()
       qrcode.callback = (result) ->
         qrcodeSuccess result, localMediaStream
        
@@ -268,7 +217,54 @@ $.fn.extend
 #On dom ready
 $ ->
   
-  
+  $.when( d3 ).done ( v3 ) ->
+    console.log( v3 )
+    videoElement = $( "#cam" )
+    audioSelect = document.querySelector('select#audioSource')
+    videoSelect = document.querySelector('select#videoSource')
+
+    gotDevices = (deviceInfos) ->
+      i = 0
+      while i != deviceInfos.length
+        deviceInfo = deviceInfos[i]
+        option = document.createElement('option')
+        option.value = deviceInfo.deviceId
+        if deviceInfo.kind == 'audioinput'
+          option.text = deviceInfo.label or 'microphone ' + audioSelect.length + 1
+          audioSelect.appendChild option
+        else if deviceInfo.kind == 'videoinput'
+          option.text = deviceInfo.label or 'camera ' + videoSelect.length + 1
+          videoSelect.appendChild option
+        else
+          console.log 'Found ome other kind of source/device: ', deviceInfo
+        ++i
+      return
+
+    getStream = ->
+      if window.stream
+        window.stream.getTracks().forEach (track) ->
+          track.stop()
+          return
+      constraints = 
+        audio: optional: [ { sourceId: audioSelect.value } ]
+        video: optional: [ { sourceId: videoSelect.value } ]
+      navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
+      return
+
+    gotStream = (stream) ->
+      window.stream = stream
+      # make stream available to console
+      videoElement.srcObject = stream
+      return
+
+    handleError = (error) ->
+      console.log 'Error: ', error
+      return
+
+    navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
+    audioSelect.onchange = getStream
+    videoSelect.onchange = getStream
+ 
   
     
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
@@ -278,6 +274,7 @@ $ ->
   ################################################################## 
   d1 = $.Deferred()
   d2 = $.Deferred()
+  
   #Construction de DATA
   $.ajax
     type: "GET",
