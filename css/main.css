@@ -382,6 +382,7 @@ button.absent, button.present {
   flex-flow: row nowrap;
   justify-content: flex-start;
   max-width : none;
+  min-width: 50px;
   background-color : transparent;
   border : none;
 }

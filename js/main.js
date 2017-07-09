@@ -79,7 +79,7 @@
       this.item = item1;
       this.domaine = domaine;
       this.id = ID++;
-      this.html = "<div id='" + this.id + "' class='signifiant' data-item='" + this.item + "' data-color='white' data-signifiant='" + this.signifiant + "' data-domaine='" + this.domaine + "'>\n    <div class='head'>\n        <div class='toggleDescripteurs hide' data-id='" + this.id + "'></div>" + this.signifiant + "\n    </div>\n    <div class='descripteurs'>\n        <ul></ul>\n    </div>\n</div>";
+      this.html = "<div id='" + this.id + "' class='signifiant' data-item='" + this.item + "' data-color='white' data-signifiant='" + this.signifiant + "' data-domaine='" + this.domaine + "'>\n    <div class='head'>\n        <button class='toggleDescripteurs hide' data-id='" + this.id + "'></button>" + this.signifiant + "\n    </div>\n    <div class='descripteurs'>\n        <ul></ul>\n    </div>\n</div>";
     }
 
     return Signifiant;
@@ -179,7 +179,7 @@
   $.fn.extend({
     html5_qrcode: function(qrcodeSuccess, qrcodeError, videoError) {
       return this.each(function() {
-        var canvas, canvasElem, context, currentElem, height, localMediaStream, scan, successCallback, vidElem, video, width;
+        var audioSelect, canvas, canvasElem, context, currentElem, getStream, gotDevices, gotStream, handleError, height, localMediaStream, scan, vidElem, video, videoSelect, width;
         currentElem = $(this);
         height = currentElem.height();
         width = currentElem.width();
@@ -195,6 +195,8 @@
         canvas = canvasElem[0];
         context = canvas.getContext('2d');
         localMediaStream = void 0;
+        audioSelect = document.querySelector('select#audioSource');
+        videoSelect = document.querySelector('select#videoSource');
         scan = function() {
           var e;
           if (localMediaStream) {
@@ -210,25 +212,68 @@
             return $.data(currentElem[0], 'timeout', setTimeout(scan, 500));
           }
         };
-        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        successCallback = function(stream) {
-          video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+        gotDevices = function(deviceInfos) {
+          var deviceInfo, i, option;
+          i = 0;
+          while (i !== deviceInfos.length) {
+            deviceInfo = deviceInfos[i];
+            option = document.createElement('option');
+            option.value = deviceInfo.deviceId;
+            if (deviceInfo.kind === 'audioinput') {
+              option.text = deviceInfo.label || 'microphone ' + audioSelect.length + 1;
+              audioSelect.appendChild(option);
+            } else if (deviceInfo.kind === 'videoinput') {
+              option.text = deviceInfo.label || 'camera ' + videoSelect.length + 1;
+              videoSelect.appendChild(option);
+            } else {
+              console.log('Found ome other kind of source/device: ', deviceInfo);
+            }
+            ++i;
+          }
+        };
+        getStream = function() {
+          var constraints;
+          if (window.stream) {
+            window.stream.getTracks().forEach(function(track) {
+              track.stop();
+            });
+          }
+          constraints = {
+            audio: {
+              optional: [
+                {
+                  sourceId: audioSelect.value
+                }
+              ]
+            },
+            video: {
+              optional: [
+                {
+                  sourceId: videoSelect.value
+                }
+              ]
+            }
+          };
+          navigator.mediaDevices.getUserMedia(constraints).then(gotStream)["catch"](handleError);
+        };
+        gotStream = function(stream) {
+          window.stream = stream;
+          video.srcObject = stream;
           localMediaStream = stream;
           $.data(currentElem[0], 'stream', stream);
           video.play();
           return $.data(currentElem[0], 'timeout', setTimeout(scan, 1000));
         };
+        handleError = function(error) {
+          return console.log('Error: ', error);
+        };
         if (navigator.getUserMedia) {
-          navigator.getUserMedia({
-            video: true
-          }, successCallback, function(error) {
-            videoError(error, localMediaStream);
-          });
+          navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream)["catch"](handleError);
+          audioSelect.onchange = getStream;
+          videoSelect.onchange = getStream;
         } else {
           console.log('Native web camera streaming (getUserMedia) not supported in this browser.');
         }
-        d3.resolve();
         return qrcode.callback = function(result) {
           return qrcodeSuccess(result, localMediaStream);
         };
@@ -246,67 +291,6 @@
 
   $(function() {
     var d1, d2, dnd, do_it, toggleSignifiant;
-    $.when(d3).done(function(v3) {
-      var audioSelect, getStream, gotDevices, gotStream, handleError, videoElement, videoSelect;
-      console.log(v3);
-      videoElement = $("#cam");
-      audioSelect = document.querySelector('select#audioSource');
-      videoSelect = document.querySelector('select#videoSource');
-      gotDevices = function(deviceInfos) {
-        var deviceInfo, i, option;
-        i = 0;
-        while (i !== deviceInfos.length) {
-          deviceInfo = deviceInfos[i];
-          option = document.createElement('option');
-          option.value = deviceInfo.deviceId;
-          if (deviceInfo.kind === 'audioinput') {
-            option.text = deviceInfo.label || 'microphone ' + audioSelect.length + 1;
-            audioSelect.appendChild(option);
-          } else if (deviceInfo.kind === 'videoinput') {
-            option.text = deviceInfo.label || 'camera ' + videoSelect.length + 1;
-            videoSelect.appendChild(option);
-          } else {
-            console.log('Found ome other kind of source/device: ', deviceInfo);
-          }
-          ++i;
-        }
-      };
-      getStream = function() {
-        var constraints;
-        if (window.stream) {
-          window.stream.getTracks().forEach(function(track) {
-            track.stop();
-          });
-        }
-        constraints = {
-          audio: {
-            optional: [
-              {
-                sourceId: audioSelect.value
-              }
-            ]
-          },
-          video: {
-            optional: [
-              {
-                sourceId: videoSelect.value
-              }
-            ]
-          }
-        };
-        navigator.mediaDevices.getUserMedia(constraints).then(gotStream)["catch"](handleError);
-      };
-      gotStream = function(stream) {
-        window.stream = stream;
-        videoElement.srcObject = stream;
-      };
-      handleError = function(error) {
-        console.log('Error: ', error);
-      };
-      navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream)["catch"](handleError);
-      audioSelect.onchange = getStream;
-      return videoSelect.onchange = getStream;
-    });
     $("#upload .close").on("click", function() {
       return $("#upload").hide();
     });

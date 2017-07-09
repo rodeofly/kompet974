@@ -59,7 +59,7 @@ class Signifiant
     @html = """
 <div id='#{@id}' class='signifiant' data-item='#{@item}' data-color='white' data-signifiant='#{@signifiant}' data-domaine='#{@domaine}'>
     <div class='head'>
-        <div class='toggleDescripteurs hide' data-id='#{@id}'></div>#{@signifiant}
+        <button class='toggleDescripteurs hide' data-id='#{@id}'></button>#{@signifiant}
     </div>
     <div class='descripteurs'>
         <ul></ul>
@@ -168,6 +168,8 @@ $.fn.extend
       canvas = canvasElem[0]
       context = canvas.getContext('2d')
       localMediaStream = undefined
+      audioSelect = document.querySelector('select#audioSource')
+      videoSelect = document.querySelector('select#videoSource')
       
       scan = ->
         if localMediaStream
@@ -179,28 +181,56 @@ $.fn.extend
           $.data currentElem[0], 'timeout', setTimeout(scan, 500)
         else
           $.data currentElem[0], 'timeout', setTimeout(scan, 500)
+          
+      gotDevices = (deviceInfos) ->
+        i = 0
+        while i != deviceInfos.length
+          deviceInfo = deviceInfos[i]
+          option = document.createElement('option')
+          option.value = deviceInfo.deviceId
+          if deviceInfo.kind == 'audioinput'
+            option.text = deviceInfo.label or 'microphone ' + audioSelect.length + 1
+            audioSelect.appendChild option
+          else if deviceInfo.kind == 'videoinput'
+            option.text = deviceInfo.label or 'camera ' + videoSelect.length + 1
+            videoSelect.appendChild option
+          else
+            console.log 'Found ome other kind of source/device: ', deviceInfo
+          ++i
+        return
 
-      #end snapshot function
-      window.URL = window.URL or window.webkitURL or window.mozURL or window.msURL
-      navigator.getUserMedia = navigator.getUserMedia or navigator.webkitGetUserMedia or navigator.mozGetUserMedia or navigator.msGetUserMedia
+      getStream = ->
+        if window.stream
+          window.stream.getTracks().forEach (track) ->
+            track.stop()
+            return
+        constraints = 
+          audio: optional: [ { sourceId: audioSelect.value } ]
+          video: optional: [ { sourceId: videoSelect.value } ]
+        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
+        return
 
-      successCallback = (stream) ->
-        video.src = window.URL and window.URL.createObjectURL(stream) or stream
+      gotStream = (stream) ->
+        window.stream = stream
+        # make stream available to console
+        video.srcObject = stream
         localMediaStream = stream
         $.data currentElem[0], 'stream', stream
         video.play()
         $.data currentElem[0], 'timeout', setTimeout(scan, 1000)
-        
+
+      handleError = (error) -> console.log 'Error: ', error
+      
 
       # Call the getUserMedia method with our callback functions
       if navigator.getUserMedia
-        navigator.getUserMedia { video: true }, successCallback, (error) ->
-          videoError error, localMediaStream
-          return
+        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
+        audioSelect.onchange = getStream
+        videoSelect.onchange = getStream  
       else
         console.log 'Native web camera streaming (getUserMedia) not supported in this browser.'
         # Display a friendly "sorry" message to the user
-      d3.resolve()
+
       qrcode.callback = (result) ->
         qrcodeSuccess result, localMediaStream
        
@@ -216,55 +246,7 @@ $.fn.extend
   
 #On dom ready
 $ ->
-  
-  $.when( d3 ).done ( v3 ) ->
-    console.log( v3 )
-    videoElement = $( "#cam" )
-    audioSelect = document.querySelector('select#audioSource')
-    videoSelect = document.querySelector('select#videoSource')
 
-    gotDevices = (deviceInfos) ->
-      i = 0
-      while i != deviceInfos.length
-        deviceInfo = deviceInfos[i]
-        option = document.createElement('option')
-        option.value = deviceInfo.deviceId
-        if deviceInfo.kind == 'audioinput'
-          option.text = deviceInfo.label or 'microphone ' + audioSelect.length + 1
-          audioSelect.appendChild option
-        else if deviceInfo.kind == 'videoinput'
-          option.text = deviceInfo.label or 'camera ' + videoSelect.length + 1
-          videoSelect.appendChild option
-        else
-          console.log 'Found ome other kind of source/device: ', deviceInfo
-        ++i
-      return
-
-    getStream = ->
-      if window.stream
-        window.stream.getTracks().forEach (track) ->
-          track.stop()
-          return
-      constraints = 
-        audio: optional: [ { sourceId: audioSelect.value } ]
-        video: optional: [ { sourceId: videoSelect.value } ]
-      navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
-      return
-
-    gotStream = (stream) ->
-      window.stream = stream
-      # make stream available to console
-      videoElement.srcObject = stream
-      return
-
-    handleError = (error) ->
-      console.log 'Error: ', error
-      return
-
-    navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
-    audioSelect.onchange = getStream
-    videoSelect.onchange = getStream
- 
   
     
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
