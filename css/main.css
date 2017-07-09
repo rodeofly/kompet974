@@ -334,7 +334,8 @@ button.absent, button.present {
   color : black;
   vertical-align : top;
   text-align : left;
-  font-weight :bolder;  
+  font-weight :bolder;
+  cursor : pointer;
 
 }
 
