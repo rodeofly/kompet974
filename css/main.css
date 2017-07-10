@@ -452,10 +452,23 @@ button.absent, button.present {
   display : flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  margin-bottom : 30px;
 
 }
 
+.grid .eleve {
+  padding-left : 5px;
+  font-size : 1em;
+  line-height : 2em;
+  font-weight : bolder;
+  background-color : rgba(200, 200, 200, 1);
+  width : 150px;
+  height : 128px;
+  overflow-wrap: normal;
+  text-align : left;
+  vertical-align : bottom;
 
+}
 .qrcodes {
   text-align : center;
 }

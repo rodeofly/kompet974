@@ -327,7 +327,7 @@
             }
             break;
           case "Imprimer les QR-codes":
-            if (STUDENT_NUMBER === 1) {
+            if (STUDENTS_LENGTH === 1) {
               alert("importer des élèves d'abord !");
             } else {
               $html = $("<div class='qrcodes'></div>");
@@ -339,7 +339,7 @@
                 "green": "très bien"
               };
               for (i = l = 1; l <= 25; i = ++l) {
-                $nom = $("<div class='grid'><h3>" + i + "-" + STUDENTS[i].nom + " " + STUDENTS[i].prenom + "</h3></div>");
+                $nom = $("<div class='grid'><div class='eleve'>(" + i + ") " + STUDENTS[i].nom + "<br>" + STUDENTS[i].prenom + "</div></div>");
                 ref1 = ["shaded", "red", "yellow", "lightGreen", "green"];
                 for (m = 0, len1 = ref1.length; m < len1; m++) {
                   j = ref1[m];
@@ -353,6 +353,7 @@
                   $html.append($nom);
                 }
               }
+              $("html").css('background-image', 'none');
               $("body").empty().append($html);
             }
             break;

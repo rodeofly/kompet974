@@ -282,7 +282,7 @@ do_menu = () ->
           if confirm('Êtes-vous sur de vouloir tout effacer ?') 
             localStorage.DATA = []
         when "Imprimer les QR-codes"
-          if STUDENT_NUMBER is 1
+          if STUDENTS_LENGTH is 1
             alert "importer des élèves d'abord !"
           else
             $html = $( "<div class='qrcodes'></div>" )
@@ -293,12 +293,13 @@ do_menu = () ->
               "lightGreen" : "satisfaisant"
               "green"      : "très bien"
             for i in [1..25]
-              $nom = $("<div class='grid'><h3>#{i}-#{STUDENTS[i].nom} #{STUDENTS[i].prenom}</h3></div>")
+              $nom = $("<div class='grid'><div class='eleve'>(#{i}) #{STUDENTS[i].nom}<br>#{STUDENTS[i].prenom}</div></div>")
               for j in ["shaded", "red", "yellow", "lightGreen", "green" ]
                 $qrcode = $( "<div class='qrcodePrint'/>" )
                 $qrcode.qrcode({width: 128,height: 128,text: "#{i}-#{j}"})
                 $nom.append( $qrcode.append("<br><span>#{note[j]}</span>") )
-                $html.append $nom  
+                $html.append $nom
+            $( "html" ).css('background-image', 'none')
             $( "body" ).empty().append $html
             
         when "Sauver Table"      then save "csv"        
