@@ -1,23 +1,20 @@
+#for DOM elements
 ID = 1000
-STUDENT_ID = 1
-HEADERS = ['ID',  'Classe', 'Nom', 'Prénom']
+
+STUDENTS_LENGTH = 0
+STUDENTS = {}
 
 SELECTED_DOMS=[]
-DOMAINES = undefined
-CLASSES = []
+DOMAINES = {}
 
 DATA = []
-
 DATA_TEMP = {}
 
-STUDENTS = {}
-TREE_EVAL = {}
+CLASSES = []
 CURRENT_EVAL = {}
 CURRENT_CLASSE = undefined
 
-MediaStream = window.MediaStream
-if (typeof MediaStream is 'undefined' and typeof webkitMediaStream isnt 'undefined')
-  MediaStream = webkitMediaStream
+
 #############################################################################################################"
 timer = (name) ->
   start = new Date()
@@ -27,8 +24,8 @@ timer = (name) ->
     console.log('Timer:', name, 'finished in', time, 'ms')
 #############################################################################################################"
 class Eleve
-  constructor : (@classe,@nom, @prenom) ->
-    @id = STUDENT_ID++
+  constructor : (@id, @classe, @nom, @prenom) ->
+    STUDENTS_LENGTH++
     @evaluation = {}
     @html = """
 <div id="#{@id}" class="eleve" data-classe="#{@classe}" data-nom="#{@nom}" data-prenom="#{@prenom}">
@@ -87,72 +84,8 @@ class Domaine
     </div>
     <div class='signifiants'></div>
 </div>"""
-    
-#############################################################################################################"
-#Drag an Drop interface
-DnDFileController = (selector, onDropCallback) ->
-  el_ = document.querySelector(selector)
-
-  @dragenter = (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    el_.classList.add 'dropping'
-    $( "#upload" ).addClass "slim"
-
-  @dragover = (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-
-  @dragleave = (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    $( "#upload" ).removeClass "slim"
-    el_.classList.remove 'dropping'
-
-  @drop = (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    el_.classList.remove 'dropping'
-    onDropCallback e.dataTransfer.files, e
-    $( "#upload" ).removeClass "slim"
-    $( "#upload" ).hide()
-
-  el_.addEventListener 'dragenter', @dragenter, false
-  el_.addEventListener 'dragover', @dragover, false
-  el_.addEventListener 'dragleave', @dragleave, false
-  el_.addEventListener 'drop', @drop, false
-    
-#############################################################################################################"
-#Copy to clipboard 
-copyToClipboard = (el) ->
-  body = document.body
-  if (document.createRange and window.getSelection) 
-    range = document.createRange()
-    sel = window.getSelection()
-    sel.removeAllRanges()
-    try 
-        range.selectNodeContents(el)
-        sel.addRange(range)
-    catch e
-        range.selectNode(el)
-        sel.addRange(range)
-  else if (body.createTextRange) 
-    range = body.createTextRange()
-    range.moveToElementText(el)
-    range.select()
-  document.execCommand("Copy")
 ####################################################################
-#Construction des cartes élèves  
-studentsCards = (data) ->
-  CLASSES = []
-  $( "#eleves" ).empty()
-  students_arrays = $.csv.toArrays(data)
-  for array in students_arrays
-    s = new Eleve(array[0],array[1],array[2])
-    STUDENTS[s.id] = s
-    CLASSES.push s.classe if s.classe not in CLASSES
-    $( "#eleves" ).append s.html
-
+####################################################################
 ####################################################################
 d3 = $.Deferred()
 $.fn.extend
@@ -245,70 +178,81 @@ $.fn.extend
         videoTrack.stop()
         return
       clearTimeout $(this).data('timeout')
-      
-  
-#On dom ready
-$ ->
+#############################################################################################################"
+#Copy to clipboard 
+copyToClipboard = (el) ->
+  body = document.body
+  if (document.createRange and window.getSelection) 
+    range = document.createRange()
+    sel = window.getSelection()
+    sel.removeAllRanges()
+    try 
+        range.selectNodeContents(el)
+        sel.addRange(range)
+    catch e
+        range.selectNode(el)
+        sel.addRange(range)
+  else if (body.createTextRange) 
+    range = body.createTextRange()
+    range.moveToElementText(el)
+    range.select()
+  document.execCommand("Copy")
 
+#############################################################################################################"
+#Drag an Drop interface
+DnDFileController = (selector, onDropCallback) ->
+  el_ = document.querySelector(selector)
 
-    
-  $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
-  ##################################################################
-  #Accidental reload !
-  window.onbeforeunload = () -> return ""  
-  ################################################################## 
-  d1 = $.Deferred()
-  d2 = $.Deferred()
-  
-  #Construction de DATA
-  $.ajax
-    type: "GET",
-    url: "eleves.csv",
-    dataType: "text",
-    success: (data) ->
-      studentsCards(data)
-  $( "#eleves" ).hide()
-  d1.resolve( "Éleves finished !" )
-  #Fin Élèves
-  ##################################################################
-  #Construction du S4C
-  $.getJSON "S4C_cat.json", ( data ) -> 
-      DOMAINES = data
-      for nom of DOMAINES
-        CURRENT_EVAL[nom] = {}
-        dom = new Domaine(nom, data[nom].description, data[nom].iconUrl)
-        $( "#tabs" ).append dom.htmlTab
-        $( "#domaines_area" ).append dom.html   
-        i=1
-        for signifiant, descripteurs of data[nom].signifiants
-          sig = new Signifiant(signifiant, "#{nom}.#{i++}", dom.domaine)
-          $( ".domaine[data-domaine='#{sig.domaine}']" ).find( ".signifiants" ).append sig.html
-          j=1
-          for descripteur in descripteurs
-            des = new Descripteur(descripteur, "#{sig.item}.#{j++}",sig.item)
-            $( ".signifiant[data-item='#{sig.item}'] .descripteurs ul" ).append des.html     
-      $( "#edit" ).prop "checked", false      
-      $( ".toggleDescripteurs" ).click()      
-      $( ".domaine, .domaine__tab" ).hide()
-      d2.resolve( "S4C finished !" )
-      #Fin du S4C     
-  ###################################################################
-  #Deffered to resolve Ajax concurrency
-  $.when( d1, d2 ).done ( v1, v2 ) ->
-    console.log( v1 )
-    console.log( v2 )
-    ###########################################################
-    #Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories", "Tous"
-    $select = $( "<select id='mainselect'><option value='defaut'>&#9776;</option></select>" )
-    for o in ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES
-      $select.append "<option value='#{o}'>#{o}</option>"
-    $( "#tabs" ).prepend $select       
-    $( "#mainselect option[value=Menu]").prop "selected", true
-    ##################################################################
-    #On selectionne la classe    
-    ##################################################################
-    #hide_show_col()
-    $( "#mainselect" ).change () ->
+  @dragenter = (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    el_.classList.add 'dropping'
+    $( "#upload" ).addClass "slim"
+
+  @dragover = (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+  @dragleave = (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    el_.classList.remove 'dropping'
+    $( "#upload" ).removeClass "slim"
+
+  @drop = (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    el_.classList.remove 'dropping'
+    onDropCallback e.dataTransfer.files, e
+    $( "#upload" ).removeClass( "slim" ).hide()
+
+  el_.addEventListener 'dragenter'  , @dragenter, false
+  el_.addEventListener 'dragover'   , @dragover , false
+  el_.addEventListener 'dragleave'  , @dragleave, false
+  el_.addEventListener 'drop'       , @drop     , false
+##################################################################
+#Drag and Drop file
+dnd = new DnDFileController '#upload', (files) ->
+  f = files[0]
+  reader = new FileReader
+  reader.onloadend = (e) -> addStudentsCards(@result)
+  reader.readAsText f
+  return
+####################################################################
+####################################################################
+####################################################################
+#Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories", "Tous"  
+do_menu = () ->
+  $( "#mainselect" ).remove()
+  $select = $( "<select id='mainselect'><option value='defaut'>Menu</option></select>" )
+  for o in ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES
+    $select.append "<option value='#{o}'>#{o}</option>"
+  $( "#tabs" ).prepend $select       
+  $( "#mainselect option[value=Menu]").prop "selected", true
+  $( "#mainselect" ).selectmenu
+    width  : 50
+    height : 50
+    change : -> 
       save = (type) ->
         dataStr = "data:text/#{type};charset=utf-8,"
         stringValue = prompt( "Nom du fichier ?", stringValue )
@@ -325,7 +269,7 @@ $ ->
         dlAnchorElem.click()
       option = $("#mainselect").val()
       switch option
-        when "Importer"          then $( "#upload" ).show()
+        when "Importer" then $( "#upload" ).show()
         when "Charger Local"
           if localStorage.DATA
             DATA = JSON.parse localStorage.DATA
@@ -338,7 +282,7 @@ $ ->
           if confirm('Êtes-vous sur de vouloir tout effacer ?') 
             localStorage.DATA = []
         when "Imprimer les QR-codes"
-          if STUDENT_ID is 1
+          if STUDENT_NUMBER is 1
             alert "importer des élèves d'abord !"
           else
             $html = $( "<div class='qrcodes'></div>" )
@@ -370,15 +314,78 @@ $ ->
           $( ".eleve:not([data-classe='#{option}']) " ).hide()
           $( ".eleve[data-classe='#{option}'] " ).show()
           $( "#editEval" ).show()
-      $( "#mainselect option[value='defaut']").prop "selected", true
+      $( "#mainselect option[value='defaut']").prop "selected", true     
+####################################################################
+#Construction des cartes élèves  
+addStudentsCards = (data) ->
+  CLASSES = []
+  STUDENTS = {}
+  $( "#eleves" ).empty()
+  # data.csv : id, classe, nom, prenom
+  students_arrays = $.csv.toArrays(data)
+  for array in students_arrays
+    s = new Eleve(array[0],array[1],array[2], array[3])
+    STUDENTS[s.id] = s
+    CLASSES.push s.classe if s.classe not in CLASSES
+    $( "#eleves" ).append s.html
+  do_menu()
+  $( "#eleves" ).hide()
+  console.log "Il y avait #{students_arrays.length} entrée(s) ! Il y a #{CLASSES.length} classe(s) dans le menu !"   
+#On dom ready
+$ ->
+  
+
+    
+  $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
   ##################################################################
-  #Drag and Drop file
-  dnd = new DnDFileController '#upload', (files) ->
-    f = files[0]
-    reader = new FileReader
-    reader.onloadend = (e) -> studentsCards(@result)
-    reader.readAsText f
-    return
+  #Accidental reload !
+  window.onbeforeunload = () -> return ""  
+  ################################################################## 
+  d1 = $.Deferred()
+  d2 = $.Deferred()
+  
+  #Construction de DATA
+  $.ajax
+    type: "GET"
+    url: "eleves.csv"
+    dataType: "text"
+    success: (data) -> 
+      addStudentsCards(data)      
+      d1.resolve( "Éleves finished !" )
+    error: ->
+      alert "aucun élève importé !"
+      d1.resolve( "Éleves finished !" )
+  #Fin Élèves
+  ##################################################################
+  #Construction du S4C
+  $.getJSON "S4C_cat.json", ( data ) -> 
+      DOMAINES = data
+      for nom of DOMAINES
+        CURRENT_EVAL[nom] = {}
+        dom = new Domaine(nom, data[nom].description, data[nom].iconUrl)
+        $( "#tabs" ).append dom.htmlTab
+        $( "#domaines_area" ).append dom.html   
+        i=1
+        for signifiant, descripteurs of data[nom].signifiants
+          sig = new Signifiant(signifiant, "#{nom}.#{i++}", dom.domaine)
+          $( ".domaine[data-domaine='#{sig.domaine}']" ).find( ".signifiants" ).append sig.html
+          j=1
+          for descripteur in descripteurs
+            des = new Descripteur(descripteur, "#{sig.item}.#{j++}",sig.item)
+            $( ".signifiant[data-item='#{sig.item}'] .descripteurs ul" ).append des.html     
+      $( "#edit" ).prop "checked", false      
+      $( ".toggleDescripteurs" ).click()      
+      $( ".domaine, .domaine__tab" ).hide()
+      d2.resolve( "S4C finished !" )
+      #Fin du S4C     
+  ###################################################################
+  #Deffered to resolve Ajax concurrency
+  $.when( d1, d2 ).done ( v1, v2 ) ->
+    console.log( v1 )
+    console.log( v2 )   
+    do_menu()
+        
+  
   ##################################################################
   #Evenements de l'interface 
   ##################################################################
@@ -571,13 +578,12 @@ $ ->
   #Evt : Quand on clique sur Validation 
   ##################################################################    
   $( "body" ).on "click", "#validEval", -> 
-    $( this ).after "<button id='validAllCancel button red'>Annuler</button><button id='validAll'>Tout valider</button>"
-    $( this ).remove()
+    $( this ).after "<button id='validAllCancel' class='button red'>Annuler</button><button id='validAll' class='button green'>Tout valider</button>"
+    $( "#validEval" ).hide()
   
   $( "body" ).on "click", "#validAllCancel", -> 
-    $( this ).after "<button id='validEval button red'>Validation</button>"
-    $( this ).remove()
-    $( "#validAll" ).remove()
+    $( "#validEval" ).show()
+    $( "#validAll, #validAllCancel" ).remove()
     
   $( "body" ).on "click", "#validAll", -> 
     if confirm('Êtes-vous sur de vouloir tout valider ?')

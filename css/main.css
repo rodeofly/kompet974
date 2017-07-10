@@ -120,16 +120,8 @@ html {
   position : fixed;
   width : 100%;
   top : 0;
-  
   background-color : blue;
   z-index : 100;
-}
-
-#mainselect {
-  width : 50px;
-  height : 50px;
-  font-size : 1.5em;
-  display: inline-block;
 }
 
 #tabs {
@@ -167,6 +159,7 @@ html {
   border : solid black 2px;
   border-radius : 5px;
   margin : 2px;
+  cursor : pointer;
 }
 
 .eleve.absent {
@@ -233,13 +226,12 @@ button.absent, button.present {
 }
 
 #domaines_area {
-  position : relative;
   display     : flex;
   justify-content: flex-start;
   flex-flow : row nowrap;
   background  : white;
-
-  z-index     : 1000;
+  z-index     : 50;
+  margin-top : 150px; 
   overflow : scroll-y;
 }
 
@@ -297,7 +289,7 @@ button.absent, button.present {
 }
 
 .domaine__tab.show {
-  background-color : rgba(64,64,64,1);
+  background-color : rgba(255,255,255,0.75);
 }
 
 .domaine__icon, .tabtoggler {
@@ -368,7 +360,6 @@ button.absent, button.present {
 
 #domaines_area.freeze {
   position : fixed;
-  width : 100%;
   bottom : 0;
   left : 0;
   z-index : 1000;
@@ -497,6 +488,7 @@ font-size : 0.75em;
   z-index : 1000;
   border : solid black 5px;
   border-radius : 10px;
+  color : white;
 }
 #upload .close {
   position : absolute;
@@ -510,9 +502,16 @@ font-size : 0.75em;
 }
 #upload.slim {
   background-color : rgba(0,0,0,0.25);
-
 }
 
+#upload p {
+  background-color : rgba(0,0,0,0.5);
+  border-radius : 10px;
+}
+#upload a {
+  color : white;
+  font-weight : bold;
+}
 .admin {
   color:black;
 
