@@ -33,9 +33,9 @@ class Eleve
     @html = """
 <div id="#{@id}" class="eleve" data-classe="#{@classe}" data-nom="#{@nom}" data-prenom="#{@prenom}">
   <div class="content">
-    <button class='absent'>#{@classe} - Présent</button>
-    <button class='present' style='display:none;'>#{@classe} - Absent</button>
-    <button class='save' style='display:none;'>Valider</button>   
+    <button class='absent button black'>#{@classe} - Présent</button>
+    <button class='present button white' style='display:none;'>#{@classe} - Absent</button>
+    <button class='save button red' style='display:none;'>Valider</button>   
     <div class="evaluation"></div>
     <h1>#{@nom} #{@prenom}</h1>
     
@@ -59,7 +59,7 @@ class Signifiant
     @html = """
 <div id='#{@id}' class='signifiant' data-item='#{@item}' data-color='white' data-signifiant='#{@signifiant}' data-domaine='#{@domaine}'>
     <div class='head'>
-        <button class='toggleDescripteurs hide' data-id='#{@id}'></button>#{@signifiant}
+        <button class='toggleDescripteurs button black hide' data-id='#{@id}'>[Détails]</button> #{@signifiant}
     </div>
     <div class='descripteurs'>
         <ul></ul>
@@ -79,8 +79,11 @@ class Domaine
     @html = """
 <div id='#{@id}' class='domaine' data-domaine='#{@domaine}' data-description='#{@desc}' data-icon='#{@iconUrl}'>
     <div class='head'>  
-        <img class='domaine__icon' src='#{@iconUrl}' data-domaine='#{@domaine}'> 
-        <div class='domaine__name'>#{@domaine} : #{@desc}</div>
+        <img class='domaine__icon' src='#{@iconUrl}' data-domaine='#{@domaine}'>
+        
+        
+        <button class='toggleDomDescription button black hide' data-id='#{@id}'>info</button> 
+        <div class="domDescription" style="display:none;"><div class='domaine__name'>#{@domaine} : #{@desc}</div></div>
     </div>
     <div class='signifiants'></div>
 </div>"""
@@ -247,7 +250,7 @@ $.fn.extend
 #On dom ready
 $ ->
 
-  
+
     
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
   ##################################################################
@@ -295,9 +298,9 @@ $ ->
     console.log( v1 )
     console.log( v2 )
     ###########################################################
-    #Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories",
+    #Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories", "Tous"
     $select = $( "<select id='mainselect'><option value='defaut'>&#9776;</option></select>" )
-    for o in ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier", "Tous"].concat CLASSES
+    for o in ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES
       $select.append "<option value='#{o}'>#{o}</option>"
     $( "#tabs" ).prepend $select       
     $( "#mainselect option[value=Menu]").prop "selected", true
@@ -353,6 +356,7 @@ $ ->
                 $nom.append( $qrcode.append("<br><span>#{note[j]}</span>") )
                 $html.append $nom  
             $( "body" ).empty().append $html
+            
         when "Sauver Table"      then save "csv"        
         when "Sauver Catégories" then save "json"           
         when "Copier"
@@ -360,12 +364,12 @@ $ ->
           $( "#clipboard" ).text( $.csv.fromArrays DATA, options )
           new Clipboard "#copy"     
           $( "#copy" ).click()
-        when "Tous"              then alert "Tous"
         else
           CURRENT_CLASSE = option
           $( "#eleves" ).show()
           $( ".eleve:not([data-classe='#{option}']) " ).hide()
           $( ".eleve[data-classe='#{option}'] " ).show()
+          $( "#editEval" ).show()
       $( "#mainselect option[value='defaut']").prop "selected", true
   ##################################################################
   #Drag and Drop file
@@ -399,15 +403,21 @@ $ ->
       index = SELECTED_DOMS.indexOf(dom)
       SELECTED_DOMS.splice(index, 1) if (index > -1)
       $( "##{id}" ).hide()   
+  
+  $( "body" ).on "click", ".toggleDomDescription", (event) ->
+    id = $(this).data( "id" )
+    $( "##{id} .domDescription" ).toggle()
+    
   ##################################################################
   #Evt : Quand on toggle un signifiant   
   ##################################################################
   #Toggle signifiant
   toggleSignifiant = (item) ->
-    $s = $( ".signifiant[data-item='#{item}']" )
-    dom = $s.data "domaine"
-    
-    switch $s.data "color"
+    $s    = $( ".signifiant[data-item='#{item}']" )
+    dom   = $s.data "domaine"
+    color = $s.data "color"
+
+    switch color
       when "white"      then [color, score] = ["shaded", 0]
       when "shaded"     then [color, score] = ["red", 10]
       when "red"        then [color, score] = ["yellow", 25]
@@ -421,16 +431,18 @@ $ ->
     $s.attr( "data-color", color )
     $s.data( "color", color )
     CURRENT_EVAL[dom][item] =
-      note : score
+      note    : score
       couleur : color
     
+    
     if $( "#domaines_area .domaine[data-domaine='#{dom}']" ).hasClass "freeze"
-      id = $( ".selected" ).attr "id"
-      $( ".selected .eval_sig[data-item='#{item}']" ).data "color", color
-      $( ".selected .eval_sig[data-item='#{item}']" ).attr "data-color", color
-      DATA_TEMP[id][dom][item] =
-        note       : score
-        couleur    : color
+      if $( ".selected" ).length > 0
+        id = $( ".selected" ).attr "id"
+        $( ".selected .eval_sig[data-item='#{item}']" ).data "color", color
+        $( ".selected .eval_sig[data-item='#{item}']" ).attr "data-color", color
+        DATA_TEMP[id][dom][item] =
+          note       : score
+          couleur    : color
     else
       #On crée une entrée dans DATA_TEMP pour ce signifiant
       if color isnt "white"
@@ -458,11 +470,12 @@ $ ->
   #Evt : Quand on crée une éval
   ################################################################## 
   $( "body" ).on "click", "#editEval", ->
+    
     if CURRENT_CLASSE is undefined
       alert "selectionner une classe"
     else
       $( this ).hide()
-      $( "#eleves, #validEval, qrcodeModeStart" ).hide()
+      $( "#eleves, #validEval, #qrcodeModeStart" ).hide()
       $( ".domaine__tab" ).show()
       if $( ".signifiant:not([data-color='white'])" ).length > 0
         $( "#freeze" ).show() 
@@ -558,11 +571,11 @@ $ ->
   #Evt : Quand on clique sur Validation 
   ##################################################################    
   $( "body" ).on "click", "#validEval", -> 
-    $( this ).after "<button id='validAllCancel'>Annuler</button><button id='validAll'>Tout valider</button>"
+    $( this ).after "<button id='validAllCancel button red'>Annuler</button><button id='validAll'>Tout valider</button>"
     $( this ).remove()
   
   $( "body" ).on "click", "#validAllCancel", -> 
-    $( this ).after "<button id='validEval'>Validation</button>"
+    $( this ).after "<button id='validEval button red'>Validation</button>"
     $( this ).remove()
     $( "#validAll" ).remove()
     
@@ -626,7 +639,7 @@ $ ->
   $( "body" ).on "click", "#qrcodeModeStop", ->
     $( ".selectedSig" ).removeClass "selectedSig"
     $( "#qrcodeModeStart, #qrcodeModeStop" ).toggle()
-    $( "#html5_qrcode_video, #qr-canvas" ).remove()
+    $( "#cam, #qr-canvas" ).remove()
     $( "#scanner" ).hide()
     $( "body" ).off "click", ".signifiant"
     $( "body" ).on "click", ".signifiant", -> toggleSignifiant( $(this).data "item" )

@@ -53,7 +53,7 @@
       this.prenom = prenom1;
       this.id = STUDENT_ID++;
       this.evaluation = {};
-      this.html = "<div id=\"" + this.id + "\" class=\"eleve\" data-classe=\"" + this.classe + "\" data-nom=\"" + this.nom + "\" data-prenom=\"" + this.prenom + "\">\n  <div class=\"content\">\n    <button class='absent'>" + this.classe + " - Présent</button>\n    <button class='present' style='display:none;'>" + this.classe + " - Absent</button>\n    <button class='save' style='display:none;'>Valider</button>   \n    <div class=\"evaluation\"></div>\n    <h1>" + this.nom + " " + this.prenom + "</h1>\n    \n  </div>\n</div>";
+      this.html = "<div id=\"" + this.id + "\" class=\"eleve\" data-classe=\"" + this.classe + "\" data-nom=\"" + this.nom + "\" data-prenom=\"" + this.prenom + "\">\n  <div class=\"content\">\n    <button class='absent button black'>" + this.classe + " - Présent</button>\n    <button class='present button white' style='display:none;'>" + this.classe + " - Absent</button>\n    <button class='save button red' style='display:none;'>Valider</button>   \n    <div class=\"evaluation\"></div>\n    <h1>" + this.nom + " " + this.prenom + "</h1>\n    \n  </div>\n</div>";
     }
 
     return Eleve;
@@ -79,7 +79,7 @@
       this.item = item1;
       this.domaine = domaine;
       this.id = ID++;
-      this.html = "<div id='" + this.id + "' class='signifiant' data-item='" + this.item + "' data-color='white' data-signifiant='" + this.signifiant + "' data-domaine='" + this.domaine + "'>\n    <div class='head'>\n        <button class='toggleDescripteurs hide' data-id='" + this.id + "'></button>" + this.signifiant + "\n    </div>\n    <div class='descripteurs'>\n        <ul></ul>\n    </div>\n</div>";
+      this.html = "<div id='" + this.id + "' class='signifiant' data-item='" + this.item + "' data-color='white' data-signifiant='" + this.signifiant + "' data-domaine='" + this.domaine + "'>\n    <div class='head'>\n        <button class='toggleDescripteurs button black hide' data-id='" + this.id + "'>[Détails]</button> " + this.signifiant + "\n    </div>\n    <div class='descripteurs'>\n        <ul></ul>\n    </div>\n</div>";
     }
 
     return Signifiant;
@@ -93,7 +93,7 @@
       this.iconUrl = iconUrl;
       this.id = ID++;
       this.htmlTab = "<div class='domaine__tab hide' data-id='" + this.id + "' data-domaine='" + this.domaine + "'>\n    <div class='head'>\n        <img class='domaine__icon' src='" + this.iconUrl + "'>\n    </div>\n</div>";
-      this.html = "<div id='" + this.id + "' class='domaine' data-domaine='" + this.domaine + "' data-description='" + this.desc + "' data-icon='" + this.iconUrl + "'>\n    <div class='head'>  \n        <img class='domaine__icon' src='" + this.iconUrl + "' data-domaine='" + this.domaine + "'> \n        <div class='domaine__name'>" + this.domaine + " : " + this.desc + "</div>\n    </div>\n    <div class='signifiants'></div>\n</div>";
+      this.html = "<div id='" + this.id + "' class='domaine' data-domaine='" + this.domaine + "' data-description='" + this.desc + "' data-icon='" + this.iconUrl + "'>\n    <div class='head'>  \n        <img class='domaine__icon' src='" + this.iconUrl + "' data-domaine='" + this.domaine + "'>\n        \n        \n        <button class='toggleDomDescription button black hide' data-id='" + this.id + "'>info</button> \n        <div class=\"domDescription\" style=\"display:none;\"><div class='domaine__name'>" + this.domaine + " : " + this.desc + "</div></div>\n    </div>\n    <div class='signifiants'></div>\n</div>";
     }
 
     return Domaine;
@@ -341,7 +341,7 @@
       console.log(v1);
       console.log(v2);
       $select = $("<select id='mainselect'><option value='defaut'>&#9776;</option></select>");
-      ref = ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier", "Tous"].concat(CLASSES);
+      ref = ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat(CLASSES);
       for (k = 0, len = ref.length; k < len; k++) {
         o = ref[k];
         $select.append("<option value='" + o + "'>" + o + "</option>");
@@ -433,14 +433,12 @@
             new Clipboard("#copy");
             $("#copy").click();
             break;
-          case "Tous":
-            alert("Tous");
-            break;
           default:
             CURRENT_CLASSE = option;
             $("#eleves").show();
             $(".eleve:not([data-classe='" + option + "']) ").hide();
             $(".eleve[data-classe='" + option + "'] ").show();
+            $("#editEval").show();
         }
         return $("#mainselect option[value='defaut']").prop("selected", true);
       });
@@ -478,11 +476,17 @@
         return $("#" + id).hide();
       }
     });
+    $("body").on("click", ".toggleDomDescription", function(event) {
+      var id;
+      id = $(this).data("id");
+      return $("#" + id + " .domDescription").toggle();
+    });
     toggleSignifiant = function(item) {
       var $s, color, dom, id, ref, ref1, ref2, ref3, ref4, ref5, ref6, score;
       $s = $(".signifiant[data-item='" + item + "']");
       dom = $s.data("domaine");
-      switch ($s.data("color")) {
+      color = $s.data("color");
+      switch (color) {
         case "white":
           ref = ["shaded", 0], color = ref[0], score = ref[1];
           break;
@@ -512,13 +516,15 @@
         couleur: color
       };
       if ($("#domaines_area .domaine[data-domaine='" + dom + "']").hasClass("freeze")) {
-        id = $(".selected").attr("id");
-        $(".selected .eval_sig[data-item='" + item + "']").data("color", color);
-        $(".selected .eval_sig[data-item='" + item + "']").attr("data-color", color);
-        return DATA_TEMP[id][dom][item] = {
-          note: score,
-          couleur: color
-        };
+        if ($(".selected").length > 0) {
+          id = $(".selected").attr("id");
+          $(".selected .eval_sig[data-item='" + item + "']").data("color", color);
+          $(".selected .eval_sig[data-item='" + item + "']").attr("data-color", color);
+          return DATA_TEMP[id][dom][item] = {
+            note: score,
+            couleur: color
+          };
+        }
       } else {
         if (color !== "white") {
           $("#freeze").show();
@@ -561,7 +567,7 @@
         return alert("selectionner une classe");
       } else {
         $(this).hide();
-        $("#eleves, #validEval, qrcodeModeStart").hide();
+        $("#eleves, #validEval, #qrcodeModeStart").hide();
         $(".domaine__tab").show();
         if ($(".signifiant:not([data-color='white'])").length > 0) {
           $("#freeze").show();
@@ -673,11 +679,11 @@
       }
     });
     $("body").on("click", "#validEval", function() {
-      $(this).after("<button id='validAllCancel'>Annuler</button><button id='validAll'>Tout valider</button>");
+      $(this).after("<button id='validAllCancel button red'>Annuler</button><button id='validAll'>Tout valider</button>");
       return $(this).remove();
     });
     $("body").on("click", "#validAllCancel", function() {
-      $(this).after("<button id='validEval'>Validation</button>");
+      $(this).after("<button id='validEval button red'>Validation</button>");
       $(this).remove();
       return $("#validAll").remove();
     });
@@ -757,7 +763,7 @@
     return $("body").on("click", "#qrcodeModeStop", function() {
       $(".selectedSig").removeClass("selectedSig");
       $("#qrcodeModeStart, #qrcodeModeStop").toggle();
-      $("#html5_qrcode_video, #qr-canvas").remove();
+      $("#cam, #qr-canvas").remove();
       $("#scanner").hide();
       $("body").off("click", ".signifiant");
       $("body").on("click", ".signifiant", function() {
