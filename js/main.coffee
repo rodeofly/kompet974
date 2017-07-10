@@ -14,7 +14,7 @@ CLASSES = []
 CURRENT_EVAL = {}
 CURRENT_CLASSE = undefined
 
-
+tuto = false
 #############################################################################################################"
 timer = (name) ->
   start = new Date()
@@ -245,14 +245,15 @@ dnd = new DnDFileController '#upload', (files) ->
 do_menu = () ->
   $( "#mainselect" ).remove()
   $select = $( "<select id='mainselect'><option value='defaut'>Menu</option></select>" )
-  for o in ["Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES
+  menu_item = ["Tutoriel", "Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES 
+  for o in menu_item
     $select.append "<option value='#{o}'>#{o}</option>"
   $( "#tabs" ).prepend $select       
   $( "#mainselect option[value=Menu]").prop "selected", true
   $( "#mainselect" ).selectmenu
     width  : 50
     height : 50
-    change : -> 
+    change : ->
       save = (type) ->
         dataStr = "data:text/#{type};charset=utf-8,"
         stringValue = prompt( "Nom du fichier ?", stringValue )
@@ -269,6 +270,13 @@ do_menu = () ->
         dlAnchorElem.click()
       option = $("#mainselect").val()
       switch option
+        when "Tutoriel"
+          tuto = true
+          $( "#dialog1" ).dialog("open").dialog
+            position:
+              my: "left top"
+              at: "left bottom"
+              of: "#menu-item" 
         when "Importer" then $( "#upload" ).show()
         when "Charger Local"
           if localStorage.DATA
@@ -293,7 +301,7 @@ do_menu = () ->
               "lightGreen" : "satisfaisant"
               "green"      : "très bien"
             for i in [1..25]
-              $nom = $("<div class='grid'><div class='eleve'>(#{i}) #{STUDENTS[i].nom}<br>#{STUDENTS[i].prenom}</div></div>")
+              $nom = $("<div class='grid'><div class='eleveQR'>(#{i}) #{STUDENTS[i].nom}<br>#{STUDENTS[i].prenom}</div></div>")
               for j in ["shaded", "red", "yellow", "lightGreen", "green" ]
                 $qrcode = $( "<div class='qrcodePrint'/>" )
                 $qrcode.qrcode({width: 128,height: 128,text: "#{i}-#{j}"})
@@ -310,12 +318,21 @@ do_menu = () ->
           new Clipboard "#copy"     
           $( "#copy" ).click()
         else
+          if tuto
+            $( "#dialog1" ).dialog "close"
           CURRENT_CLASSE = option
           $( "#eleves" ).show()
           $( ".eleve:not([data-classe='#{option}']) " ).hide()
           $( ".eleve[data-classe='#{option}'] " ).show()
           $( "#editEval" ).show()
-      $( "#mainselect option[value='defaut']").prop "selected", true     
+          if tuto
+            $( "#dialog2" ).dialog( "open" ).dialog
+              position:
+                my: "left top"
+                at: "left bottom"
+                of: "#editEval" 
+      $( "#mainselect option[value='defaut']").prop "selected", true
+           
 ####################################################################
 #Construction des cartes élèves  
 addStudentsCards = (data) ->
@@ -334,6 +351,11 @@ addStudentsCards = (data) ->
   console.log "Il y avait #{students_arrays.length} entrée(s) ! Il y a #{CLASSES.length} classe(s) dans le menu !"   
 #On dom ready
 $ ->
+  
+  $( ".dialog" ).dialog
+    dialogClass: 'tuto'
+    autoOpen : false
+  
   
 
     
@@ -402,15 +424,25 @@ $ ->
   #Evt : Quand on toggle un domaine
   ##################################################################
   $( "body" ).on "click", ".domaine__tab", (event) ->
+    
     id = $(this).data( "id" )
     dom = $(this).data( "domaine" )
     $(this).toggleClass "show hide"
     if $(this).hasClass "show"
-      $( "##{id}, ##{id} .signifiants, ##{id} .signifiant" ).show()
+      $( "##{id}, ##{id} .signifiants, ##{id} .signifiant" ).show 0, ->
+        if tuto
+          $( "#dialog3" ).dialog( "close" )
+          $( "#dialog4" ).dialog( "open" ).dialog
+            position:
+              my: "left top"
+              at: "right top"
+              of: "#signifiants" 
     else     
       index = SELECTED_DOMS.indexOf(dom)
       SELECTED_DOMS.splice(index, 1) if (index > -1)
       $( "##{id}" ).hide()   
+    
+    
   
   $( "body" ).on "click", ".toggleDomDescription", (event) ->
     id = $(this).data( "id" )
@@ -466,7 +498,23 @@ $ ->
         if $( ".signifiant:not([data-color='white'])" ).length is 0
           $( "#freeze" ).hide()
             
-  $( "body" ).on "click", ".signifiant", -> toggleSignifiant( $(this).data "item" )
+  $( "body" ).on "click", ".signifiant", ->
+    toggleSignifiant( $(this).data "item" )
+    if tuto and not $( "#domaines_area").hasClass( "freeze" )
+      $( "#dialog4" ).dialog( "close" )
+      $( "#dialog5" ).dialog( "open" ).dialog
+        position:
+          my: "left top"
+          at: "left bottom"
+          of: "#freeze"
+     else
+       if tuto and $( "#domaines_area").hasClass( "freeze" )
+         $( "#dialog7" ).dialog( "close" )
+         $( "#dialog8" ).dialog( "open" ).dialog
+           position:
+             my: "left top"
+             at: "left bottom"
+             of: "#validEval" 
    
   $( "body" ).on "click", ".toggleDescripteurs", (event) ->
     event.stopPropagation()
@@ -478,7 +526,13 @@ $ ->
   #Evt : Quand on crée une éval
   ################################################################## 
   $( "body" ).on "click", "#editEval", ->
-    
+    if tuto
+      $( "#dialog2" ).dialog "close"
+      $( "#dialog3" ).dialog( "open" ).dialog
+        position:
+          my: "left top"
+          at: "right top"
+          of: "#tabs" 
     if CURRENT_CLASSE is undefined
       alert "selectionner une classe"
     else
@@ -534,6 +588,13 @@ $ ->
             $( "#id .eval_sig[data-item='#{item}']" ).attr "data-color", color
             DATA_TEMP[id][dom][item].couleur = color
     t2.stop()
+    if tuto
+      $( "#dialog5" ).dialog( "close" )
+      $( "#dialog6" ).dialog( "open" ).dialog
+        position:
+          my: "left bottom"
+          at: "right top"
+          of: ".eleve:first" 
   ##################################################################
   #Evt : Quand on clique sur un eleve absent  
   ##################################################################
@@ -558,7 +619,14 @@ $ ->
         item = $(this).data "item"
         color = DATA_TEMP[id][dom][item].couleur if DATA_TEMP[id][dom][item].couleur isnt undefined
         $( this ).data "color", color
-        $( this ).attr "data-color", color   
+        $( this ).attr "data-color", color
+      if tuto
+        $( "#dialog6" ).dialog( "close" )
+        $( "#dialog7" ).dialog( "open" ).dialog
+          position:
+            my: "left top"
+            at: "right top"
+            of: ".domaine.freeze:first"  
   $( "body" ).on "click", ".eleve", ->
     id = $(this).attr "id"
     if $( ".signifiant:not([data-color='white'])" ).length is 0
@@ -580,13 +648,22 @@ $ ->
   ##################################################################    
   $( "body" ).on "click", "#validEval", -> 
     $( this ).after "<button id='validAllCancel' class='button red'>Annuler</button><button id='validAll' class='button green'>Tout valider</button>"
-    $( "#validEval" ).hide()
+    $( "#validEval" ).hide 0, ->
+      if tuto
+       $( "#dialog8" ).dialog( "close" )
+       $( "#dialog9" ).dialog( "open" ).dialog
+         position:
+           my: "left top"
+           at: "left bottom"
+           of: "#validAll"
+       tuto = false
   
   $( "body" ).on "click", "#validAllCancel", -> 
     $( "#validEval" ).show()
     $( "#validAll, #validAllCancel" ).remove()
     
-  $( "body" ).on "click", "#validAll", -> 
+  $( "body" ).on "click", "#validAll", ->
+    $( "#dialog9" ).dialog( "close" )
     if confirm('Êtes-vous sur de vouloir tout valider ?')
       for id of DATA_TEMP
         nom    = $( "##{id}" ).data "nom"
