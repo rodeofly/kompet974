@@ -26,7 +26,7 @@ timer = (name) ->
 class Eleve
   constructor : (@id, @classe, @nom, @prenom) ->
     STUDENTS_LENGTH++
-    @evaluation = {}
+    @evaluations = {}
     @html = """
 <div id="#{@id}" class="eleve" data-classe="#{@classe}" data-nom="#{@nom}" data-prenom="#{@prenom}">
   <div class="content">
@@ -134,14 +134,14 @@ $.fn.extend
             console.log 'Found ome other kind of source/device: ', deviceInfo
           ++i
         return
-
+       
       getStream = ->
         if window.stream
           window.stream.getTracks().forEach (track) ->
             track.stop()
             return
         constraints = 
-          audio: optional: [ { sourceId: audioSelect.value } ]
+          #audio: optional: [ { sourceId: audioSelect.value } ]
           video: optional: [ { sourceId: videoSelect.value } ]
         navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch handleError
         return
@@ -152,20 +152,24 @@ $.fn.extend
         video.srcObject = stream
         localMediaStream = stream
         $.data currentElem[0], 'stream', stream
-        video.play()
+        video.play() #important !
         $.data currentElem[0], 'timeout', setTimeout(scan, 1000)
 
       handleError = (error) -> console.log 'Error: ', error
-      
 
-      # Call the getUserMedia method with our callback functions
-      if navigator.getUserMedia
-        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
+      if $( videoSelect ).children().length is 0
+        # Call the getUserMedia method with our callback functions
+        if navigator.getUserMedia
+          navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch handleError
+          audioSelect.onchange = getStream
+          videoSelect.onchange = getStream  
+        else
+          console.log 'Native web camera streaming (getUserMedia) not supported in this browser.'
+          # Display a friendly "sorry" message to the user
+      else
+        navigator.mediaDevices.enumerateDevices().then(getStream).catch handleError
         audioSelect.onchange = getStream
         videoSelect.onchange = getStream  
-      else
-        console.log 'Native web camera streaming (getUserMedia) not supported in this browser.'
-        # Display a friendly "sorry" message to the user
 
       qrcode.callback = (result) ->
         qrcodeSuccess result, localMediaStream
@@ -173,10 +177,7 @@ $.fn.extend
     # end of html5_qrcode
   html5_qrcode_stop: ->
     @each ->
-      #stop the stream and cancel timeouts
-      $(this).data('stream').getVideoTracks().forEach (videoTrack) ->
-        videoTrack.stop()
-        return
+      stream.getTracks().forEach (track) -> track.stop()
       clearTimeout $(this).data('timeout')
 #############################################################################################################"
 #Copy to clipboard 
@@ -241,7 +242,8 @@ dnd = new DnDFileController '#upload', (files) ->
 ####################################################################
 ####################################################################
 ####################################################################
-#Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories", "Tous"  
+#Menu select pour le mainmenu - missing : "Sauver Table", "Sauver Catégories", "Tous"
+ 
 do_menu = () ->
   $( "#mainselect" ).remove()
   $select = $( "<select id='mainselect'><option value='defaut'>Menu</option></select>" )
@@ -253,6 +255,14 @@ do_menu = () ->
   $( "#mainselect" ).selectmenu
     width  : 50
     height : 50
+    open   : ->
+      if tuto
+        $( "#dialog1" ).dialog( "close" )
+        $( "#dialog1-1" ).dialog( "open" ).dialog
+          position:
+            my: "left top"
+            at: "left bottom"
+            of: ".ui-menu-item:last"  
     change : ->
       save = (type) ->
         dataStr = "data:text/#{type};charset=utf-8,"
@@ -319,18 +329,18 @@ do_menu = () ->
           $( "#copy" ).click()
         else
           if tuto
-            $( "#dialog1" ).dialog "close"
+            $( "#dialog1-1" ).dialog "close"
           CURRENT_CLASSE = option
           $( "#eleves" ).show()
           $( ".eleve:not([data-classe='#{option}']) " ).hide()
           $( ".eleve[data-classe='#{option}'] " ).show()
-          $( "#editEval" ).show()
-          if tuto
-            $( "#dialog2" ).dialog( "open" ).dialog
-              position:
-                my: "left top"
-                at: "left bottom"
-                of: "#editEval" 
+          $( "#editEval" ).show 0, ->
+            if tuto
+              $( "#dialog2" ).dialog( "open" ).dialog
+                position:
+                  my: "left top"
+                  at: "left bottom"
+                  of: "#editEval" 
       $( "#mainselect option[value='defaut']").prop "selected", true
            
 ####################################################################
@@ -351,22 +361,18 @@ addStudentsCards = (data) ->
   console.log "Il y avait #{students_arrays.length} entrée(s) ! Il y a #{CLASSES.length} classe(s) dans le menu !"   
 #On dom ready
 $ ->
-  
-  $( ".dialog" ).dialog
-    dialogClass: 'tuto'
-    autoOpen : false
-  
-  
-
-    
   $( "#upload .close" ).on "click", -> $( "#upload" ).hide()
+  $( ".dialog" ).dialog {dialogClass: 'tuto', autoOpen : false}
+  $( "#dialog10" ).on "click", ->
+    $( this ).dialog "close"
+    tuto = false
+    
   ##################################################################
   #Accidental reload !
   window.onbeforeunload = () -> return ""  
   ################################################################## 
   d1 = $.Deferred()
-  d2 = $.Deferred()
-  
+  d2 = $.Deferred()  
   #Construction de DATA
   $.ajax
     type: "GET"
@@ -406,25 +412,15 @@ $ ->
   $.when( d1, d2 ).done ( v1, v2 ) ->
     console.log( v1 )
     console.log( v2 )   
-    do_menu()
-        
-  
+    do_menu() 
   ##################################################################
   #Evenements de l'interface 
   ##################################################################
-  #Toggle all checkboxes
-  ##################################################################
-  $( "body" ).on "click", "input[data-row='0']", ->
-    checkBoxes = $("input[type='checkbox']").not($(this))
-    if $(this).prop "checked"
-      checkBoxes.prop("checked", true).closest("tr").addClass "export"
-    else
-      checkBoxes.prop("checked", false).closest("tr").removeClass "export"
+
   ##################################################################
   #Evt : Quand on toggle un domaine
   ##################################################################
   $( "body" ).on "click", ".domaine__tab", (event) ->
-    
     id = $(this).data( "id" )
     dom = $(this).data( "domaine" )
     $(this).toggleClass "show hide"
@@ -437,25 +433,26 @@ $ ->
               my: "left top"
               at: "right top"
               of: "#signifiants" 
-    else     
+    else
+      #On retire le domaine de l'évaluation
       index = SELECTED_DOMS.indexOf(dom)
       SELECTED_DOMS.splice(index, 1) if (index > -1)
-      $( "##{id}" ).hide()   
-    
-    
-  
+      $( "##{id}" ).hide()
+  ##################################################################
+  #Evt : Quand on toggle "info" pour connaitre la description d'un domaine
+  ##################################################################  
   $( "body" ).on "click", ".toggleDomDescription", (event) ->
     id = $(this).data( "id" )
     $( "##{id} .domDescription" ).toggle()
-    
   ##################################################################
   #Evt : Quand on toggle un signifiant   
   ##################################################################
   #Toggle signifiant
-  toggleSignifiant = (item) ->
-    $s    = $( ".signifiant[data-item='#{item}']" )
-    dom   = $s.data "domaine"
-    color = $s.data "color"
+  toggleSignifiant = (id) ->
+    $signifiant    = $( "##{id}" )
+    item  = $signifiant.data "item"
+    dom   = $signifiant.data "domaine"
+    color = $signifiant.data "color"
 
     switch color
       when "white"      then [color, score] = ["shaded", 0]
@@ -468,13 +465,12 @@ $ ->
           [color, score] = ["shaded", 0]
         else
           [color, score] = ["white", 0]
-    $s.attr( "data-color", color )
-    $s.data( "color", color )
+    $signifiant.attr( "data-color", color )
+    $signifiant.data( "color", color )
     CURRENT_EVAL[dom][item] =
       note    : score
       couleur : color
-    
-    
+        
     if $( "#domaines_area .domaine[data-domaine='#{dom}']" ).hasClass "freeze"
       if $( ".selected" ).length > 0
         id = $( ".selected" ).attr "id"
@@ -499,7 +495,8 @@ $ ->
           $( "#freeze" ).hide()
             
   $( "body" ).on "click", ".signifiant", ->
-    toggleSignifiant( $(this).data "item" )
+    id = $( this ).attr "id"
+    toggleSignifiant( id )
     if tuto and not $( "#domaines_area").hasClass( "freeze" )
       $( "#dialog4" ).dialog( "close" )
       $( "#dialog5" ).dialog( "open" ).dialog
@@ -515,7 +512,9 @@ $ ->
              my: "left top"
              at: "left bottom"
              of: "#validEval" 
-   
+  ##################################################################
+  #Evt : Quand on toggle les descripteurs
+  ##################################################################         
   $( "body" ).on "click", ".toggleDescripteurs", (event) ->
     event.stopPropagation()
     id = $(this).data "id"
@@ -539,28 +538,29 @@ $ ->
       $( this ).hide()
       $( "#eleves, #validEval, #qrcodeModeStart" ).hide()
       $( ".domaine__tab" ).show()
+      $( ".signifiant:not([data-color='white'])" ).attr "data-color", "shaded"
+      $( ".signifiant:not([data-color='white'])" ).data "color", "shaded"
+      #on montre le bouton "évaluer"
       if $( ".signifiant:not([data-color='white'])" ).length > 0
         $( "#freeze" ).show() 
       for dom in SELECTED_DOMS
         $( ".domaine[data-domaine='#{dom}'], .domaine[data-domaine='#{dom}'] .signifiant" ).show()
-        $( ".domaine[data-domaine='#{dom}'], #domaines_area" ).removeClass "freeze"
-        $( ".signifiant[data-descripteur='#{dom}']" )
-          .attr "data-color", "shaded"
-          .data "color", "shaded"
+      $( ".domaine, #domaines_area" ).removeClass "freeze"
+        
   
   ##################################################################
   #Evt : Quand on freeze une éval   
   ##################################################################   
   $( "body" ).on "click", "#freeze", ->
-    $( "#qrcodeModeStart" ).show()
-    $( ".domaine__tab, .signifiant[data-color='white']" ).hide()
-
     $( this ).hide()
+    $( "#qrcodeModeStart" ).show()
+    $( ".domaine__tab, .signifiant[data-color='white']" ).hide()    
     $( "#eleves, #editEval, #validEval" ).show()
     $( "#domaines_area" ).addClass "freeze"
     
     $html = $( "<div/>" )
     t1 = timer('First loop')
+    #On crée les petits carrés pour chaque élèves
     for d in SELECTED_DOMS
       $( ".domaine[data-domaine='#{d}']" ).addClass "freeze"
       $html.append "<div class='eval_dom' data-domaine='#{d}'></div>"
@@ -574,6 +574,7 @@ $ ->
     $( ".eleve[data-classe='#{CURRENT_CLASSE}']" ).find( ".evaluation" ).append $html.html()
     
     t2 = timer('Second loop')
+    #
     for id of DATA_TEMP
       for dom in SELECTED_DOMS
         $( ".domaine[data-domaine='#{dom}'] .signifiant:not([data-color='white'])" ).each ->
@@ -656,7 +657,7 @@ $ ->
            my: "left top"
            at: "left bottom"
            of: "#validAll"
-       tuto = false
+       
   
   $( "body" ).on "click", "#validAllCancel", -> 
     $( "#validEval" ).show()
@@ -684,21 +685,23 @@ $ ->
       $( "#clipboard" ).text( $.csv.fromArrays DATA, options )
       new Clipboard "#copy"     
       $( "#copy" ).click()
-      alert "Prêt à coller dans un tableur (ctrl+V) !"  
+      alert "Prêt à coller dans un tableur (ctrl+V) !"
+      $( "#dialog10" ).dialog( "open" ) if tuto
+        
   ##################################################################
   #Evt : Mode QrCode START
   ##################################################################    
   $( "body" ).on "click", "#qrcodeModeStart", ->
     $( ".signifiant:visible:first" ).addClass "selectedSig"
     $( ".eleve" ).hide()
-    $( "body" ).off "click", ".signifiant"
-    $( "body" ).on "click", ".signifiant", ->
-      $( ".selectedSig" ).removeClass "selectedSig"
-      $(this).addClass "selectedSig"      
     $( "#qrcodeModeStart, #qrcodeModeStop" ).toggle()
     $( "#scanner" ).show()
     
-
+    $( "body" ).off "click", ".signifiant"    
+    $( "body" ).on "click", ".signifiant", ->
+      $( ".selectedSig" ).removeClass "selectedSig"
+      $(this).addClass "selectedSig"      
+        
     $('#reader').html5_qrcode ((data) ->
       $( ".eleve" ).hide()    
       [id, color] = data.split("-")
@@ -726,7 +729,9 @@ $ ->
     $( "#cam, #qr-canvas" ).remove()
     $( "#scanner" ).hide()
     $( "body" ).off "click", ".signifiant"
-    $( "body" ).on "click", ".signifiant", -> toggleSignifiant( $(this).data "item" )
+    $( "body" ).on "click", ".signifiant", -> 
+      id = $( this ).attr "id"
+      toggleSignifiant( id )
     $( ".eleve" ).hide()
     $( ".eleve[data-classe='#{CURRENT_CLASSE}']" ).show()
       

@@ -45,7 +45,7 @@
       this.nom = nom1;
       this.prenom = prenom1;
       STUDENTS_LENGTH++;
-      this.evaluation = {};
+      this.evaluations = {};
       this.html = "<div id=\"" + this.id + "\" class=\"eleve\" data-classe=\"" + this.classe + "\" data-nom=\"" + this.nom + "\" data-prenom=\"" + this.prenom + "\">\n  <div class=\"content\">\n    <button class='absent button black'>" + this.classe + " - Présent</button>\n    <button class='present button white' style='display:none;'>" + this.classe + " - Absent</button>\n    <button class='save button red' style='display:none;'>Valider</button>   \n    <div class=\"evaluation\"></div>\n    <h1>" + this.nom + " " + this.prenom + "</h1>\n    \n  </div>\n</div>";
     }
 
@@ -158,13 +158,6 @@
             });
           }
           constraints = {
-            audio: {
-              optional: [
-                {
-                  sourceId: audioSelect.value
-                }
-              ]
-            },
             video: {
               optional: [
                 {
@@ -186,12 +179,18 @@
         handleError = function(error) {
           return console.log('Error: ', error);
         };
-        if (navigator.getUserMedia) {
-          navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream)["catch"](handleError);
+        if ($(videoSelect).children().length === 0) {
+          if (navigator.getUserMedia) {
+            navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream)["catch"](handleError);
+            audioSelect.onchange = getStream;
+            videoSelect.onchange = getStream;
+          } else {
+            console.log('Native web camera streaming (getUserMedia) not supported in this browser.');
+          }
+        } else {
+          navigator.mediaDevices.enumerateDevices().then(getStream)["catch"](handleError);
           audioSelect.onchange = getStream;
           videoSelect.onchange = getStream;
-        } else {
-          console.log('Native web camera streaming (getUserMedia) not supported in this browser.');
         }
         return qrcode.callback = function(result) {
           return qrcodeSuccess(result, localMediaStream);
@@ -200,8 +199,8 @@
     },
     html5_qrcode_stop: function() {
       return this.each(function() {
-        $(this).data('stream').getVideoTracks().forEach(function(videoTrack) {
-          videoTrack.stop();
+        stream.getTracks().forEach(function(track) {
+          return track.stop();
         });
         return clearTimeout($(this).data('timeout'));
       });
@@ -287,6 +286,18 @@
     return $("#mainselect").selectmenu({
       width: 50,
       height: 50,
+      open: function() {
+        if (tuto) {
+          $("#dialog1").dialog("close");
+          return $("#dialog1-1").dialog("open").dialog({
+            position: {
+              my: "left top",
+              at: "left bottom",
+              of: ".ui-menu-item:last"
+            }
+          });
+        }
+      },
       change: function() {
         var $html, $nom, $qrcode, i, j, l, len1, m, note, option, options, ref, save;
         save = function(type) {
@@ -385,22 +396,23 @@
             break;
           default:
             if (tuto) {
-              $("#dialog1").dialog("close");
+              $("#dialog1-1").dialog("close");
             }
             CURRENT_CLASSE = option;
             $("#eleves").show();
             $(".eleve:not([data-classe='" + option + "']) ").hide();
             $(".eleve[data-classe='" + option + "'] ").show();
-            $("#editEval").show();
-            if (tuto) {
-              $("#dialog2").dialog("open").dialog({
-                position: {
-                  my: "left top",
-                  at: "left bottom",
-                  of: "#editEval"
-                }
-              });
-            }
+            $("#editEval").show(0, function() {
+              if (tuto) {
+                return $("#dialog2").dialog("open").dialog({
+                  position: {
+                    my: "left top",
+                    at: "left bottom",
+                    of: "#editEval"
+                  }
+                });
+              }
+            });
         }
         return $("#mainselect option[value='defaut']").prop("selected", true);
       }
@@ -429,12 +441,16 @@
 
   $(function() {
     var d1, d2, do_it, toggleSignifiant;
+    $("#upload .close").on("click", function() {
+      return $("#upload").hide();
+    });
     $(".dialog").dialog({
       dialogClass: 'tuto',
       autoOpen: false
     });
-    $("#upload .close").on("click", function() {
-      return $("#upload").hide();
+    $("#dialog10").on("click", function() {
+      $(this).dialog("close");
+      return tuto = false;
     });
     window.onbeforeunload = function() {
       return "";
@@ -486,15 +502,6 @@
       console.log(v2);
       return do_menu();
     });
-    $("body").on("click", "input[data-row='0']", function() {
-      var checkBoxes;
-      checkBoxes = $("input[type='checkbox']").not($(this));
-      if ($(this).prop("checked")) {
-        return checkBoxes.prop("checked", true).closest("tr").addClass("export");
-      } else {
-        return checkBoxes.prop("checked", false).closest("tr").removeClass("export");
-      }
-    });
     $("body").on("click", ".domaine__tab", function(event) {
       var dom, id, index;
       id = $(this).data("id");
@@ -526,11 +533,12 @@
       id = $(this).data("id");
       return $("#" + id + " .domDescription").toggle();
     });
-    toggleSignifiant = function(item) {
-      var $s, color, dom, id, ref, ref1, ref2, ref3, ref4, ref5, ref6, score;
-      $s = $(".signifiant[data-item='" + item + "']");
-      dom = $s.data("domaine");
-      color = $s.data("color");
+    toggleSignifiant = function(id) {
+      var $signifiant, color, dom, item, ref, ref1, ref2, ref3, ref4, ref5, ref6, score;
+      $signifiant = $("#" + id);
+      item = $signifiant.data("item");
+      dom = $signifiant.data("domaine");
+      color = $signifiant.data("color");
       switch (color) {
         case "white":
           ref = ["shaded", 0], color = ref[0], score = ref[1];
@@ -554,8 +562,8 @@
             ref6 = ["white", 0], color = ref6[0], score = ref6[1];
           }
       }
-      $s.attr("data-color", color);
-      $s.data("color", color);
+      $signifiant.attr("data-color", color);
+      $signifiant.data("color", color);
       CURRENT_EVAL[dom][item] = {
         note: score,
         couleur: color
@@ -597,7 +605,9 @@
       }
     };
     $("body").on("click", ".signifiant", function() {
-      toggleSignifiant($(this).data("item"));
+      var id;
+      id = $(this).attr("id");
+      toggleSignifiant(id);
       if (tuto && !$("#domaines_area").hasClass("freeze")) {
         $("#dialog4").dialog("close");
         return $("#dialog5").dialog("open").dialog({
@@ -628,7 +638,7 @@
       return $("#" + id + " .descripteurs").toggle();
     });
     $("body").on("click", "#editEval", function() {
-      var dom, k, len, results;
+      var dom, k, len;
       if (tuto) {
         $("#dialog2").dialog("close");
         $("#dialog3").dialog("open").dialog({
@@ -645,24 +655,23 @@
         $(this).hide();
         $("#eleves, #validEval, #qrcodeModeStart").hide();
         $(".domaine__tab").show();
+        $(".signifiant:not([data-color='white'])").attr("data-color", "shaded");
+        $(".signifiant:not([data-color='white'])").data("color", "shaded");
         if ($(".signifiant:not([data-color='white'])").length > 0) {
           $("#freeze").show();
         }
-        results = [];
         for (k = 0, len = SELECTED_DOMS.length; k < len; k++) {
           dom = SELECTED_DOMS[k];
           $(".domaine[data-domaine='" + dom + "'], .domaine[data-domaine='" + dom + "'] .signifiant").show();
-          $(".domaine[data-domaine='" + dom + "'], #domaines_area").removeClass("freeze");
-          results.push($(".signifiant[data-descripteur='" + dom + "']").attr("data-color", "shaded").data("color", "shaded"));
         }
-        return results;
+        return $(".domaine, #domaines_area").removeClass("freeze");
       }
     });
     $("body").on("click", "#freeze", function() {
       var $html, d, dom, id, k, l, len, len1, len2, m, ref, s, signifiants, t1, t2;
+      $(this).hide();
       $("#qrcodeModeStart").show();
       $(".domaine__tab, .signifiant[data-color='white']").hide();
-      $(this).hide();
       $("#eleves, #editEval, #validEval").show();
       $("#domaines_area").addClass("freeze");
       $html = $("<div/>");
@@ -781,14 +790,13 @@
       return $("#validEval").hide(0, function() {
         if (tuto) {
           $("#dialog8").dialog("close");
-          $("#dialog9").dialog("open").dialog({
+          return $("#dialog9").dialog("open").dialog({
             position: {
               my: "left top",
               at: "left bottom",
               of: "#validAll"
             }
           });
-          return tuto = false;
         }
       });
     });
@@ -828,19 +836,22 @@
         $("#clipboard").text($.csv.fromArrays(DATA, options));
         new Clipboard("#copy");
         $("#copy").click();
-        return alert("Prêt à coller dans un tableur (ctrl+V) !");
+        alert("Prêt à coller dans un tableur (ctrl+V) !");
+        if (tuto) {
+          return $("#dialog10").dialog("open");
+        }
       }
     });
     $("body").on("click", "#qrcodeModeStart", function() {
       $(".signifiant:visible:first").addClass("selectedSig");
       $(".eleve").hide();
+      $("#qrcodeModeStart, #qrcodeModeStop").toggle();
+      $("#scanner").show();
       $("body").off("click", ".signifiant");
       $("body").on("click", ".signifiant", function() {
         $(".selectedSig").removeClass("selectedSig");
         return $(this).addClass("selectedSig");
       });
-      $("#qrcodeModeStart, #qrcodeModeStop").toggle();
-      $("#scanner").show();
       return $('#reader').html5_qrcode((function(data) {
         var color, dom, id, item, ref, score;
         $(".eleve").hide();
@@ -877,7 +888,9 @@
       $("#scanner").hide();
       $("body").off("click", ".signifiant");
       $("body").on("click", ".signifiant", function() {
-        return toggleSignifiant($(this).data("item"));
+        var id;
+        id = $(this).attr("id");
+        return toggleSignifiant(id);
       });
       $(".eleve").hide();
       return $(".eleve[data-classe='" + CURRENT_CLASSE + "']").show();
