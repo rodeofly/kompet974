@@ -276,7 +276,7 @@
     var $select, k, len, menu_item, o;
     $("#mainselect").remove();
     $select = $("<select id='mainselect'><option value='defaut'>Menu</option></select>");
-    menu_item = ["Tutoriel", "Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat(CLASSES);
+    menu_item = ["Tutoriel", "Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Exemple tableur", "Copier"].concat(CLASSES);
     for (k = 0, len = menu_item.length; k < len; k++) {
       o = menu_item[k];
       $select.append("<option value='" + o + "'>" + o + "</option>");
@@ -299,7 +299,7 @@
         }
       },
       change: function() {
-        var $html, $nom, $qrcode, i, j, l, len1, m, note, option, options, ref, save;
+        var $html, $nom, $qrcode, ask, i, j, l, len1, m, note, option, options, ref, save;
         save = function(type) {
           var dataStr, dlAnchorElem, options, stringValue;
           dataStr = "data:text/" + type + ";charset=utf-8,";
@@ -385,6 +385,12 @@
             break;
           case "Sauver Catégories":
             save("json");
+            break;
+          case "Exemple tableur":
+            ask = window.confirm("Vous allez être redirigé vers une feuille de calcul Google Drive !");
+            if (ask) {
+              document.location.href = "https://docs.google.com/spreadsheets/d/1WMs1XQTDBIfhxk1_JNzi3pMB92d85QwkomX5GP2w9tw/edit?usp=sharing";
+            }
             break;
           case "Copier":
             options = {

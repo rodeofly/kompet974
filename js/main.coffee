@@ -247,7 +247,7 @@ dnd = new DnDFileController '#upload', (files) ->
 do_menu = () ->
   $( "#mainselect" ).remove()
   $select = $( "<select id='mainselect'><option value='defaut'>Menu</option></select>" )
-  menu_item = ["Tutoriel", "Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Copier"].concat CLASSES 
+  menu_item = ["Tutoriel", "Importer", "Charger Local", "Effacer Local", "Imprimer les QR-codes", "Exemple tableur", "Copier"].concat CLASSES 
   for o in menu_item
     $select.append "<option value='#{o}'>#{o}</option>"
   $( "#tabs" ).prepend $select       
@@ -321,7 +321,11 @@ do_menu = () ->
             $( "body" ).empty().append $html
             
         when "Sauver Table"      then save "csv"        
-        when "Sauver Catégories" then save "json"           
+        when "Sauver Catégories" then save "json"
+        when "Exemple tableur"
+          ask = window.confirm("Vous allez être redirigé vers une feuille de calcul Google Drive !")
+          if (ask)
+            document.location.href = "https://docs.google.com/spreadsheets/d/1WMs1XQTDBIfhxk1_JNzi3pMB92d85QwkomX5GP2w9tw/edit?usp=sharing"        
         when "Copier"
           options= {"separator" : "\t"}
           $( "#clipboard" ).text( $.csv.fromArrays DATA, options )
