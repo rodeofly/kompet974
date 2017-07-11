@@ -557,9 +557,9 @@ $ ->
     $( ".domaine__tab, .signifiant[data-color='white']" ).hide()    
     $( "#eleves, #editEval, #validEval" ).show()
     $( "#domaines_area" ).addClass "freeze"
-    
-    $html = $( "<div/>" )
+        
     t1 = timer('First loop')
+    $html = $( "<div/>" )
     #On crée les petits carrés pour chaque élèves
     for d in SELECTED_DOMS
       $( ".domaine[data-domaine='#{d}']" ).addClass "freeze"
@@ -567,27 +567,37 @@ $ ->
       signifiants = Object.keys CURRENT_EVAL[d]
       for s in signifiants.sort()
         if CURRENT_EVAL[d][s].couleur isnt "white"
-          $html.find( ".eval_dom[data-domaine='#{d}']" ).append "<div class='eval_sig' data-item='#{s}' data-color='#{CURRENT_EVAL[d][s].couleur}' data-note='#{CURRENT_EVAL[d][s].note}'></div>"
+          color = CURRENT_EVAL[d][s].couleur
+          note  = CURRENT_EVAL[d][s].note  
+          carres = "<div class='eval_sig' data-item='#{s}' data-color='#{color}' data-note='#{note}'></div>"
+          $html.find( ".eval_dom[data-domaine='#{d}']" ).append carres        
     t1.stop()
+    
     $( ".domaine" ).filter( ":not(.freeze)" ).hide()
     $( ".eleve[data-classe='#{CURRENT_CLASSE}'] .evaluation" ).empty()
     $( ".eleve[data-classe='#{CURRENT_CLASSE}']" ).find( ".evaluation" ).append $html.html()
     
+    #On passe les élèves en revue
     t2 = timer('Second loop')
-    #
     for id of DATA_TEMP
       for dom in SELECTED_DOMS
         $( ".domaine[data-domaine='#{dom}'] .signifiant:not([data-color='white'])" ).each ->
           item = $( this ).data "item"
-          #si les élèves n'ont jamais été évalué, on, leur assigne une couleur par défaut
-          if DATA_TEMP[id][dom][item].couleur isnt undefined
-            $( "##{id} .eval_sig[data-item='#{item}']" ).data "color", DATA_TEMP[id][dom][item].couleur
-            $( "##{id} .eval_sig[data-item='#{item}']" ).attr "data-color", DATA_TEMP[id][dom][item].couleur
-          else
-            color = $( this ).data "color"
-            $( "#id .eval_sig[data-item='#{item}']" ).data "color", color
-            $( "#id .eval_sig[data-item='#{item}']" ).attr "data-color", color
+          #si l'élève n'a jamais été évalué, on lui assigne la couleur par défaut, sinon, on lui remet sa couleur
+          if DATA_TEMP[id][dom][item].couleur is undefined
+            color = CURRENT_EVAL[dom][item].couleur
+            note  = CURRENT_EVAL[dom][item].note  
+            $( "##{id} .eval_sig[data-item='#{item}']" ).data "color"     , color
+            $( "##{id} .eval_sig[data-item='#{item}']" ).attr "data-color", color
+            $( "##{id} .eval_sig[data-item='#{item}']" ).data "note"      , note
+            $( "##{id} .eval_sig[data-item='#{item}']" ).attr "data-note" , note
             DATA_TEMP[id][dom][item].couleur = color
+            DATA_TEMP[id][dom][item].note    = note
+          else    
+            $( "##{id} .eval_sig[data-item='#{item}']" ).data "color"     , DATA_TEMP[id][dom][item].couleur
+            $( "##{id} .eval_sig[data-item='#{item}']" ).attr "data-color", DATA_TEMP[id][dom][item].couleur
+            $( "##{id} .eval_sig[data-item='#{item}']" ).data "note"      , DATA_TEMP[id][dom][item].note
+            $( "##{id} .eval_sig[data-item='#{item}']" ).attr "data-note" , DATA_TEMP[id][dom][item].note
     t2.stop()
     if tuto
       $( "#dialog5" ).dialog( "close" )

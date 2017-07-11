@@ -668,14 +668,14 @@
       }
     });
     $("body").on("click", "#freeze", function() {
-      var $html, d, dom, id, k, l, len, len1, len2, m, ref, s, signifiants, t1, t2;
+      var $html, carres, color, d, dom, id, k, l, len, len1, len2, m, note, ref, s, signifiants, t1, t2;
       $(this).hide();
       $("#qrcodeModeStart").show();
       $(".domaine__tab, .signifiant[data-color='white']").hide();
       $("#eleves, #editEval, #validEval").show();
       $("#domaines_area").addClass("freeze");
-      $html = $("<div/>");
       t1 = timer('First loop');
+      $html = $("<div/>");
       for (k = 0, len = SELECTED_DOMS.length; k < len; k++) {
         d = SELECTED_DOMS[k];
         $(".domaine[data-domaine='" + d + "']").addClass("freeze");
@@ -685,7 +685,10 @@
         for (l = 0, len1 = ref.length; l < len1; l++) {
           s = ref[l];
           if (CURRENT_EVAL[d][s].couleur !== "white") {
-            $html.find(".eval_dom[data-domaine='" + d + "']").append("<div class='eval_sig' data-item='" + s + "' data-color='" + CURRENT_EVAL[d][s].couleur + "' data-note='" + CURRENT_EVAL[d][s].note + "'></div>");
+            color = CURRENT_EVAL[d][s].couleur;
+            note = CURRENT_EVAL[d][s].note;
+            carres = "<div class='eval_sig' data-item='" + s + "' data-color='" + color + "' data-note='" + note + "'></div>";
+            $html.find(".eval_dom[data-domaine='" + d + "']").append(carres);
           }
         }
       }
@@ -698,16 +701,22 @@
         for (m = 0, len2 = SELECTED_DOMS.length; m < len2; m++) {
           dom = SELECTED_DOMS[m];
           $(".domaine[data-domaine='" + dom + "'] .signifiant:not([data-color='white'])").each(function() {
-            var color, item;
+            var item;
             item = $(this).data("item");
-            if (DATA_TEMP[id][dom][item].couleur !== void 0) {
-              $("#" + id + " .eval_sig[data-item='" + item + "']").data("color", DATA_TEMP[id][dom][item].couleur);
-              return $("#" + id + " .eval_sig[data-item='" + item + "']").attr("data-color", DATA_TEMP[id][dom][item].couleur);
+            if (DATA_TEMP[id][dom][item].couleur === void 0) {
+              color = CURRENT_EVAL[dom][item].couleur;
+              note = CURRENT_EVAL[dom][item].note;
+              $("#" + id + " .eval_sig[data-item='" + item + "']").data("color", color);
+              $("#" + id + " .eval_sig[data-item='" + item + "']").attr("data-color", color);
+              $("#" + id + " .eval_sig[data-item='" + item + "']").data("note", note);
+              $("#" + id + " .eval_sig[data-item='" + item + "']").attr("data-note", note);
+              DATA_TEMP[id][dom][item].couleur = color;
+              return DATA_TEMP[id][dom][item].note = note;
             } else {
-              color = $(this).data("color");
-              $("#id .eval_sig[data-item='" + item + "']").data("color", color);
-              $("#id .eval_sig[data-item='" + item + "']").attr("data-color", color);
-              return DATA_TEMP[id][dom][item].couleur = color;
+              $("#" + id + " .eval_sig[data-item='" + item + "']").data("color", DATA_TEMP[id][dom][item].couleur);
+              $("#" + id + " .eval_sig[data-item='" + item + "']").attr("data-color", DATA_TEMP[id][dom][item].couleur);
+              $("#" + id + " .eval_sig[data-item='" + item + "']").data("note", DATA_TEMP[id][dom][item].note);
+              return $("#" + id + " .eval_sig[data-item='" + item + "']").attr("data-note", DATA_TEMP[id][dom][item].note);
             }
           });
         }

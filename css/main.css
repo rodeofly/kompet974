@@ -366,16 +366,18 @@ button.absent, button.present {
   display : flex;
   flex-flow : row nowrap;
   justify-content: flex-start;
+  width : 100%;
+  overflow : scroll-y;
 }
 
 #domaines_area.freeze .domaine.freeze {
   display : flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  max-width : none;
   min-width: 50px;
   background-color : transparent;
   border : none;
+  
 }
 
 .domaine.freeze .domaine__name, .domaine.freeze .toggleDescripteurs, .domaine.freeze .toggleDomDescription {
