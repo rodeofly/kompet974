@@ -366,6 +366,8 @@ button.absent, button.present {
   display : flex;
   flex-flow : row nowrap;
   justify-content: flex-start;
+  width : 100%;
+  overflow : scroll-y;
 }
 
 #domaines_area.freeze .domaine.freeze {
